@@ -1233,6 +1233,26 @@
         width: min(var(--max), calc(100% - 28px));
       }
 
+      .nav {
+        gap: 10px;
+      }
+
+      .brand {
+        min-width: 0;
+      }
+
+      .brand span:last-child {
+        line-height: 1.12;
+      }
+
+      .site-header .btn {
+        width: auto;
+        min-height: 40px;
+        flex: 0 0 auto;
+        padding: 0 12px;
+        font-size: 0.78rem;
+      }
+
       .hero {
         min-height: 76vh;
         padding-top: 96px;
@@ -1265,6 +1285,25 @@
 
       .section {
         padding: 64px 0;
+      }
+
+      .toolkit {
+        align-items: stretch;
+      }
+
+      .toolkit-visual {
+        min-height: auto;
+        display: grid;
+        gap: 12px;
+        padding: 16px;
+      }
+
+      .tool-card,
+      .tool-card:nth-child(1),
+      .tool-card:nth-child(2),
+      .tool-card:nth-child(3) {
+        position: static;
+        width: 100%;
       }
 
       .persona-tabs,
@@ -1301,6 +1340,33 @@
       .footer-row {
         align-items: flex-start;
         flex-direction: column;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .brand {
+        gap: 8px;
+        font-size: 0.9rem;
+      }
+
+      .brand-mark {
+        width: 30px;
+        height: 30px;
+        font-size: 0.72rem;
+      }
+
+      .site-header .btn {
+        max-width: 126px;
+        padding: 0 10px;
+        font-size: 0.74rem;
+      }
+
+      h1 {
+        font-size: 2.08rem;
+      }
+
+      .eyebrow {
+        font-size: 0.74rem;
       }
     }
   </style>

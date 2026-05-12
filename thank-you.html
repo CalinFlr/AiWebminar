@@ -322,6 +322,48 @@
         flex-direction: column;
       }
     }
+
+    @media (max-width: 420px) {
+      .container {
+        width: min(var(--max), calc(100% - 40px));
+      }
+
+      .nav {
+        gap: 10px;
+      }
+
+      .brand {
+        min-width: 0;
+        gap: 8px;
+        font-size: 0.92rem;
+        line-height: 1.15;
+      }
+
+      .brand-mark {
+        width: 30px;
+        height: 30px;
+        flex: 0 0 30px;
+        font-size: 0.72rem;
+      }
+
+      .site-header .btn {
+        min-height: 40px;
+        max-width: 124px;
+        padding: 0 10px;
+        font-size: 0.8rem;
+        line-height: 1.15;
+      }
+
+      .page {
+        padding: 56px 0;
+      }
+
+      .hero-card,
+      .side-card,
+      .onboarding-card {
+        padding: 24px;
+      }
+    }
   </style>
 </head>
 <body>
