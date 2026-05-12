@@ -1,0 +1,2244 @@
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agenti AI 24/7 | Workshop AI Automation Zero to Hero</title>
+  <meta name="description" content="Workshop live pentru oameni non-tehnici: construieste primii tai agenti AI 24/7 pentru afacerea ta, jobul tau sau clientii tai.">
+  <style>
+    :root {
+      --ink: #171715;
+      --ink-soft: #25241f;
+      --paper: #f7f3e9;
+      --paper-alt: #ebe4d4;
+      --line: rgba(23, 23, 21, 0.16);
+      --white: #ffffff;
+      --muted: #6d675e;
+      --teal: #2f7d7a;
+      --teal-dark: #1f5956;
+      --coral: #d96f55;
+      --brass: #b8954c;
+      --green: #5f7f55;
+      --shadow: 0 18px 50px rgba(23, 23, 21, 0.14);
+      --radius: 8px;
+      --max: 1160px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    .container {
+      width: min(var(--max), calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(23, 23, 21, 0.86);
+      backdrop-filter: blur(18px);
+      color: var(--white);
+    }
+
+    .nav {
+      min-height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      border-radius: 8px;
+      background: var(--teal);
+      color: var(--white);
+      font-size: 0.82rem;
+      letter-spacing: 0;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 0.94rem;
+    }
+
+    .btn {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      padding: 0 18px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
+      white-space: normal;
+      text-align: center;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--coral);
+      color: var(--white);
+      box-shadow: 0 10px 28px rgba(217, 111, 85, 0.28);
+    }
+
+    .btn-primary:hover {
+      background: #c96049;
+    }
+
+    .btn-secondary {
+      border-color: rgba(255, 255, 255, 0.26);
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .btn-dark {
+      background: var(--ink);
+      color: var(--white);
+    }
+
+    .hero {
+      position: relative;
+      min-height: 78vh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      padding: 104px 0 64px;
+      color: var(--white);
+      background: var(--ink);
+      isolation: isolate;
+    }
+
+    .hero-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -3;
+      background: #151512;
+    }
+
+    .hero-scrim {
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      background: rgba(12, 12, 10, 0.58);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.02fr) minmax(340px, 0.7fr);
+      gap: 48px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+      padding: 7px 10px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+
+    .eyebrow-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 99px;
+      background: var(--coral);
+      box-shadow: 0 0 0 4px rgba(217, 111, 85, 0.18);
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 780px;
+      margin-bottom: 20px;
+      font-size: 4rem;
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-bottom: 18px;
+      font-size: 2.35rem;
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 10px;
+      font-size: 1.18rem;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      max-width: 680px;
+      margin-bottom: 28px;
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 1.16rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      color: rgba(255, 255, 255, 0.76);
+      font-size: 0.94rem;
+    }
+
+    .hero-meta span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 8px;
+      padding: 0 10px;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .hero-panel {
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 8px;
+      padding: 18px;
+      background: rgba(23, 23, 21, 0.72);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.24);
+    }
+
+    .system-preview {
+      display: grid;
+      gap: 12px;
+    }
+
+    .preview-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: rgba(255, 255, 255, 0.74);
+      font-size: 0.82rem;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: #bfe0c3;
+      font-weight: 800;
+    }
+
+    .status-pill::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #7fcf8b;
+      box-shadow: 0 0 0 4px rgba(127, 207, 139, 0.16);
+    }
+
+    .preview-row {
+      display: grid;
+      grid-template-columns: 84px 1fr;
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .preview-label {
+      min-height: 72px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      color: rgba(255, 255, 255, 0.72);
+      font-weight: 800;
+      font-size: 0.82rem;
+    }
+
+    .preview-work {
+      min-height: 72px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 8px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .preview-work strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--white);
+    }
+
+    .preview-work span {
+      color: rgba(255, 255, 255, 0.68);
+      font-size: 0.9rem;
+    }
+
+    .preview-progress {
+      height: 8px;
+      margin-top: 10px;
+      overflow: hidden;
+      border-radius: 99px;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .preview-progress i {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--brass);
+    }
+
+    .section {
+      padding: 86px 0;
+    }
+
+    .section-dark {
+      color: var(--white);
+      background: var(--ink);
+    }
+
+    .section-alt {
+      background: var(--paper-alt);
+    }
+
+    .section-kicker {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--teal-dark);
+      font-size: 0.82rem;
+      font-weight: 900;
+    }
+
+    .section-dark .section-kicker {
+      color: #91d3ce;
+    }
+
+    .section-heading {
+      max-width: 780px;
+      margin-bottom: 34px;
+    }
+
+    .section-heading p {
+      max-width: 720px;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .section-dark .section-heading p {
+      color: rgba(255, 255, 255, 0.72);
+    }
+
+    .problem-grid {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .problem-statement {
+      border-left: 4px solid var(--coral);
+      padding-left: 22px;
+    }
+
+    .problem-statement p {
+      color: var(--muted);
+      font-size: 1.08rem;
+    }
+
+    .contrast-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .contrast-item {
+      display: grid;
+      grid-template-columns: 32px 1fr;
+      gap: 12px;
+      align-items: start;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.42);
+    }
+
+    .contrast-number {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: var(--ink);
+      color: var(--white);
+      font-size: 0.86rem;
+      font-weight: 900;
+    }
+
+    .contrast-item p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .persona-shell {
+      display: grid;
+      grid-template-columns: 1fr;
+      position: relative;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.48);
+      box-shadow: var(--shadow);
+    }
+
+    .persona-tabs {
+      display: grid;
+      grid-column: 1;
+      grid-row: 1;
+      grid-template-columns: repeat(3, 1fr);
+      border-bottom: 1px solid var(--line);
+      background: rgba(23, 23, 21, 0.04);
+    }
+
+    .persona-tab {
+      min-height: 58px;
+      border: 0;
+      border-right: 1px solid var(--line);
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-weight: 900;
+    }
+
+    .persona-tab:last-child {
+      border-right: 0;
+    }
+
+    .persona-tab.is-active {
+      color: var(--ink);
+      background: var(--white);
+      box-shadow: inset 0 -3px 0 var(--teal);
+    }
+
+    .persona-content {
+      display: grid;
+      grid-column: 1;
+      grid-row: 2;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      padding: 30px;
+      opacity: 0;
+      pointer-events: none;
+      visibility: hidden;
+    }
+
+    .persona-content.is-active {
+      opacity: 1;
+      pointer-events: auto;
+      visibility: visible;
+    }
+
+    .persona-copy p {
+      color: var(--muted);
+    }
+
+    .mini-list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .mini-list li {
+      position: relative;
+      padding-left: 22px;
+      color: var(--muted);
+    }
+
+    .mini-list li::before {
+      content: "";
+      position: absolute;
+      top: 9px;
+      left: 0;
+      width: 9px;
+      height: 9px;
+      border-radius: 2px;
+      background: var(--teal);
+    }
+
+    .persona-result {
+      border-radius: 8px;
+      padding: 22px;
+      background: var(--ink);
+      color: var(--white);
+    }
+
+    .persona-result p {
+      color: rgba(255, 255, 255, 0.76);
+    }
+
+    .path-grid,
+    .outcome-grid,
+    .pricing-grid,
+    .faq-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .path-card,
+    .outcome-card,
+    .day-card,
+    .price-card,
+    .faq-item {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    .path-card,
+    .outcome-card {
+      padding: 22px;
+    }
+
+    .path-card h3,
+    .outcome-card h3 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .icon-box {
+      width: 34px;
+      height: 34px;
+      display: inline-grid;
+      place-items: center;
+      flex: 0 0 auto;
+      border-radius: 8px;
+      background: var(--teal);
+      color: var(--white);
+      font-weight: 900;
+      font-size: 0.78rem;
+    }
+
+    .path-card p,
+    .outcome-card p {
+      color: var(--muted);
+    }
+
+    .curriculum {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .day-card {
+      display: flex;
+      flex-direction: column;
+      min-height: 332px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.14);
+    }
+
+    .day-card h3 {
+      color: var(--white);
+    }
+
+    .day-card p,
+    .day-card li {
+      color: rgba(255, 255, 255, 0.72);
+    }
+
+    .day-label {
+      width: fit-content;
+      margin-bottom: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 8px;
+      padding: 5px 8px;
+      color: #bfe0dc;
+      font-weight: 900;
+      font-size: 0.78rem;
+    }
+
+    .day-card ul {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .day-card.featured {
+      background: rgba(217, 111, 85, 0.16);
+      border-color: rgba(217, 111, 85, 0.45);
+    }
+
+    .toolkit {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 34px;
+      align-items: center;
+    }
+
+    .toolkit-visual {
+      min-height: 360px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 8px;
+      background: var(--ink);
+      box-shadow: var(--shadow);
+    }
+
+    .tool-card {
+      position: absolute;
+      width: 56%;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 8px;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--white);
+    }
+
+    .tool-card:nth-child(1) {
+      top: 34px;
+      left: 28px;
+    }
+
+    .tool-card:nth-child(2) {
+      top: 132px;
+      right: 28px;
+      background: rgba(47, 125, 122, 0.28);
+    }
+
+    .tool-card:nth-child(3) {
+      bottom: 34px;
+      left: 58px;
+      background: rgba(184, 149, 76, 0.24);
+    }
+
+    .tool-card strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .tool-card span {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.9rem;
+    }
+
+    .toolkit-copy p {
+      color: var(--muted);
+    }
+
+    .toolkit-copy .mini-list {
+      margin-top: 20px;
+    }
+
+    .offer-compare {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .offer-tier {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      background: rgba(255, 255, 255, 0.52);
+    }
+
+    .offer-tier.vip {
+      border-color: rgba(217, 111, 85, 0.5);
+      background: rgba(217, 111, 85, 0.1);
+    }
+
+    .offer-tier span {
+      display: inline-block;
+      margin-bottom: 8px;
+      color: var(--teal);
+      font-size: 0.76rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .offer-tier.vip span {
+      color: var(--coral);
+    }
+
+    .offer-tier h3 {
+      margin-bottom: 10px;
+      font-size: 1.15rem;
+    }
+
+    .offer-tier ul {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .mentor-section {
+      position: relative;
+      overflow: hidden;
+      color: var(--white);
+      background: var(--ink);
+    }
+
+    .mentor-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(340px, 0.82fr);
+      gap: 34px;
+      align-items: center;
+    }
+
+    .mentor-copy h2 {
+      max-width: 760px;
+    }
+
+    .mentor-lead {
+      max-width: 760px;
+      margin-bottom: 18px;
+      color: var(--white);
+      font-size: 1.22rem;
+      font-weight: 800;
+    }
+
+    .mentor-copy p {
+      max-width: 760px;
+      color: rgba(255, 255, 255, 0.74);
+    }
+
+    .mentor-personas {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .mentor-persona {
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 8px;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .mentor-persona strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--white);
+    }
+
+    .mentor-persona span {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.92rem;
+    }
+
+    .mentor-card {
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 8px;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.26);
+    }
+
+    .mentor-profile {
+      margin: 0 0 18px;
+      text-align: center;
+    }
+
+    .mentor-photo {
+      display: block;
+      width: min(220px, 72%);
+      aspect-ratio: 1 / 1;
+      margin: 10px auto 0;
+      object-fit: cover;
+      object-position: center;
+      border: 4px solid rgba(255, 255, 255, 0.18);
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.22);
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28);
+    }
+
+    .mentor-caption {
+      padding: 16px 8px 2px;
+    }
+
+    .mentor-name {
+      margin-bottom: 6px;
+      font-size: 2rem;
+      line-height: 1;
+      font-weight: 900;
+    }
+
+    .mentor-role {
+      margin-bottom: 20px;
+      color: #bfe0dc;
+      font-weight: 900;
+    }
+
+    .impact-stack {
+      display: grid;
+      gap: 12px;
+    }
+
+    .impact-card {
+      display: grid;
+      grid-template-columns: 116px 1fr;
+      gap: 14px;
+      align-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      padding: 14px;
+      background: rgba(0, 0, 0, 0.18);
+    }
+
+    .impact-value {
+      color: var(--coral);
+      font-size: 1.36rem;
+      line-height: 1.05;
+      font-weight: 900;
+    }
+
+    .impact-card strong {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--white);
+    }
+
+    .impact-card span {
+      color: rgba(255, 255, 255, 0.68);
+      font-size: 0.92rem;
+    }
+
+    .pricing-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .price-card {
+      display: flex;
+      flex-direction: column;
+      min-height: 420px;
+      padding: 26px;
+      background: var(--white);
+    }
+
+    .price-card.highlight {
+      border-color: rgba(217, 111, 85, 0.56);
+      box-shadow: var(--shadow);
+    }
+
+    .price-badge {
+      width: fit-content;
+      margin-bottom: 10px;
+      border-radius: 999px;
+      padding: 5px 9px;
+      color: var(--white);
+      background: var(--coral);
+      font-size: 0.74rem;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .price {
+      margin: 10px 0 18px;
+      font-size: 3rem;
+      line-height: 1;
+      font-weight: 900;
+    }
+
+    .price span {
+      font-size: 1rem;
+      color: var(--muted);
+    }
+
+    .price-card .mini-list {
+      margin-bottom: 26px;
+    }
+
+    .price-card .btn {
+      margin-top: auto;
+    }
+
+    .form-band {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 32px;
+      align-items: start;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 8px;
+      padding: 32px;
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .form-band p {
+      color: rgba(255, 255, 255, 0.72);
+    }
+
+    .signup-steps {
+      display: grid;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .signup-step {
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      padding: 14px;
+      background: rgba(0, 0, 0, 0.16);
+    }
+
+    .signup-step strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--white);
+    }
+
+    .signup-step span {
+      color: rgba(255, 255, 255, 0.66);
+      font-size: 0.92rem;
+    }
+
+    .signup-form {
+      display: grid;
+      gap: 14px;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    .field label {
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 0.88rem;
+      font-weight: 800;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      min-height: 46px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 8px;
+      padding: 0 12px;
+      color: var(--white);
+      background: rgba(0, 0, 0, 0.18);
+    }
+
+    .field textarea {
+      min-height: 112px;
+      padding: 12px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+
+    .field select option {
+      color: var(--ink);
+      background: var(--white);
+    }
+
+    .field-hint {
+      color: rgba(255, 255, 255, 0.58);
+      font-size: 0.82rem;
+    }
+
+    .plan-selector {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .plan-choice {
+      position: relative;
+      cursor: pointer;
+    }
+
+    .plan-choice input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .plan-choice-body {
+      display: grid;
+      gap: 4px;
+      min-height: 92px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 8px;
+      padding: 14px;
+      background: rgba(0, 0, 0, 0.18);
+      color: rgba(255, 255, 255, 0.78);
+    }
+
+    .plan-choice-body strong {
+      color: var(--white);
+    }
+
+    .plan-choice-body em {
+      width: fit-content;
+      border-radius: 999px;
+      padding: 4px 8px;
+      color: var(--white);
+      background: var(--coral);
+      font-size: 0.72rem;
+      font-style: normal;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .plan-choice-body small {
+      color: rgba(255, 255, 255, 0.58);
+      line-height: 1.45;
+    }
+
+    .plan-choice input:checked + .plan-choice-body {
+      border-color: rgba(217, 111, 85, 0.84);
+      background: rgba(217, 111, 85, 0.18);
+      box-shadow: 0 0 0 1px rgba(217, 111, 85, 0.18);
+    }
+
+    .plan-choice input:focus-visible + .plan-choice-body {
+      outline: 3px solid rgba(217, 111, 85, 0.42);
+      outline-offset: 2px;
+    }
+
+    .form-note {
+      min-height: 24px;
+      margin: 0;
+      color: #bfe0c3;
+      font-size: 0.92rem;
+      font-weight: 800;
+    }
+
+    .next-step-panel {
+      display: grid;
+      gap: 14px;
+      border: 1px solid rgba(191, 224, 195, 0.28);
+      border-radius: 8px;
+      padding: 18px;
+      background: rgba(191, 224, 195, 0.1);
+    }
+
+    .next-step-panel h3 {
+      margin: 0;
+      color: var(--white);
+    }
+
+    .next-step-panel p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.74);
+    }
+
+    .next-step-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .next-step-actions .btn {
+      width: auto;
+    }
+
+    .onboarding-section {
+      border-top: 1px solid var(--line);
+    }
+
+    .onboarding-card {
+      display: grid;
+      grid-template-columns: 0.82fr 1.18fr;
+      gap: 32px;
+      align-items: start;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 32px;
+      background: rgba(255, 255, 255, 0.62);
+      box-shadow: var(--shadow);
+    }
+
+    .onboarding-card p {
+      color: var(--muted);
+    }
+
+    .onboarding-card .field label {
+      color: var(--ink);
+    }
+
+    .onboarding-card .field input,
+    .onboarding-card .field select,
+    .onboarding-card .field textarea {
+      color: var(--ink);
+      border-color: var(--line);
+      background: rgba(255, 255, 255, 0.78);
+    }
+
+    .onboarding-card .field-hint {
+      color: var(--muted);
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    .faq-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .faq-item {
+      display: grid;
+      align-content: start;
+      padding: 20px;
+    }
+
+    .faq-item p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .site-footer {
+      padding: 34px 0;
+      color: rgba(255, 255, 255, 0.68);
+      background: var(--ink);
+    }
+
+    .footer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 980px) {
+      .nav-links {
+        display: none;
+      }
+
+      .hero-grid,
+      .problem-grid,
+      .toolkit,
+      .mentor-grid,
+      .onboarding-card,
+      .form-band {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 3rem;
+      }
+
+      h2 {
+        font-size: 2rem;
+      }
+
+      .path-grid,
+      .outcome-grid,
+      .mentor-personas,
+      .curriculum {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .hero-panel {
+        display: none;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(var(--max), calc(100% - 28px));
+      }
+
+      .hero {
+        min-height: 76vh;
+        padding-top: 96px;
+      }
+
+      h1 {
+        font-size: 2.35rem;
+      }
+
+      h2 {
+        font-size: 1.72rem;
+      }
+
+      .lead {
+        font-size: 1rem;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .hero-actions,
+      .hero-meta {
+        width: 100%;
+      }
+
+      .hero-meta span {
+        width: 100%;
+      }
+
+      .section {
+        padding: 64px 0;
+      }
+
+      .persona-tabs,
+      .persona-content,
+      .path-grid,
+      .outcome-grid,
+      .mentor-personas,
+      .curriculum,
+      .offer-compare,
+      .plan-selector,
+      .pricing-grid,
+      .faq-grid,
+      .field-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .persona-tab {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .persona-content {
+        padding: 22px;
+      }
+
+      .price-card {
+        min-height: auto;
+      }
+
+      .impact-card {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-row {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="#top" aria-label="AI Automation Zero to Hero">
+        <span class="brand-mark">AI</span>
+        <span>AI Automation Zero to Hero</span>
+      </a>
+      <nav class="nav-links" aria-label="Navigatie principala">
+        <a href="#trasee">Trasee</a>
+        <a href="#program">Program</a>
+        <a href="#mentor">Mentor</a>
+        <a href="#inscriere">Inscriere</a>
+      </nav>
+      <a class="btn btn-primary" href="#inscriere" data-plan="vip">Rezerva locul</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero" aria-labelledby="hero-title">
+      <canvas class="hero-canvas" id="systemCanvas" aria-hidden="true"></canvas>
+      <div class="hero-scrim" aria-hidden="true"></div>
+      <div class="container hero-grid">
+        <div>
+          <div class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span> Workshop live: AI Automation Zero to Hero</div>
+          <h1 id="hero-title">Construieste primii tai agenti AI 24/7 pentru business, job sau clienti</h1>
+          <p class="lead">In 3 sesiuni live inveti sa treci de la ChatGPT folosit ocazional la agenti si workflow-uri AI care pot prelua taskuri repetitive, pot analiza informatie si pot pregati rezultate pentru tine. Fara programare. Fara teorie goala.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#inscriere" data-plan="vip">Rezerva locul la workshop &rarr;</a>
+            <a class="btn btn-secondary" href="#program">Vezi ce construiesti</a>
+          </div>
+          <div class="hero-meta" aria-label="Detalii workshop">
+            <span>3 sesiuni live + optional Implementation Lab</span>
+            <span>Agenti pentru business, job si clienti</span>
+            <span>Creat pentru nivel incepator si intermediar</span>
+          </div>
+        </div>
+
+        <aside class="hero-panel" aria-label="Preview agent AI">
+          <div class="system-preview">
+            <div class="preview-top">
+              <strong>Agent AI 24/7</strong>
+              <span class="status-pill">ruleaza</span>
+            </div>
+            <div class="preview-row">
+              <div class="preview-label">Input</div>
+              <div class="preview-work">
+                <strong>Task repetitiv</strong>
+                <span>Emailuri, lead-uri, documente, notite sau cereri care iti consuma ore saptamanal.</span>
+                <div class="preview-progress"><i style="width: 42%"></i></div>
+              </div>
+            </div>
+            <div class="preview-row">
+              <div class="preview-label">Agent</div>
+              <div class="preview-work">
+                <strong>Analiza + decizie + actiune</strong>
+                <span>Extrage informatii, aplica reguli, propune urmatorul pas si pregateste outputul.</span>
+                <div class="preview-progress"><i style="width: 68%; background: var(--teal)"></i></div>
+              </div>
+            </div>
+            <div class="preview-row">
+              <div class="preview-label">Output</div>
+              <div class="preview-work">
+                <strong>Mini-sistem reutilizabil</strong>
+                <span>Un raspuns, raport, plan sau workflow pe care il poti folosi din nou.</span>
+                <div class="preview-progress"><i style="width: 86%; background: var(--coral)"></i></div>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section section-alt" aria-labelledby="problem-title">
+      <div class="container problem-grid">
+        <div class="problem-statement">
+          <span class="section-kicker">Problema reala</span>
+          <h2 id="problem-title">Ai AI, dar tot tu faci munca.</h2>
+          <p>Multi oameni au testat ChatGPT, Claude sau tool-uri no-code. Au primit texte mai bune, idei mai rapide si raspunsuri utile. Dar in practica raman blocati in acelasi mod de lucru: deschid un chat, explica iar contextul, copiaza, verifica, repara si repeta.</p>
+          <p>Diferenta apare cand AI-ul nu mai este doar un chat, ci devine un sistem: primeste un obiectiv, urmeaza pasi, verifica reguli si pregateste un output pe care il poti folosi.</p>
+          <p>In workshop vezi inclusiv cum poate arata un agent care foloseste browserul: navigheaza pagini, colecteaza date publice si transforma research-ul intr-un raport actionabil.</p>
+        </div>
+        <div class="contrast-list">
+          <div class="contrast-item">
+            <span class="contrast-number">01</span>
+            <div>
+              <h3>De la raspunsuri la agenti care executa pasi</h3>
+              <p>Nu doar "scrie-mi un text", ci "cauta, compara, extrage, structureaza si pregateste urmatoarea actiune".</p>
+            </div>
+          </div>
+          <div class="contrast-item">
+            <span class="contrast-number">02</span>
+            <div>
+              <h3>De la inspiratie la procese repetabile</h3>
+              <p>Un prompt bun te ajuta o data. Un workflow bun poate fi folosit din nou pentru lead-uri, rapoarte, documente, research sau operatiuni.</p>
+            </div>
+          </div>
+          <div class="contrast-item">
+            <span class="contrast-number">03</span>
+            <div>
+              <h3>De la demo generic la cazul tau real</h3>
+              <p>Ownerii cauta timp si control. Profesionistii cauta impact la job. Consultantii cauta un demo vandabil pentru clienti.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="trasee" aria-labelledby="persona-title">
+      <div class="container">
+        <div class="section-heading">
+          <span class="section-kicker">Alege traseul tau</span>
+          <h2 id="persona-title">Nu inveti AI generic. Iti construiesti agenti pentru miza ta reala.</h2>
+          <p>Pentru un owner inseamna timp castigat in business. Pentru un profesionist inseamna avantaj la job. Pentru un consultant inseamna inceputul unui serviciu vandabil.</p>
+        </div>
+
+        <div class="persona-shell">
+          <div class="persona-tabs" role="tablist" aria-label="Trasee workshop">
+            <button class="persona-tab is-active" type="button" role="tab" aria-selected="true" data-persona="owner">Am o afacere</button>
+            <button class="persona-tab" type="button" role="tab" aria-selected="false" data-persona="pro">Vreau avantaj la job</button>
+            <button class="persona-tab" type="button" role="tab" aria-selected="false" data-persona="consultant">Vreau servicii AI</button>
+          </div>
+
+          <div class="persona-content is-active" data-panel="owner" aria-hidden="false">
+            <div class="persona-copy">
+              <h3>Pentru owneri si soloprenori</h3>
+              <p>AI-ul nu trebuie sa fie inca un tool pe care il verifici tu. Trebuie sa preia bucati repetitive din business: lead-uri, follow-up, rapoarte, documente si cereri.</p>
+              <ul class="mini-list">
+                <li>Alegi procesele unde un agent AI poate economisi timp rapid.</li>
+                <li>Construiesti un workflow reutilizabil, cu reguli si verificare umana.</li>
+                <li>Inveti sa gandesti automatizarea prin ROI, risc si control.</li>
+              </ul>
+            </div>
+            <div class="persona-result">
+              <h3>Rezultat urmarit</h3>
+              <p>Pleci cu o harta clara de procese si cu primul agent sau workflow AI pe care il poti adapta in businessul tau.</p>
+            </div>
+          </div>
+
+          <div class="persona-content" data-panel="pro" aria-hidden="true">
+            <div class="persona-copy">
+              <h3>Pentru profesionisti la job</h3>
+              <p>Daca folosesti AI doar pentru texte, esti inca la suprafata. Avantajul real apare cand poti arata un workflow care economiseste ore si imbunatateste munca echipei.</p>
+              <ul class="mini-list">
+                <li>Construiesti un agent sau workflow pe rolul tau: sales, marketing, HR, operations, finance sau project management.</li>
+                <li>Inveti cum lucrezi corect cu date, verificare si acuratete.</li>
+                <li>Pregatesti un rezultat concret pe care il poti arata managerului sau echipei.</li>
+              </ul>
+            </div>
+            <div class="persona-result">
+              <h3>Rezultat urmarit</h3>
+              <p>Pleci cu un sistem de lucru demonstrabil, care te ajuta sa fii mai rapid, mai organizat si mai greu de ignorat.</p>
+            </div>
+          </div>
+
+          <div class="persona-content" data-panel="consultant" aria-hidden="true">
+            <div class="persona-copy">
+              <h3>Pentru consultanti si freelanceri</h3>
+              <p>Nu e suficient sa stii prompturi. Ca sa vinzi AI automation, ai nevoie de problema clara, demo credibil, oferta si pasi de livrare.</p>
+              <ul class="mini-list">
+                <li>Inveti sa gasesti procese repetitive care merita automatizate pentru clienti.</li>
+                <li>Construiesti un demo mic, dar suficient de clar ca sa creeze interes.</li>
+                <li>Iei un cadru simplu pentru oferta, discovery si handover.</li>
+              </ul>
+            </div>
+            <div class="persona-result">
+              <h3>Rezultat urmarit</h3>
+              <p>Pleci cu inceputul unui serviciu vandabil de AI automation: problema, demo, oferta si pasi de livrare.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-dark" id="program" aria-labelledby="program-title">
+      <div class="container">
+        <div class="section-heading">
+          <span class="section-kicker">Programul workshopului</span>
+          <h2 id="program-title">In 3 zile treci de la ChatGPT la prima ta echipa de agenti AI.</h2>
+          <p>Incepem cu primul agent, ii dam apoi browser si workflow, iar in ziua finala vezi cum lucreaza o echipa multi-agent: research, strategie, continut, verificare si plan de actiune.</p>
+        </div>
+
+        <div class="curriculum">
+          <article class="day-card">
+            <span class="day-label">Ziua 1</span>
+            <h3>Primul agent AI live</h3>
+            <p>Luam un business real si construim un agent care intelege contextul, publicul, oferta si outputul dorit.</p>
+            <ul>
+              <li>Claude Desktop ca workspace de agent</li>
+              <li>Rol, obiectiv, context, reguli, output</li>
+              <li>Primul rezultat: idei, oportunitati si procese de automatizat</li>
+            </ul>
+          </article>
+
+          <article class="day-card">
+            <span class="day-label">Ziua 2</span>
+            <h3>Agent cu browser si workflow</h3>
+            <p>Ii dam agentului acces la research: cauta, compara, extrage informatii si produce un output reutilizabil.</p>
+            <ul>
+              <li>Browser agent pentru research public</li>
+              <li>Input -> analiza -> verificare -> output</li>
+              <li>Cum alegi ce merita dus mai departe intr-un sistem real</li>
+            </ul>
+          </article>
+
+          <article class="day-card">
+            <span class="day-label">Ziua 3</span>
+            <h3>Echipa multi-agent in actiune</h3>
+            <p>Nu mai ai un singur agent. Ai researcher, strategist, copywriter, QA si project manager care lucreaza impreuna.</p>
+            <ul>
+              <li>Agenti specializati pe roluri</li>
+              <li>Strategie, continut, verificare si plan</li>
+              <li>Demo cu output cap-coada pentru un business real</li>
+            </ul>
+          </article>
+
+          <article class="day-card featured">
+            <span class="day-label">VIP</span>
+            <h3>Implementation Lab</h3>
+            <p>Alegi un proces din business, job sau portofoliu si il transformam intr-un plan concret de agent/workflow AI.</p>
+            <ul>
+              <li>Alegem primul agent care merita construit</li>
+              <li>Primesti feedback pe cazul tau</li>
+              <li>Pleci cu roadmap de implementare pe 7 zile</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt" aria-labelledby="toolkit-title">
+      <div class="container toolkit">
+        <div class="toolkit-visual" aria-hidden="true">
+          <div class="tool-card">
+            <strong>Free: 3 sesiuni live</strong>
+            <span>Demo-uri, harta de agenti si mini-checklist pentru primul proces.</span>
+          </div>
+          <div class="tool-card">
+            <strong>VIP: Implementation Lab</strong>
+            <span>Hot seats, feedback si roadmap pe cazul tau real.</span>
+          </div>
+          <div class="tool-card">
+            <strong>VIP kit extins</strong>
+            <span>Agent brief, browser workflow, roluri multi-agent si QA checklist.</span>
+          </div>
+        </div>
+        <div class="toolkit-copy">
+          <span class="section-kicker">Ce primesti</span>
+          <h2 id="toolkit-title">Free-ul iti arata ce e posibil. VIP-ul te ajuta sa aplici pe cazul tau.</h2>
+          <p>Varianta gratuita este intrarea in experienta: vezi demo-urile, intelegi mecanismul si pleci cu o harta simpla. VIP-ul este pentru cei care vor materiale complete, feedback si un plan clar de implementare.</p>
+          <div class="offer-compare" aria-label="Comparatie intre acces gratuit si VIP">
+            <div class="offer-tier">
+              <span>Free</span>
+              <h3>Workshop live</h3>
+              <ul>
+                <li>Acces live la cele 3 sesiuni principale.</li>
+                <li>Demo-uri cu agenti AI, browser si multi-agent.</li>
+                <li>Mini-checklist pentru alegerea primului proces.</li>
+              </ul>
+            </div>
+            <div class="offer-tier vip">
+              <span>VIP</span>
+              <h3>Implementation Lab</h3>
+              <ul>
+                <li>Sesiune extra pe cazuri reale si hot seats.</li>
+                <li>Replay-uri cu timestamp-uri si materiale extinse.</li>
+                <li>Roadmap de implementare pe 7 zile pentru cazul tau.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="outcome-title">
+      <div class="container">
+        <div class="section-heading">
+          <span class="section-kicker">Ce se schimba dupa workshop</span>
+          <h2 id="outcome-title">Nu mai vezi AI-ul ca pe un chat. Il vezi ca pe o echipa de lucru.</h2>
+        </div>
+
+        <div class="outcome-grid">
+          <article class="outcome-card">
+            <h3><span class="icon-box">01</span> Primul agent gandit corect</h3>
+            <p>Intelegi cum transformi o nevoie reala intr-un agent cu rol, context, reguli si output clar.</p>
+          </article>
+          <article class="outcome-card">
+            <h3><span class="icon-box">02</span> Un workflow pe care il poti adapta</h3>
+            <p>Pleci cu logica unui sistem reutilizabil: input, research, analiza, verificare si rezultat.</p>
+          </article>
+          <article class="outcome-card">
+            <h3><span class="icon-box">03</span> O harta pentru business, job sau clienti</h3>
+            <p>Stii ce merita construit prima data: economie de timp in business, avantaj la job sau demo vandabil pentru servicii AI.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section mentor-section" id="mentor" aria-labelledby="mentor-title">
+      <div class="container mentor-grid">
+        <div class="mentor-copy">
+          <span class="section-kicker">Cine te ghideaza</span>
+          <h2 id="mentor-title">Diferenta dintre un prompt simpatic si un sistem AI util? 15 ani de experienta in sisteme care nu au voie sa cada.</h2>
+          <p class="mentor-lead">Sunt Calin Florea, engineer cu 15+ ani in IT si sisteme enterprise. Am lucrat cu aplicatii, integrari si procese unde viteza, stabilitatea si acuratetea conteaza.</p>
+          <p>Acum folosesc aceeasi gandire pentru agenti AI, automatizari si workflow-uri care reduc munca repetitiva, nu doar produc raspunsuri frumoase. Am construit agenti AI autonomi pentru coding care pot analiza context, planifica pasi si implementa functionalitati cap-coada, reducand munca de zile la ore.</p>
+          <p>In paralel, imi aliniez practica de AI cu standardele Microsoft pentru cloud, agenti si automatizare. In workshop traduc zona asta pentru owneri, profesionisti si consultanti: clar, practic si aplicat pe nevoia ta.</p>
+
+          <div class="mentor-personas">
+            <div class="mentor-persona">
+              <strong>Pentru owneri</strong>
+              <span>Vezi cum alegi procese care economisesc timp, reduc haosul operational si pot deveni agenti AI utili.</span>
+            </div>
+            <div class="mentor-persona">
+              <strong>Pentru profesionisti</strong>
+              <span>Inveti sa devii omul care aduce sisteme AI in echipa, nu doar texte generate in ChatGPT.</span>
+            </div>
+            <div class="mentor-persona">
+              <strong>Pentru consultanti</strong>
+              <span>Inveti sa transformi AI automation intr-un demo, o oferta si un inceput de serviciu vandabil.</span>
+            </div>
+          </div>
+        </div>
+
+        <aside class="mentor-card" aria-label="Rezultate relevante din experienta">
+          <figure class="mentor-profile">
+            <img class="mentor-photo" src="mentor.jpeg" alt="Calin Florea">
+            <figcaption class="mentor-caption">
+              <div class="mentor-name">Calin Florea</div>
+              <div class="mentor-role">15+ ani in IT si sisteme enterprise</div>
+            </figcaption>
+          </figure>
+          <div class="impact-stack">
+            <div class="impact-card">
+              <div class="impact-value">Chat &rarr; agent</div>
+              <div>
+                <strong>Misiuni, nu conversatii</strong>
+                <span>Rol, context, reguli, tool-uri si criterii de verificare, ca AI-ul sa produca output repetabil.</span>
+              </div>
+            </div>
+            <div class="impact-card">
+              <div class="impact-value">Browser &rarr; research</div>
+              <div>
+                <strong>AI conectat la lume</strong>
+                <span>Agenti care pot naviga, compara informatii publice si transforma research-ul in decizii si continut.</span>
+              </div>
+            </div>
+            <div class="impact-card">
+              <div class="impact-value">Agent &rarr; echipa</div>
+              <div>
+                <strong>Orchestrare multi-agent</strong>
+                <span>Researcher, strategist, copywriter, QA si PM lucrand pe acelasi caz real, nu prompturi separate aruncate in chat.</span>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section section-alt" aria-labelledby="pricing-title">
+      <div class="container">
+        <div class="section-heading" style="margin-left: auto; margin-right: auto; text-align: center;">
+          <span class="section-kicker">Participare</span>
+          <h2 id="pricing-title">Poti intra gratuit. Dar daca vrei sa aplici pe cazul tau, VIP-ul e alegerea evidenta.</h2>
+          <p>Vezi demo-urile live in varianta gratuita. Cu VIP primesti replay-uri, materiale extinse si sesiunea in care lucram pe procese reale.</p>
+        </div>
+
+        <div class="pricing-grid">
+          <article class="price-card">
+            <h3>Workshop live</h3>
+            <div class="price">0 <span>EUR</span></div>
+            <ul class="mini-list">
+              <li>Acces live la cele 3 sesiuni principale.</li>
+              <li>Demo-uri live cu agenti AI, browser si multi-agent.</li>
+              <li>Mini-checklist pentru alegerea primului proces.</li>
+              <li>Formular de segmentare pentru exemple relevante.</li>
+            </ul>
+            <a class="btn btn-dark" href="#inscriere" data-plan="free">Particip gratuit</a>
+          </article>
+
+          <article class="price-card highlight">
+            <span class="price-badge">Recomandat</span>
+            <h3>VIP Implementation Lab</h3>
+            <div class="price">19 <span>EUR</span></div>
+            <ul class="mini-list">
+              <li>Tot ce este inclus in workshopul live.</li>
+              <li>Replay-uri cu timestamp-uri, ca sa poti reveni la demo-uri.</li>
+              <li>Implementation Lab cu hot seats pe cazuri reale.</li>
+              <li>VIP Agent Workbook: brief, workflow, roluri multi-agent si QA.</li>
+              <li>Roadmap de implementare pe 7 zile pentru cazul tau.</li>
+              <li>Prioritate la intrebari in sesiunile live.</li>
+            </ul>
+            <a class="btn btn-primary" href="#inscriere" data-plan="vip">Vreau acces VIP</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-dark" id="inscriere" aria-labelledby="signup-title">
+      <div class="container form-band">
+        <div>
+          <span class="section-kicker">Inscriere segmentata</span>
+          <h2 id="signup-title">Rezerva locul si spune-ne pe ce traseu intri.</h2>
+          <p>Primul pas ramane scurt: nume, email, telefon si traseu. Dupa rezervare trimitem onboarding-ul rapid ca sa alegem exemplele potrivite pentru tine.</p>
+          <div class="signup-steps" aria-label="Pasi inscriere">
+            <div class="signup-step">
+              <strong>1. Rezervi locul</strong>
+              <span>Alegi gratuit sau VIP si primesti linkul pe email plus reminder pe WhatsApp.</span>
+            </div>
+            <div class="signup-step">
+              <strong>2. Raspunzi la onboarding</strong>
+              <span>Doua-trei intrebari scurte despre ce vrei sa automatizezi.</span>
+            </div>
+          </div>
+        </div>
+        <form class="signup-form" id="signupForm">
+          <div class="field-grid">
+            <div class="field">
+              <label for="name">Nume</label>
+              <input id="name" name="name" autocomplete="name" placeholder="Numele tau" required>
+            </div>
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" autocomplete="email" placeholder="email@exemplu.ro" required>
+            </div>
+          </div>
+
+          <div class="field-grid">
+            <div class="field full">
+              <label for="phone">Telefon / WhatsApp pentru reminder</label>
+              <input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="07xx xxx xxx" required>
+              <span class="field-hint">Trimitem linkul si reminderul inainte de sesiuni. Fara spam.</span>
+            </div>
+          </div>
+
+          <div class="field full">
+            <label>Alege traseul tau</label>
+            <div class="plan-selector persona-selector" role="radiogroup" aria-label="Alege traseul tau">
+              <label class="plan-choice">
+                <input type="radio" name="persona" value="business" checked required>
+                <span class="plan-choice-body">
+                  <strong>Am o afacere</strong>
+                  <small>Vreau agenti AI pentru procese, marketing, lead-uri sau operatiuni.</small>
+                </span>
+              </label>
+              <label class="plan-choice">
+                <input type="radio" name="persona" value="job">
+                <span class="plan-choice-body">
+                  <strong>Vreau avantaj la job</strong>
+                  <small>Vreau sa folosesc AI ca sa lucrez mai rapid si mai vizibil.</small>
+                </span>
+              </label>
+              <label class="plan-choice">
+                <input type="radio" name="persona" value="consultant">
+                <span class="plan-choice-body">
+                  <strong>Vreau servicii AI</strong>
+                  <small>Vreau sa construiesc demo-uri si oferte pentru clienti.</small>
+                </span>
+              </label>
+              <label class="plan-choice">
+                <input type="radio" name="persona" value="explorare">
+                <span class="plan-choice-body">
+                  <strong>Inca explorez</strong>
+                  <small>Vreau sa inteleg ce pot face agentii AI pentru mine.</small>
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <div class="field full">
+            <label>Aleg accesul</label>
+            <div class="plan-selector" role="radiogroup" aria-label="Aleg accesul">
+              <label class="plan-choice">
+                <input type="radio" name="access" value="free">
+                <span class="plan-choice-body">
+                  <strong>Workshop gratuit</strong>
+                  <small>3 sesiuni live, demo-uri si mini-checklist pentru primul proces.</small>
+                </span>
+              </label>
+              <label class="plan-choice">
+                <input type="radio" name="access" value="vip" checked>
+                <span class="plan-choice-body">
+                  <strong>VIP Implementation Lab - 19 EUR</strong>
+                  <em>Recomandat</em>
+                  <small>Replay-uri, workbook, hot seats si roadmap pe cazul tau.</small>
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <button class="btn btn-primary" id="signupSubmit" type="submit">Continua cu acces VIP &rarr;</button>
+          <p class="form-note" id="formNote" aria-live="polite"></p>
+          <div class="next-step-panel" id="nextStepPanel" hidden>
+            <h3 id="nextStepTitle">Urmatorul pas</h3>
+            <p id="nextStepText"></p>
+            <div class="next-step-actions" id="nextStepActions"></div>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section class="section section-alt onboarding-section" id="onboarding" aria-labelledby="onboarding-title" hidden>
+      <div class="container onboarding-card">
+        <div>
+          <span class="section-kicker">Onboarding rapid</span>
+          <h2 id="onboarding-title">Spune-ne ce caz vrei sa aducem mai aproape de workshop.</h2>
+          <p>Raspunsurile astea ne ajuta sa alegem exemple, hot seats si follow-up-uri relevante. Pentru VIP, ele devin baza roadmap-ului de implementare pe 7 zile.</p>
+        </div>
+
+        <form class="signup-form" id="onboardingForm">
+          <div class="field">
+            <label for="automationIdea">Ce ai vrea sa automatizezi prima data?</label>
+            <textarea id="automationIdea" name="automationIdea" placeholder="Ex: follow-up lead-uri, research concurenta, calendar social media, rapoarte, documente..." required></textarea>
+          </div>
+          <div class="field-grid">
+            <div class="field">
+              <label for="currentTools">Ce tool-uri folosesti acum?</label>
+              <input id="currentTools" name="currentTools" placeholder="ChatGPT, Claude, Excel, CRM, Notion...">
+            </div>
+            <div class="field">
+              <label for="publicLink">Link relevant, daca exista</label>
+              <input id="publicLink" name="publicLink" type="url" placeholder="Site, profil social, pagina produs...">
+            </div>
+          </div>
+          <div class="field">
+            <label for="desiredOutcome">Cum ar arata un rezultat bun dupa 7 zile?</label>
+            <textarea id="desiredOutcome" name="desiredOutcome" placeholder="Ex: un agent care pregateste postari, un raport saptamanal, un demo pentru clienti..." required></textarea>
+          </div>
+          <button class="btn btn-primary" type="submit">Trimite onboardingul &rarr;</button>
+          <p class="form-note" id="onboardingNote" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="faq-title">
+      <div class="container">
+        <div class="section-heading">
+          <span class="section-kicker">Intrebari frecvente</span>
+          <h2 id="faq-title">Intrebarile care apar inainte sa intri in lumea agentilor AI.</h2>
+        </div>
+
+        <div class="faq-grid">
+          <article class="faq-item">
+            <h3>Trebuie sa stiu programare?</h3>
+            <p>Nu. Workshopul este construit pentru oameni non-tehnici. Cand apar Claude Desktop, browser agent, MCP sau multi-agent, le explicam prin demo-uri si cazuri concrete.</p>
+          </article>
+          <article class="faq-item">
+            <h3>Daca folosesc AI doar ocazional?</h3>
+            <p>Este suficient. Pornim de la diferenta dintre chat, workflow si agent, apoi urcam spre agent cu browser si echipa multi-agent.</p>
+          </article>
+          <article class="faq-item">
+            <h3>Daca nu am business?</h3>
+            <p>Este relevant si pentru job. Poti aplica logica pe research, rapoarte, documente, emailuri, organizare sau procese repetitive din echipa.</p>
+          </article>
+          <article class="faq-item">
+            <h3>Pot invata sa vand servicii?</h3>
+            <p>Da, mai ales daca esti consultant sau freelancer. Incepem realist: problema clara, demo mic, oferta simpla si limite sanatoase de livrare.</p>
+          </article>
+          <article class="faq-item">
+            <h3>De ce sa aleg VIP daca pot intra gratuit?</h3>
+            <p>Gratuit vezi sesiunile live si demo-urile. VIP adauga replay-uri, workbook, Implementation Lab, hot seats si roadmap pe cazul tau.</p>
+          </article>
+          <article class="faq-item">
+            <h3>Trebuie sa am deja o idee de agent AI?</h3>
+            <p>Nu. Tocmai asta clarificam: alegem procesul unde AI-ul merita folosit prima data, in functie de business, job sau servicii pentru clienti.</p>
+          </article>
+          <article class="faq-item">
+            <h3>Daca nu pot participa live?</h3>
+            <p>Varianta gratuita este gandita pentru prezenta live. Daca vrei sa revii la demo-uri, VIP include replay-uri cu timestamp-uri.</p>
+          </article>
+          <article class="faq-item">
+            <h3>Este ca workshopurile cu promisiuni de autopilot?</h3>
+            <p>Nu vindem ideea ca automatizezi tot peste noapte. Vezi agenti AI spectaculosi, dar ii construim cu reguli, verificare si aplicare realista.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-row">
+      <span>AI Automation Zero to Hero</span>
+      <span>Workshop live despre automatizari AI practice.</span>
+    </div>
+  </footer>
+
+  <script>
+    const tabs = document.querySelectorAll(".persona-tab");
+    const panels = document.querySelectorAll(".persona-content");
+
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        const target = tab.dataset.persona;
+        tabs.forEach((item) => {
+          item.classList.toggle("is-active", item === tab);
+          item.setAttribute("aria-selected", item === tab ? "true" : "false");
+        });
+        panels.forEach((panel) => {
+          const isActive = panel.dataset.panel === target;
+          panel.classList.toggle("is-active", isActive);
+          panel.setAttribute("aria-hidden", isActive ? "false" : "true");
+        });
+      });
+    });
+
+    const form = document.querySelector("#signupForm");
+    const note = document.querySelector("#formNote");
+    const submitButton = document.querySelector("#signupSubmit");
+    const nextStepPanel = document.querySelector("#nextStepPanel");
+    const nextStepTitle = document.querySelector("#nextStepTitle");
+    const nextStepText = document.querySelector("#nextStepText");
+    const nextStepActions = document.querySelector("#nextStepActions");
+    const onboardingSection = document.querySelector("#onboarding");
+    const onboardingForm = document.querySelector("#onboardingForm");
+    const onboardingNote = document.querySelector("#onboardingNote");
+    const planInputs = document.querySelectorAll('input[name="access"]');
+    const planLinks = document.querySelectorAll("[data-plan]");
+    const LEAD_ENDPOINT = "";
+    const ONBOARDING_ENDPOINT = "";
+    const VIP_CHECKOUT_URL = "";
+    const DEMO_CHECKOUT_MODE = !VIP_CHECKOUT_URL;
+
+    const makeId = (prefix) => {
+      if (window.crypto && typeof window.crypto.randomUUID === "function") {
+        return window.crypto.randomUUID();
+      }
+      return `${prefix}_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+    };
+
+    const getQueryParams = () => Object.fromEntries(new URLSearchParams(window.location.search).entries());
+
+    const saveLocalRecord = (key, record) => {
+      try {
+        const existing = JSON.parse(window.localStorage.getItem(key) || "[]");
+        existing.push(record);
+        window.localStorage.setItem(key, JSON.stringify(existing));
+      } catch (error) {
+        console.warn("Nu am putut salva local recordul.", error);
+      }
+    };
+
+    const postJson = async (endpoint, payload) => {
+      if (!endpoint) return { skipped: true };
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      return { ok: response.ok, status: response.status };
+    };
+
+    const collectSignupPayload = (status) => {
+      const formData = new FormData(form);
+      const payload = Object.fromEntries(formData.entries());
+      payload.leadId = makeId("lead");
+      payload.status = status;
+      payload.createdAt = new Date().toISOString();
+      payload.pageUrl = window.location.href;
+      payload.utm = getQueryParams();
+      return payload;
+    };
+
+    const getCheckoutUrl = (payload) => {
+      if (!VIP_CHECKOUT_URL) return "";
+      const url = new URL(VIP_CHECKOUT_URL, window.location.href);
+      url.searchParams.set("lead_id", payload.leadId);
+      url.searchParams.set("email", payload.email || "");
+      url.searchParams.set("phone", payload.phone || "");
+      url.searchParams.set("persona", payload.persona || "");
+      url.searchParams.set("access", "vip");
+      return url.toString();
+    };
+
+    const getThankYouUrl = (payload, access, extraParams = {}) => {
+      const url = new URL("thank-you.html", window.location.href);
+      url.searchParams.set("access", access);
+      url.searchParams.set("lead_id", payload.leadId);
+      if (payload.email) url.searchParams.set("email", payload.email);
+      Object.entries(extraParams).forEach(([key, value]) => {
+        url.searchParams.set(key, value);
+      });
+      return url.toString();
+    };
+
+    const showOnboarding = () => {
+      onboardingSection.hidden = false;
+      onboardingSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+
+    const setNextStep = ({ title, text, actions }) => {
+      nextStepTitle.textContent = title;
+      nextStepText.textContent = text;
+      nextStepActions.innerHTML = actions;
+      nextStepPanel.hidden = false;
+    };
+
+    const showFreeConfirmation = (payload) => {
+      if (payload?.leadId) {
+        window.location.href = getThankYouUrl(payload, "free");
+        return;
+      }
+
+      setNextStep({
+        title: "Locul gratuit este rezervat.",
+        text: "Vei primi linkul si reminderul pe email si WhatsApp. Daca vrei replay-uri, workbook si lab pe cazul tau, poti face upgrade la VIP.",
+        actions: `
+          <button class="btn btn-primary" type="button" data-upgrade-vip>Fa upgrade la VIP - 19 EUR</button>
+          <button class="btn btn-secondary" type="button" data-open-onboarding>Completeaza onboardingul</button>
+        `
+      });
+    };
+
+    const showVipNextStep = (payload, checkoutUrl) => {
+      if (checkoutUrl) {
+        setNextStep({
+          title: "Te trimitem catre plata VIP.",
+          text: "Am salvat datele tale. Dupa plata de 19 EUR revii la onboardingul pentru cazul tau.",
+          actions: `<a class="btn btn-primary" href="${checkoutUrl}">Continua la plata VIP - 19 EUR</a>`
+        });
+        window.location.href = checkoutUrl;
+        return;
+      }
+
+      if (DEMO_CHECKOUT_MODE) {
+        window.location.href = getThankYouUrl(payload, "vip", { payment: "success", demo: "1" });
+        return;
+      }
+
+      setNextStep({
+        title: "Cererea VIP este salvata.",
+        text: "Urmatorul pas este confirmarea accesului VIP de 19 EUR. Cand conectam procesatorul, acest pas va deschide automat checkout-ul.",
+        actions: `
+          <button class="btn btn-primary" type="button" data-open-onboarding>Completeaza onboardingul VIP</button>
+          <button class="btn btn-secondary" type="button" data-switch-free>Schimba pe gratuit</button>
+        `
+      });
+    };
+
+    const showPaidVipConfirmation = () => {
+      setSelectedPlan("vip");
+      setNextStep({
+        title: "Accesul VIP este confirmat.",
+        text: "Urmatorul pas este onboardingul rapid, ca sa stim ce proces sau agent AI vrei sa lucram mai aproape de cazul tau.",
+        actions: `<button class="btn btn-primary" type="button" data-open-onboarding>Completeaza onboardingul VIP</button>`
+      });
+      showOnboarding();
+    };
+
+    const updatePlanCopy = () => {
+      const selectedPlan = document.querySelector('input[name="access"]:checked')?.value || "vip";
+      submitButton.textContent = selectedPlan === "vip" ? "Continua cu acces VIP \u2192" : "Rezerva loc gratuit \u2192";
+      note.textContent = "";
+    };
+
+    const setSelectedPlan = (plan) => {
+      const input = document.querySelector(`input[name="access"][value="${plan}"]`);
+      if (!input) return;
+      input.checked = true;
+      updatePlanCopy();
+    };
+
+    planInputs.forEach((input) => {
+      input.addEventListener("change", updatePlanCopy);
+    });
+
+    planLinks.forEach((link) => {
+      link.addEventListener("click", () => {
+        setSelectedPlan(link.dataset.plan);
+      });
+    });
+
+    nextStepActions.addEventListener("click", (event) => {
+      if (event.target.closest("[data-upgrade-vip]")) {
+        setSelectedPlan("vip");
+        form.requestSubmit();
+      }
+      if (event.target.closest("[data-switch-free]")) {
+        setSelectedPlan("free");
+        showFreeConfirmation();
+      }
+      if (event.target.closest("[data-open-onboarding]")) {
+        showOnboarding();
+      }
+    });
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const selectedPlan = document.querySelector('input[name="access"]:checked')?.value || "vip";
+      const status = selectedPlan === "vip" ? "vip_intent" : "free_registered";
+      const payload = collectSignupPayload(status);
+
+      submitButton.disabled = true;
+      submitButton.textContent = "Se salveaza...";
+      note.textContent = "";
+
+      saveLocalRecord("aiwebinar_leads", payload);
+
+      try {
+        await postJson(LEAD_ENDPOINT, payload);
+      } catch (error) {
+        console.warn("Lead endpoint indisponibil.", error);
+      }
+
+      if (selectedPlan === "vip") {
+        note.textContent = "Perfect. Am salvat intentia VIP.";
+        showVipNextStep(payload, getCheckoutUrl(payload));
+      } else {
+        note.textContent = "Locul gratuit este rezervat.";
+        showFreeConfirmation(payload);
+      }
+
+      submitButton.disabled = false;
+      updatePlanCopy();
+    });
+
+    onboardingForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const payload = Object.fromEntries(new FormData(onboardingForm).entries());
+      payload.onboardingId = makeId("onboarding");
+      payload.createdAt = new Date().toISOString();
+      payload.signupEmail = form.elements.email?.value || "";
+      payload.signupPhone = form.elements.phone?.value || "";
+      payload.access = document.querySelector('input[name="access"]:checked')?.value || "vip";
+      payload.persona = document.querySelector('input[name="persona"]:checked')?.value || "";
+
+      saveLocalRecord("aiwebinar_onboarding", payload);
+
+      try {
+        await postJson(ONBOARDING_ENDPOINT, payload);
+      } catch (error) {
+        console.warn("Onboarding endpoint indisponibil.", error);
+      }
+
+      onboardingNote.textContent = "Multumim. Am salvat onboardingul si il folosim pentru exemplele din workshop.";
+    });
+
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("payment") === "vip_success" || params.get("vip") === "success") {
+      const url = new URL("thank-you.html", window.location.href);
+      url.searchParams.set("access", "vip");
+      url.searchParams.set("payment", "success");
+      window.location.href = url.toString();
+    }
+
+    updatePlanCopy();
+
+    const canvas = document.querySelector("#systemCanvas");
+    const ctx = canvas.getContext("2d");
+    const pointer = { x: 0.5, y: 0.5 };
+    const nodes = [
+      { x: 0.12, y: 0.28, label: "Lead" },
+      { x: 0.28, y: 0.18, label: "Email" },
+      { x: 0.46, y: 0.32, label: "Agent" },
+      { x: 0.66, y: 0.22, label: "CRM" },
+      { x: 0.82, y: 0.36, label: "Raport" },
+      { x: 0.22, y: 0.66, label: "Brief" },
+      { x: 0.48, y: 0.72, label: "Verificare" },
+      { x: 0.76, y: 0.68, label: "Output" }
+    ];
+    const links = [[0, 2], [1, 2], [2, 3], [3, 4], [5, 6], [6, 7], [2, 6], [0, 5]];
+
+    function resizeCanvas() {
+      const rect = canvas.getBoundingClientRect();
+      const ratio = window.devicePixelRatio || 1;
+      canvas.width = Math.floor(rect.width * ratio);
+      canvas.height = Math.floor(rect.height * ratio);
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    }
+
+    function draw(time) {
+      const width = canvas.clientWidth;
+      const height = canvas.clientHeight;
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = "#151512";
+      ctx.fillRect(0, 0, width, height);
+
+      const driftX = (pointer.x - 0.5) * 24;
+      const driftY = (pointer.y - 0.5) * 18;
+
+      links.forEach(([from, to], index) => {
+        const a = nodes[from];
+        const b = nodes[to];
+        const ax = a.x * width + driftX * (index % 2 ? 0.3 : -0.2);
+        const ay = a.y * height + driftY * 0.25;
+        const bx = b.x * width + driftX * 0.16;
+        const by = b.y * height + driftY * (index % 2 ? -0.2 : 0.2);
+
+        ctx.strokeStyle = "rgba(247, 243, 233, 0.16)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(ax, ay);
+        ctx.lineTo(bx, by);
+        ctx.stroke();
+
+        const progress = ((time / 1600) + index * 0.18) % 1;
+        const px = ax + (bx - ax) * progress;
+        const py = ay + (by - ay) * progress;
+        ctx.fillStyle = index % 3 === 0 ? "#d96f55" : index % 3 === 1 ? "#2f7d7a" : "#b8954c";
+        ctx.beginPath();
+        ctx.arc(px, py, 3, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      nodes.forEach((node, index) => {
+        const pulse = Math.sin(time / 900 + index) * 3;
+        const x = node.x * width + driftX * (index % 2 ? 0.3 : -0.2);
+        const y = node.y * height + driftY * (index % 2 ? -0.22 : 0.2);
+        const w = 92;
+        const h = 40;
+
+        ctx.fillStyle = "rgba(255, 255, 255, 0.08)";
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.18)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.roundRect(x - w / 2, y - h / 2, w, h, 8);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = index === 2 ? "#d96f55" : "#f7f3e9";
+        ctx.font = "700 12px Inter, system-ui, sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(node.label, x, y + pulse * 0.15);
+      });
+
+      requestAnimationFrame(draw);
+    }
+
+    window.addEventListener("resize", resizeCanvas);
+    window.addEventListener("pointermove", (event) => {
+      pointer.x = event.clientX / window.innerWidth;
+      pointer.y = event.clientY / window.innerHeight;
+    });
+
+    resizeCanvas();
+    requestAnimationFrame(draw);
+  </script>
+</body>
+</html>
