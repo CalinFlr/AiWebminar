@@ -7,6 +7,7 @@ export async function onRequestGet({ env }) {
     stripePaymentLinkConfigured: Boolean(env.STRIPE_PAYMENT_LINK_URL),
     whatsappFreeGroupUrl: env.WHATSAPP_FREE_GROUP_URL || "",
     whatsappFreeGroupConfigured: Boolean(env.WHATSAPP_FREE_GROUP_URL),
+    opsWebhookConfigured: Boolean(env.GOOGLE_OPS_WEBHOOK_URL || env.MAKE_LEAD_WEBHOOK_URL),
     ga4MeasurementId: env.GA4_MEASUREMENT_ID || "",
     metaPixelId: env.META_PIXEL_ID || "",
     workshopStatus: env.WORKSHOP_STATUS || "tbd",

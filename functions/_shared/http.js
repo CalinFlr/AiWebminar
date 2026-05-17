@@ -48,6 +48,103 @@ export async function postWebhook(url, payload) {
   };
 }
 
+async function hmacHex(secret, message) {
+  const encoder = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    "raw",
+    encoder.encode(secret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"]
+  );
+  const signature = await crypto.subtle.sign("HMAC", key, encoder.encode(message));
+  return [...new Uint8Array(signature)]
+    .map((byte) => byte.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+function publicWebhookResponse(body, text) {
+  if (body && typeof body === "object") {
+    return {
+      ok: body.ok === true,
+      error: body.error || "",
+      type: body.type || "",
+      row: body.row || "",
+      sheet: body.sheet || "",
+      emailStatus: body.emailStatus || ""
+    };
+  }
+
+  return {
+    ok: false,
+    error: "invalid_json_response",
+    text: String(text || "").slice(0, 300)
+  };
+}
+
+export async function postSignedOpsWebhook({ url, secret, type, record }) {
+  if (!url) {
+    return { provider: "apps_script", ok: false, skipped: true, error: "apps_script_webhook_not_configured" };
+  }
+
+  if (!secret) {
+    return { provider: "apps_script", ok: false, error: "apps_script_secret_not_configured" };
+  }
+
+  const envelope = {
+    type,
+    sentAt: new Date().toISOString(),
+    nonce: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
+    record
+  };
+  const signedPayload = JSON.stringify(envelope);
+  const signature = await hmacHex(secret, signedPayload);
+  const response = await fetch(url, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ signedPayload, signature })
+  });
+  const text = await response.text();
+  let body = null;
+
+  try {
+    body = text ? JSON.parse(text) : null;
+  } catch (error) {
+    body = null;
+  }
+
+  const webhookResponse = publicWebhookResponse(body, text);
+  return {
+    provider: "apps_script",
+    ok: response.ok && webhookResponse.ok,
+    status: response.status,
+    response: webhookResponse
+  };
+}
+
+export async function postOpsWebhook(env, type, record, makeUrl) {
+  if (env.GOOGLE_OPS_WEBHOOK_URL) {
+    return postSignedOpsWebhook({
+      url: env.GOOGLE_OPS_WEBHOOK_URL,
+      secret: env.GOOGLE_OPS_WEBHOOK_SECRET,
+      type,
+      record
+    });
+  }
+
+  if (makeUrl) {
+    const make = await postWebhook(makeUrl, record);
+    return {
+      provider: "make",
+      ok: make.ok,
+      status: make.status,
+      skipped: make.skipped === true
+    };
+  }
+
+  return { provider: "none", ok: false, skipped: true, error: "ops_webhook_not_configured" };
+}
+
 export function getBaseUrl(request, env) {
   if (env.PUBLIC_SITE_URL) {
     return env.PUBLIC_SITE_URL.replace(/\/+$/, "");

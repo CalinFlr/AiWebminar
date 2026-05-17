@@ -1,4 +1,4 @@
-import { json, methodNotAllowed, postWebhook } from "../_shared/http.js";
+import { json, methodNotAllowed, postOpsWebhook } from "../_shared/http.js";
 
 function parseStripeSignature(header) {
   return String(header || "").split(",").reduce((acc, item) => {
@@ -129,23 +129,21 @@ export async function onRequestPost({ request, env }) {
     "checkout.session.async_payment_failed"
   ]);
 
-  let make = { skipped: true };
+  let ops = { skipped: true };
   if (handledEvents.has(event.type)) {
     const session = event.data?.object || {};
     const validationError = validateCheckoutSession(session, env);
     if (validationError) {
       return json({ ok: true, received: true, handled: false, ignoredReason: validationError });
     }
-    if (!env.MAKE_PAYMENT_WEBHOOK_URL) {
-      return json({ ok: false, error: "make_payment_webhook_not_configured" }, { status: 503 });
-    }
-    make = await postWebhook(env.MAKE_PAYMENT_WEBHOOK_URL, paymentRecordFromEvent(event));
-    if (!make.ok) {
-      return json({ ok: false, error: "make_payment_webhook_failed", make }, { status: 502 });
+    ops = await postOpsWebhook(env, "payment", paymentRecordFromEvent(event), env.MAKE_PAYMENT_WEBHOOK_URL);
+    if (!ops.ok) {
+      const status = ops.skipped || String(ops.error || "").includes("not_configured") ? 503 : 502;
+      return json({ ok: false, error: ops.error || "payment_webhook_failed", ops }, { status });
     }
   }
 
-  return json({ ok: true, received: true, handled: handledEvents.has(event.type), make });
+  return json({ ok: true, received: true, handled: handledEvents.has(event.type), ops });
 }
 
 export async function onRequestGet() {

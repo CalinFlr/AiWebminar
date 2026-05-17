@@ -1,4 +1,4 @@
-import { cleanEmail, cleanEnum, cleanLongText, cleanText, cleanUrl, json, methodNotAllowed, postWebhook, readJson } from "../_shared/http.js";
+import { cleanEmail, cleanEnum, cleanLongText, cleanText, cleanUrl, json, methodNotAllowed, postOpsWebhook, readJson } from "../_shared/http.js";
 
 function normalizeOnboarding(payload) {
   return {
@@ -40,27 +40,21 @@ export async function onRequestPost({ request, env }) {
     serverReceivedAt: new Date().toISOString()
   };
 
-  if (!env.MAKE_ONBOARDING_WEBHOOK_URL) {
+  const opsResult = await postOpsWebhook(env, "onboarding", record, env.MAKE_ONBOARDING_WEBHOOK_URL);
+  if (!opsResult.ok) {
+    const status = opsResult.skipped || String(opsResult.error || "").includes("not_configured") ? 503 : 502;
     return json({
       ok: false,
-      error: "make_onboarding_webhook_not_configured",
-      message: "Sistemul de onboarding nu este configurat inca."
-    }, { status: 503 });
-  }
-
-  const makeResult = await postWebhook(env.MAKE_ONBOARDING_WEBHOOK_URL, record);
-  if (!makeResult.ok) {
-    return json({
-      ok: false,
-      error: "make_onboarding_webhook_failed",
-      make: makeResult
-    }, { status: 502 });
+      error: opsResult.error || "onboarding_webhook_failed",
+      message: "Sistemul de onboarding nu este configurat inca.",
+      ops: opsResult
+    }, { status });
   }
 
   return json({
     ok: true,
     onboardingId: payload.onboardingId,
-    make: makeResult
+    ops: opsResult
   });
 }
 
