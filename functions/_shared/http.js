@@ -36,16 +36,24 @@ export async function postWebhook(url, payload) {
     return { skipped: true };
   }
 
-  const response = await fetch(url, {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify(payload)
-  });
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload)
+    });
 
-  return {
-    ok: response.ok,
-    status: response.status
-  };
+    return {
+      ok: response.ok,
+      status: response.status
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      error: "webhook_fetch_failed",
+      message: String(error && error.message ? error.message : error).slice(0, 200)
+    };
+  }
 }
 
 async function hmacHex(secret, message) {
@@ -71,7 +79,8 @@ function publicWebhookResponse(body, text) {
       type: body.type || "",
       row: body.row || "",
       sheet: body.sheet || "",
-      emailStatus: body.emailStatus || ""
+      emailStatus: body.emailStatus || "",
+      duplicate: body.duplicate === true
     };
   }
 
@@ -99,12 +108,25 @@ export async function postSignedOpsWebhook({ url, secret, type, record }) {
   };
   const signedPayload = JSON.stringify(envelope);
   const signature = await hmacHex(secret, signedPayload);
-  const response = await fetch(url, {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify({ signedPayload, signature })
-  });
-  const text = await response.text();
+  let response;
+  let text = "";
+
+  try {
+    response = await fetch(url, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ signedPayload, signature })
+    });
+    text = await response.text();
+  } catch (error) {
+    return {
+      provider: "apps_script",
+      ok: false,
+      error: "apps_script_fetch_failed",
+      message: String(error && error.message ? error.message : error).slice(0, 200)
+    };
+  }
+
   let body = null;
 
   try {
@@ -138,6 +160,8 @@ export async function postOpsWebhook(env, type, record, makeUrl) {
       provider: "make",
       ok: make.ok,
       status: make.status,
+      error: make.error || "",
+      message: make.message || "",
       skipped: make.skipped === true
     };
   }
@@ -159,13 +183,17 @@ export function buildPaymentLink(paymentLinkUrl, payload) {
     return "";
   }
 
-  const url = new URL(paymentLinkUrl);
-  if (payload.leadId) {
-    url.searchParams.set("client_reference_id", payload.leadId);
-    url.searchParams.set("lead_id", payload.leadId);
-  }
+  try {
+    const url = new URL(paymentLinkUrl);
+    if (payload.leadId) {
+      url.searchParams.set("client_reference_id", payload.leadId);
+      url.searchParams.set("lead_id", payload.leadId);
+    }
 
-  return url.toString();
+    return url.toString();
+  } catch (error) {
+    return "";
+  }
 }
 
 export function normalizePhone(phone = "") {

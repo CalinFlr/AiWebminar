@@ -2138,10 +2138,15 @@
     const getCheckoutUrl = (payload, fallbackUrl = "") => {
       const rawUrl = fallbackUrl || publicConfig.stripePaymentLinkUrl || "";
       if (!rawUrl) return "";
-      const url = new URL(rawUrl, window.location.href);
-      url.searchParams.set("client_reference_id", payload.leadId);
-      url.searchParams.set("lead_id", payload.leadId);
-      return url.toString();
+      try {
+        const url = new URL(rawUrl, window.location.href);
+        url.searchParams.set("client_reference_id", payload.leadId);
+        url.searchParams.set("lead_id", payload.leadId);
+        return url.toString();
+      } catch (error) {
+        console.warn("Stripe Payment Link invalid.", error);
+        return "";
+      }
     };
 
     const getThankYouUrl = (payload, access, extraParams = {}) => {

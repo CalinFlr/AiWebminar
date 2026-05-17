@@ -148,7 +148,19 @@ function handleLead(record) {
     opsProcessedAt: now,
     emailStatus: "pending"
   });
-  var row = appendRecord("Leads", rowRecord);
+  var appendResult = appendRecordOnce("Leads", rowRecord, "leadId", rowRecord.leadId);
+  if (appendResult.duplicate) {
+    return {
+      ok: true,
+      type: "lead",
+      sheet: "Leads",
+      row: appendResult.row,
+      duplicate: true,
+      emailStatus: "duplicate_skipped"
+    };
+  }
+
+  var row = appendResult.row;
   var emailStatus = sendLeadEmail(rowRecord);
   updateCell("Leads", row, "emailStatus", emailStatus);
   appendReminderRows(rowRecord);
@@ -166,13 +178,14 @@ function handleOnboarding(record) {
   var rowRecord = Object.assign({}, record, {
     opsProcessedAt: new Date().toISOString()
   });
-  var row = appendRecord("Onboarding", rowRecord);
+  var appendResult = appendRecordOnce("Onboarding", rowRecord, "onboardingId", rowRecord.onboardingId);
 
   return {
     ok: true,
     type: "onboarding",
     sheet: "Onboarding",
-    row: row,
+    row: appendResult.row,
+    duplicate: appendResult.duplicate,
     emailStatus: "not_applicable"
   };
 }
@@ -183,7 +196,19 @@ function handlePayment(record) {
     emailStatus: "pending",
     oblioInvoiceStatus: "de_emis"
   });
-  var row = appendRecord("Payments", rowRecord);
+  var appendResult = appendRecordOnce("Payments", rowRecord, "eventId", rowRecord.eventId);
+  if (appendResult.duplicate) {
+    return {
+      ok: true,
+      type: "payment",
+      sheet: "Payments",
+      row: appendResult.row,
+      duplicate: true,
+      emailStatus: "duplicate_skipped"
+    };
+  }
+
+  var row = appendResult.row;
   var emailStatus = sendVipEmail(rowRecord);
   updateCell("Payments", row, "emailStatus", emailStatus);
 
@@ -211,6 +236,50 @@ function appendRecord(sheetName, record) {
   } finally {
     lock.releaseLock();
   }
+}
+
+function appendRecordOnce(sheetName, record, keyColumn, keyValue) {
+  var lock = LockService.getScriptLock();
+  lock.waitLock(5000);
+
+  try {
+    var columns = SHEET_COLUMNS[sheetName];
+    var sheet = getOrCreateSheet(sheetName, columns);
+    var existingRow = keyValue ? findRowByColumn(sheet, columns, keyColumn, keyValue) : 0;
+    if (existingRow) {
+      return { row: existingRow, duplicate: true };
+    }
+
+    var row = columns.map(function(column) {
+      return safeCell(record[column]);
+    });
+    sheet.appendRow(row);
+    return { row: sheet.getLastRow(), duplicate: false };
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function findRowByColumn(sheet, columns, keyColumn, keyValue) {
+  var columnIndex = columns.indexOf(keyColumn);
+  if (columnIndex === -1) {
+    return 0;
+  }
+
+  var lastRow = sheet.getLastRow();
+  if (lastRow < 2) {
+    return 0;
+  }
+
+  var normalizedKey = String(keyValue);
+  var values = sheet.getRange(2, columnIndex + 1, lastRow - 1, 1).getValues();
+  for (var index = 0; index < values.length; index += 1) {
+    if (String(values[index][0]) === normalizedKey) {
+      return index + 2;
+    }
+  }
+
+  return 0;
 }
 
 function appendReminderRows(record) {

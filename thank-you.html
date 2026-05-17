@@ -537,7 +537,7 @@
 
     const params = new URLSearchParams(window.location.search);
     const sessionId = params.get("session_id") || "";
-    const requestedVip = params.get("access") === "vip" || Boolean(sessionId) || params.get("payment") === "success";
+    const requestedVip = params.get("access") === "vip" || Boolean(sessionId);
     const leadId = params.get("lead_id") || "";
     const signupEmail = "";
     let confirmedAccess = requestedVip ? "vip_pending" : "free";
@@ -599,10 +599,15 @@
 
     const getCheckoutUrl = () => {
       if (!publicConfig.stripePaymentLinkUrl) return "";
-      const url = new URL(publicConfig.stripePaymentLinkUrl, window.location.href);
-      if (leadId) url.searchParams.set("lead_id", leadId);
-      if (leadId) url.searchParams.set("client_reference_id", leadId);
-      return url.toString();
+      try {
+        const url = new URL(publicConfig.stripePaymentLinkUrl, window.location.href);
+        if (leadId) url.searchParams.set("lead_id", leadId);
+        if (leadId) url.searchParams.set("client_reference_id", leadId);
+        return url.toString();
+      } catch (error) {
+        console.warn("Stripe Payment Link invalid.", error);
+        return "";
+      }
     };
 
     const disabledButton = (label) => `<span class="btn btn-secondary" aria-disabled="true">${label}</span>`;
