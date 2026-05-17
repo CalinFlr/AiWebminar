@@ -3,6 +3,7 @@
 .env
 .env.*
 .dev.vars
+.clasp.json
 .wrangler/
 test-results/
 playwright-report/

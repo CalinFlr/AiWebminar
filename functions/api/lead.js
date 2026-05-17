@@ -1,4 +1,5 @@
 import { buildPaymentLink, buildReminderLinks, cleanEmail, cleanEnum, cleanPhone, cleanText, cleanUtm, getBaseUrl, json, methodNotAllowed, postOpsWebhook, readJson } from "../_shared/http.js";
+import { hasD1, saveLeadRecord } from "../_shared/storage.js";
 
 function normalizeLead(payload) {
   return {
@@ -56,16 +57,23 @@ export async function onRequestPost({ request, env }) {
     ...reminderLinks
   };
 
-  const opsResult = await postOpsWebhook(env, "lead", record, env.MAKE_LEAD_WEBHOOK_URL);
-  if (!opsResult.ok) {
-    const status = opsResult.skipped || String(opsResult.error || "").includes("not_configured") ? 503 : 502;
+  const primaryResult = hasD1(env)
+    ? await saveLeadRecord(env, record)
+    : await postOpsWebhook(env, "lead", record, env.MAKE_LEAD_WEBHOOK_URL);
+
+  if (!primaryResult.ok) {
+    const status = primaryResult.skipped || String(primaryResult.error || "").includes("not_configured") ? 503 : 502;
     return json({
       ok: false,
-      error: opsResult.error || "lead_webhook_failed",
+      error: primaryResult.error || "lead_persistence_failed",
       message: "Sistemul de salvare nu este configurat inca.",
-      ops: opsResult
+      ops: primaryResult
     }, { status });
   }
+
+  const syncResult = hasD1(env)
+    ? await postOpsWebhook(env, "lead", record, env.MAKE_LEAD_WEBHOOK_URL)
+    : { skipped: true };
 
   return json({
     ok: true,
@@ -74,7 +82,8 @@ export async function onRequestPost({ request, env }) {
     checkoutUrl,
     paymentConfigured: Boolean(env.STRIPE_PAYMENT_LINK_URL),
     whatsappFreeGroupConfigured: Boolean(env.WHATSAPP_FREE_GROUP_URL),
-    ops: opsResult
+    ops: primaryResult,
+    sync: syncResult
   });
 }
 

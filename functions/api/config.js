@@ -1,12 +1,15 @@
 import { json, methodNotAllowed } from "../_shared/http.js";
+import { hasD1 } from "../_shared/storage.js";
 
 function getOpsProvider(env) {
+  if (hasD1(env)) return "cloudflare_d1";
   if (env.GOOGLE_OPS_WEBHOOK_URL) return "apps_script";
   if (env.MAKE_LEAD_WEBHOOK_URL) return "make_fallback";
   return "none";
 }
 
 export async function onRequestGet({ env }) {
+  const d1Configured = hasD1(env);
   const googleOpsConfigured = Boolean(env.GOOGLE_OPS_WEBHOOK_URL && env.GOOGLE_OPS_WEBHOOK_SECRET);
   const makeFallbackConfigured = Boolean(env.MAKE_LEAD_WEBHOOK_URL || env.MAKE_ONBOARDING_WEBHOOK_URL);
   const stripePaymentLinkConfigured = Boolean(env.STRIPE_PAYMENT_LINK_URL && env.STRIPE_PAYMENT_LINK_ID);
@@ -24,9 +27,10 @@ export async function onRequestGet({ env }) {
     whatsappFreeGroupConfigured,
     whatsappVipGroupConfigured,
     opsProvider: getOpsProvider(env),
+    d1Configured,
     googleOpsConfigured,
     makeFallbackConfigured,
-    opsWebhookConfigured: Boolean(googleOpsConfigured || makeFallbackConfigured),
+    opsWebhookConfigured: Boolean(d1Configured || googleOpsConfigured || makeFallbackConfigured),
     ga4MeasurementId: env.GA4_MEASUREMENT_ID || "",
     metaPixelId: env.META_PIXEL_ID || "",
     workshopStatus: env.WORKSHOP_STATUS || "tbd",

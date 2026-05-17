@@ -7,3 +7,8 @@ PUBLIC_SITE_URL = "https://aiwebminar.pages.dev"
 WORKSHOP_STATUS = "tbd"
 EXPECTED_VIP_AMOUNT = "1900"
 EXPECTED_VIP_CURRENCY = "eur"
+
+[[d1_databases]]
+binding = "AIWEBMINAR_DB"
+database_name = "aiwebminar_ops"
+database_id = "76ed4750-7db9-473d-b223-359aa43bb26e"

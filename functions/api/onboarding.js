@@ -1,4 +1,5 @@
 import { cleanEmail, cleanEnum, cleanLongText, cleanText, cleanUrl, json, methodNotAllowed, postOpsWebhook, readJson } from "../_shared/http.js";
+import { hasD1, saveOnboardingRecord } from "../_shared/storage.js";
 
 function normalizeOnboarding(payload) {
   return {
@@ -40,21 +41,29 @@ export async function onRequestPost({ request, env }) {
     serverReceivedAt: new Date().toISOString()
   };
 
-  const opsResult = await postOpsWebhook(env, "onboarding", record, env.MAKE_ONBOARDING_WEBHOOK_URL);
-  if (!opsResult.ok) {
-    const status = opsResult.skipped || String(opsResult.error || "").includes("not_configured") ? 503 : 502;
+  const primaryResult = hasD1(env)
+    ? await saveOnboardingRecord(env, record)
+    : await postOpsWebhook(env, "onboarding", record, env.MAKE_ONBOARDING_WEBHOOK_URL);
+
+  if (!primaryResult.ok) {
+    const status = primaryResult.skipped || String(primaryResult.error || "").includes("not_configured") ? 503 : 502;
     return json({
       ok: false,
-      error: opsResult.error || "onboarding_webhook_failed",
+      error: primaryResult.error || "onboarding_persistence_failed",
       message: "Sistemul de onboarding nu este configurat inca.",
-      ops: opsResult
+      ops: primaryResult
     }, { status });
   }
+
+  const syncResult = hasD1(env)
+    ? await postOpsWebhook(env, "onboarding", record, env.MAKE_ONBOARDING_WEBHOOK_URL)
+    : { skipped: true };
 
   return json({
     ok: true,
     onboardingId: payload.onboardingId,
-    ops: opsResult
+    ops: primaryResult,
+    sync: syncResult
   });
 }
 

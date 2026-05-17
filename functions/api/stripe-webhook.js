@@ -1,4 +1,5 @@
 import { json, methodNotAllowed, postOpsWebhook } from "../_shared/http.js";
+import { hasD1, savePaymentRecord } from "../_shared/storage.js";
 
 function parseStripeSignature(header) {
   return String(header || "").split(",").reduce((acc, item) => {
@@ -136,10 +137,16 @@ export async function onRequestPost({ request, env }) {
     if (validationError) {
       return json({ ok: true, received: true, handled: false, ignoredReason: validationError });
     }
-    ops = await postOpsWebhook(env, "payment", paymentRecordFromEvent(event), env.MAKE_PAYMENT_WEBHOOK_URL);
+    const record = paymentRecordFromEvent(event);
+    ops = hasD1(env)
+      ? await savePaymentRecord(env, record)
+      : await postOpsWebhook(env, "payment", record, env.MAKE_PAYMENT_WEBHOOK_URL);
     if (!ops.ok) {
       const status = ops.skipped || String(ops.error || "").includes("not_configured") ? 503 : 502;
       return json({ ok: false, error: ops.error || "payment_webhook_failed", ops }, { status });
+    }
+    if (hasD1(env)) {
+      ops.sync = await postOpsWebhook(env, "payment", record, env.MAKE_PAYMENT_WEBHOOK_URL);
     }
   }
 
