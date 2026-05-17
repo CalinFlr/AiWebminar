@@ -409,12 +409,22 @@ function freeLeadEmail(record) {
 }
 
 function vipIntentEmail(record) {
+  var checkoutUrl = String(record.checkoutUrl || "").trim();
+  var paymentLines = checkoutUrl
+    ? [
+      "Finalizeaza plata VIP de 19 EUR prin Stripe aici:",
+      checkoutUrl
+    ]
+    : [
+      "Plata VIP de 19 EUR se finalizeaza prin Stripe imediat ce activam checkout-ul pe SRL."
+    ];
+
   return [
     "Salut, " + firstName(record.name) + ",",
     "",
     "Am salvat intentia ta pentru VIP Implementation Lab.",
     "",
-    "Plata VIP de 19 EUR se finalizeaza prin Stripe imediat ce activam checkout-ul pe SRL.",
+    paymentLines.join("\n"),
     "Dupa plata, primesti acces la grupul WhatsApp VIP, replay-uri, workbook si Implementation Lab.",
     "",
     "Calin"
