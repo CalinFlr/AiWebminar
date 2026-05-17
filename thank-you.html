@@ -117,6 +117,12 @@
       background: rgba(255, 255, 255, 0.64);
     }
 
+    .btn[aria-disabled="true"] {
+      opacity: 0.58;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
     .page {
       padding: 72px 0;
     }
@@ -301,6 +307,19 @@
       font-weight: 900;
     }
 
+    .consent-copy {
+      margin: -2px 0 0;
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.45;
+    }
+
+    .consent-copy a {
+      color: var(--ink);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
     .site-footer {
       flex-shrink: 0;
       padding: 34px 0;
@@ -314,6 +333,49 @@
       justify-content: space-between;
       gap: 18px;
       font-size: 0.92rem;
+    }
+
+    .footer-links {
+      display: inline-flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 14px;
+    }
+
+    .footer-links a {
+      color: var(--white);
+    }
+
+    .cookie-banner {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 40;
+      width: min(420px, calc(100% - 36px));
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 8px;
+      padding: 16px;
+      color: var(--white);
+      background: rgba(23, 23, 21, 0.94);
+      box-shadow: var(--shadow);
+    }
+
+    .cookie-banner p {
+      margin: 0 0 12px;
+      color: rgba(255, 255, 255, 0.76);
+      font-size: 0.88rem;
+    }
+
+    .cookie-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .cookie-actions .btn {
+      min-height: 38px;
+      padding: 0 14px;
+      font-size: 0.88rem;
     }
 
     [hidden] {
@@ -334,6 +396,10 @@
       .footer-row {
         align-items: flex-start;
         flex-direction: column;
+      }
+
+      .footer-links {
+        justify-content: flex-start;
       }
     }
 
@@ -396,7 +462,7 @@
       <div class="container thankyou-grid">
         <article class="hero-card">
           <span class="kicker" id="stateKicker">Confirmare</span>
-          <h1 id="stateTitle">Locul tau este rezervat.</h1>
+          <h1 id="stateTitle">Locul tau prioritar este salvat.</h1>
           <p class="lead" id="stateLead">Vei primi detaliile workshopului pe email si reminder pe WhatsApp.</p>
           <div class="actions" id="primaryActions"></div>
           <ul class="status-list" id="statusList"></ul>
@@ -439,6 +505,7 @@
             <textarea id="desiredOutcome" name="desiredOutcome" placeholder="Ex: un agent care pregateste postari, un raport saptamanal, un demo pentru clienti..." required></textarea>
           </div>
           <button class="btn btn-primary" type="submit">Trimite onboardingul &rarr;</button>
+          <p class="consent-copy">Prin trimitere, esti de acord sa folosim raspunsurile pentru exemple, confirmari, remindere si follow-up despre workshop. Poti cere oricand stergerea datelor. Detalii in <a href="privacy.html">Politica de confidentialitate</a>.</p>
           <p class="note" id="onboardingNote" aria-live="polite"></p>
         </form>
       </div>
@@ -448,19 +515,38 @@
   <footer class="site-footer">
     <div class="container footer-row">
       <span>AI Automation Zero to Hero</span>
-      <span>Workshop live despre automatizari AI practice.</span>
+      <span class="footer-links">
+        <span>Workshop live despre automatizari AI practice.</span>
+        <a href="privacy.html">Confidentialitate</a>
+      </span>
     </div>
   </footer>
 
+  <div class="cookie-banner" id="cookieBanner" hidden>
+    <p>Folosim cookies pentru analytics si reclame, ca sa intelegem ce functioneaza si sa imbunatatim workshopul.</p>
+    <div class="cookie-actions">
+      <button class="btn btn-primary" type="button" data-cookie-accept>Accept</button>
+      <button class="btn btn-secondary" type="button" data-cookie-reject>Refuz</button>
+    </div>
+  </div>
+
   <script>
-    const LEAD_ENDPOINT = "";
-    const ONBOARDING_ENDPOINT = "";
-    const VIP_CHECKOUT_URL = "";
-    const DEMO_CHECKOUT_MODE = !VIP_CHECKOUT_URL;
+    const ONBOARDING_ENDPOINT = "/api/onboarding";
+    const CONFIG_ENDPOINT = "/api/config";
+    const VIP_ACCESS_ENDPOINT = "/api/vip-access";
 
     const params = new URLSearchParams(window.location.search);
-    const access = params.get("access") === "vip" || params.get("payment") === "success" ? "vip" : "free";
+    const sessionId = params.get("session_id") || "";
+    const requestedVip = params.get("access") === "vip" || Boolean(sessionId) || params.get("payment") === "success";
     const leadId = params.get("lead_id") || "";
+    const signupEmail = "";
+    let confirmedAccess = requestedVip ? "vip_pending" : "free";
+    let publicConfig = {
+      stripePaymentLinkUrl: "",
+      whatsappFreeGroupUrl: "",
+      ga4MeasurementId: "",
+      metaPixelId: ""
+    };
 
     const stateKicker = document.querySelector("#stateKicker");
     const stateTitle = document.querySelector("#stateTitle");
@@ -474,6 +560,7 @@
     const onboardingIntro = document.querySelector("#onboardingIntro");
     const onboardingForm = document.querySelector("#onboardingForm");
     const onboardingNote = document.querySelector("#onboardingNote");
+    const cookieBanner = document.querySelector("#cookieBanner");
 
     const makeId = (prefix) => {
       if (window.crypto && typeof window.crypto.randomUUID === "function") {
@@ -482,33 +569,47 @@
       return `${prefix}_${Date.now()}_${Math.random().toString(16).slice(2)}`;
     };
 
-    const saveLocalRecord = (key, record) => {
+    const loadPublicConfig = async () => {
       try {
-        const existing = JSON.parse(window.localStorage.getItem(key) || "[]");
-        existing.push(record);
-        window.localStorage.setItem(key, JSON.stringify(existing));
+        const response = await fetch(CONFIG_ENDPOINT, { headers: { accept: "application/json" } });
+        if (!response.ok) return publicConfig;
+        const config = await response.json();
+        publicConfig = { ...publicConfig, ...config };
       } catch (error) {
-        console.warn("Nu am putut salva local recordul.", error);
+        console.warn("Config endpoint indisponibil.", error);
       }
+      return publicConfig;
     };
 
     const postJson = async (endpoint, payload) => {
-      if (!endpoint) return { skipped: true };
       const response = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
       });
-      return { ok: response.ok, status: response.status };
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        const error = new Error(result.error || "request_failed");
+        error.status = response.status;
+        error.result = result;
+        throw error;
+      }
+      return result;
     };
 
     const getCheckoutUrl = () => {
-      if (DEMO_CHECKOUT_MODE) {
-        return `thank-you.html?access=vip&payment=success&demo=1${leadId ? `&lead_id=${encodeURIComponent(leadId)}` : ""}`;
-      }
-      const url = new URL(VIP_CHECKOUT_URL, window.location.href);
+      if (!publicConfig.stripePaymentLinkUrl) return "";
+      const url = new URL(publicConfig.stripePaymentLinkUrl, window.location.href);
       if (leadId) url.searchParams.set("lead_id", leadId);
+      if (leadId) url.searchParams.set("client_reference_id", leadId);
       return url.toString();
+    };
+
+    const disabledButton = (label) => `<span class="btn btn-secondary" aria-disabled="true">${label}</span>`;
+
+    const linkButton = (label, href, className = "btn btn-primary", fallback = "") => {
+      if (!href) return disabledButton(fallback || label);
+      return `<a class="${className}" href="${href}" target="_blank" rel="noopener">${label}</a>`;
     };
 
     const scrollToOnboarding = () => {
@@ -516,34 +617,74 @@
     };
 
     const renderFree = () => {
-      stateKicker.textContent = "Loc gratuit rezervat";
-      stateTitle.textContent = "Locul tau este rezervat.";
+      confirmedAccess = "free";
+      stateKicker.textContent = "Loc prioritar gratuit";
+      stateTitle.textContent = "Locul tau prioritar este salvat.";
       stateLead.textContent = "Vei primi linkul workshopului pe email si reminder pe WhatsApp inainte de fiecare sesiune.";
       primaryActions.innerHTML = `
-        <a class="btn btn-primary" href="${getCheckoutUrl()}">Fa upgrade la VIP - 19 EUR</a>
+        ${linkButton("Intra in grupul WhatsApp gratuit", publicConfig.whatsappFreeGroupUrl, "btn btn-primary", "Grupul WhatsApp gratuit se activeaza curand")}
         <button class="btn btn-secondary" type="button" data-scroll-onboarding>Completeaza onboardingul</button>
       `;
       statusList.innerHTML = `
         <li><strong>Ce ai acum</strong><span>Acces live la cele 3 sesiuni principale si demo-urile cu agenti AI.</span></li>
         <li><strong>Ce adauga VIP</strong><span>Replay-uri, workbook, Implementation Lab, hot seats si roadmap pe cazul tau.</span></li>
-        <li><strong>Onboarding optional</strong><span>Completeaza cateva intrebari ca sa primesti exemple mai relevante.</span></li>
+        <li><strong>Comunitate si remindere</strong><span>Grupul WhatsApp gratuit este canalul pentru link, anunturi si remindere.</span></li>
       `;
       sideBadge.textContent = "Recomandat";
       sideTitle.textContent = "VIP-ul te ajuta sa aplici pe cazul tau.";
       sideText.textContent = "Daca vrei sa revii la demo-uri si sa intri in Implementation Lab, upgrade-ul de 19 EUR este urmatorul pas.";
-      sideActions.innerHTML = `<a class="btn btn-primary" href="${getCheckoutUrl()}">Vreau VIP - 19 EUR</a>`;
+      sideActions.innerHTML = `${linkButton("Vreau VIP - 19 EUR", getCheckoutUrl(), "btn btn-primary", "Plata VIP se activeaza curand")}`;
       onboardingIntro.textContent = "Pentru free, onboardingul ne ajuta sa alegem exemple mai apropiate de contextul tau.";
     };
 
-    const renderVip = () => {
-      stateKicker.textContent = params.get("demo") ? "VIP confirmat pentru demo" : "VIP confirmat";
+    const renderVipLoading = () => {
+      stateKicker.textContent = "Verificam plata VIP";
+      stateTitle.textContent = "Verificam accesul tau premium.";
+      stateLead.textContent = "Daca plata a fost finalizata, linkul grupului VIP apare aici in cateva secunde.";
+      primaryActions.innerHTML = disabledButton("Verificam plata...");
+      statusList.innerHTML = `
+        <li><strong>Protectie acces premium</strong><span>Linkul VIP apare doar dupa confirmarea Stripe.</span></li>
+        <li><strong>Daca ai inchis checkout-ul</strong><span>Revino la plata din email sau cere-ne manual verificarea.</span></li>
+      `;
+      sideBadge.textContent = "VIP";
+      sideTitle.textContent = "Accesul premium este blocat pana la confirmare.";
+      sideText.textContent = "Asta protejeaza grupul premium si materialele VIP.";
+      sideActions.innerHTML = `${linkButton("Reia plata VIP - 19 EUR", getCheckoutUrl(), "btn btn-primary", "Plata VIP se activeaza curand")}`;
+    };
+
+    const renderVipBlocked = (message = "Nu putem confirma plata VIP inca.") => {
+      confirmedAccess = "vip_unverified";
+      stateKicker.textContent = "VIP neverificat";
+      stateTitle.textContent = "Accesul VIP nu este confirmat inca.";
+      stateLead.textContent = message;
+      primaryActions.innerHTML = `
+        ${linkButton("Reia plata VIP - 19 EUR", getCheckoutUrl(), "btn btn-primary", "Plata VIP se activeaza curand")}
+        <button class="btn btn-secondary" type="button" data-scroll-onboarding>Completeaza onboardingul</button>
+      `;
+      statusList.innerHTML = `
+        <li><strong>Grup premium protejat</strong><span>Nu afisam linkul WhatsApp VIP fara plata confirmata in Stripe.</span></li>
+        <li><strong>Poti continua</strong><span>Completeaza onboardingul, iar accesul VIP se confirma dupa plata.</span></li>
+      `;
+      sideBadge.textContent = "Urmatorul pas";
+      sideTitle.textContent = "Finalizeaza plata ca sa intri in grupul VIP.";
+      sideText.textContent = "Dupa confirmare, pagina iti afiseaza automat linkul grupului premium.";
+      sideActions.innerHTML = `${linkButton("Continua la plata", getCheckoutUrl(), "btn btn-primary", "Plata VIP se activeaza curand")}`;
+      onboardingIntro.textContent = "Poti completa onboardingul acum; pentru VIP il folosim dupa confirmarea platii.";
+    };
+
+    const renderVip = (vipData = {}) => {
+      confirmedAccess = "vip";
+      stateKicker.textContent = "VIP confirmat";
       stateTitle.textContent = "Accesul tau VIP este confirmat.";
       stateLead.textContent = "Ai acces la replay-uri, workbook, Implementation Lab si roadmap de implementare pe cazul tau.";
-      primaryActions.innerHTML = `<button class="btn btn-primary" type="button" data-scroll-onboarding>Completeaza onboardingul VIP</button>`;
+      primaryActions.innerHTML = `
+        ${linkButton("Intra in grupul WhatsApp VIP", vipData.whatsappVipGroupUrl, "btn btn-primary", "Grupul WhatsApp VIP se activeaza curand")}
+        <button class="btn btn-secondary" type="button" data-scroll-onboarding>Completeaza onboardingul VIP</button>
+      `;
       statusList.innerHTML = `
         <li><strong>VIP activ</strong><span>Te pregatim pentru Implementation Lab si pentru hot seats pe cazuri reale.</span></li>
+        <li><strong>Grup premium</strong><span>Intra in grupul WhatsApp VIP pentru link, remindere si materialele premium.</span></li>
         <li><strong>Urmatorul pas</strong><span>Completeaza onboardingul ca sa stim ce proces sau agent AI vrei sa lucram mai aproape.</span></li>
-        <li><strong>Daca il sari acum</strong><span>Accesul ramane valid, dar avem mai putin context pentru cazul tau.</span></li>
       `;
       sideBadge.textContent = "VIP";
       sideTitle.textContent = "Onboardingul iti creste sansele sa primesti feedback util.";
@@ -552,11 +693,30 @@
       onboardingIntro.textContent = "Pentru VIP, onboardingul devine baza roadmap-ului de implementare pe 7 zile.";
     };
 
-    if (access === "vip") {
-      renderVip();
-    } else {
-      renderFree();
-    }
+    const verifyVipAccess = async () => {
+      renderVipLoading();
+
+      if (!sessionId) {
+        renderVipBlocked("Lipseste confirmarea Stripe. Daca ai platit deja, foloseste linkul primit dupa checkout sau contacteaza-ne pentru verificare manuala.");
+        return;
+      }
+
+      try {
+        const url = new URL(VIP_ACCESS_ENDPOINT, window.location.href);
+        url.searchParams.set("session_id", sessionId);
+        if (leadId) url.searchParams.set("lead_id", leadId);
+        const response = await fetch(url.toString(), { headers: { accept: "application/json" } });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || !result.ok) {
+          renderVipBlocked(result.message || "Stripe nu a confirmat inca plata VIP.");
+          return;
+        }
+        renderVip(result);
+      } catch (error) {
+        console.warn("VIP access endpoint indisponibil.", error);
+        renderVipBlocked("Nu putem verifica plata momentan. Incearca din nou sau contacteaza-ne pentru verificare manuala.");
+      }
+    };
 
     document.addEventListener("click", (event) => {
       if (event.target.closest("[data-scroll-onboarding]")) {
@@ -569,18 +729,87 @@
       const payload = Object.fromEntries(new FormData(onboardingForm).entries());
       payload.onboardingId = makeId("onboarding");
       payload.leadId = leadId;
-      payload.access = access;
+      payload.signupEmail = signupEmail;
+      payload.access = confirmedAccess;
+      payload.stripeSessionId = sessionId;
       payload.createdAt = new Date().toISOString();
-
-      saveLocalRecord("aiwebinar_onboarding", payload);
 
       try {
         await postJson(ONBOARDING_ENDPOINT, payload);
       } catch (error) {
         console.warn("Onboarding endpoint indisponibil.", error);
+        onboardingNote.textContent = error.result?.message || "Nu am putut salva onboardingul. Incearca din nou in cateva secunde.";
+        return;
       }
 
       onboardingNote.textContent = "Multumim. Am salvat onboardingul si il folosim pentru exemplele din workshop.";
+    });
+
+    const loadGa4 = () => {
+      if (!publicConfig.ga4MeasurementId || window.__aiWebinarGa4Loaded) return;
+      window.__aiWebinarGa4Loaded = true;
+      const script = document.createElement("script");
+      script.async = true;
+      script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(publicConfig.ga4MeasurementId)}`;
+      document.head.appendChild(script);
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function gtag() { window.dataLayer.push(arguments); };
+      window.gtag("js", new Date());
+      window.gtag("config", publicConfig.ga4MeasurementId);
+    };
+
+    const loadMetaPixel = () => {
+      if (!publicConfig.metaPixelId || window.__aiWebinarPixelLoaded) return;
+      window.__aiWebinarPixelLoaded = true;
+      window.fbq = function fbq() {
+        window.fbq.callMethod ? window.fbq.callMethod.apply(window.fbq, arguments) : window.fbq.queue.push(arguments);
+      };
+      if (!window._fbq) window._fbq = window.fbq;
+      window.fbq.push = window.fbq;
+      window.fbq.loaded = true;
+      window.fbq.version = "2.0";
+      window.fbq.queue = [];
+      const script = document.createElement("script");
+      script.async = true;
+      script.src = "https://connect.facebook.net/en_US/fbevents.js";
+      document.head.appendChild(script);
+      window.fbq("init", publicConfig.metaPixelId);
+      window.fbq("track", "PageView");
+    };
+
+    const enableTracking = () => {
+      loadGa4();
+      loadMetaPixel();
+    };
+
+    const initCookieBanner = () => {
+      if (!cookieBanner) return;
+      const preference = window.localStorage.getItem("aiwebinar_cookie_consent");
+      if (preference === "accepted") {
+        enableTracking();
+        return;
+      }
+      if (preference === "rejected") return;
+
+      cookieBanner.hidden = false;
+      cookieBanner.querySelector("[data-cookie-accept]").addEventListener("click", () => {
+        window.localStorage.setItem("aiwebinar_cookie_consent", "accepted");
+        cookieBanner.hidden = true;
+        enableTracking();
+      });
+      cookieBanner.querySelector("[data-cookie-reject]").addEventListener("click", () => {
+        window.localStorage.setItem("aiwebinar_cookie_consent", "rejected");
+        cookieBanner.hidden = true;
+      });
+    };
+
+    loadPublicConfig().then(() => {
+      if (requestedVip) {
+        verifyVipAccess();
+      } else {
+        renderFree();
+      }
+      initCookieBanner();
     });
   </script>
 </body>

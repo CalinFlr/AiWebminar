@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "check:wrangler": "wrangler pages dev . --compatibility-date=2026-04-28",
+    "deploy:cloudflare": "wrangler pages deploy . --project-name=aiwebminar --commit-dirty=true"
+  },
+  "devDependencies": {
+    "wrangler": "^4.84.1"
+  }
+}

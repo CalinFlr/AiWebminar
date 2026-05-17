@@ -152,6 +152,12 @@
       color: var(--white);
     }
 
+    .btn[aria-disabled="true"] {
+      opacity: 0.58;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
     .hero {
       position: relative;
       min-height: 78vh;
@@ -1106,6 +1112,19 @@
       font-weight: 800;
     }
 
+    .consent-copy {
+      margin: -2px 0 0;
+      color: rgba(255, 255, 255, 0.58);
+      font-size: 0.78rem;
+      line-height: 1.45;
+    }
+
+    .consent-copy a {
+      color: var(--white);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
     .next-step-panel {
       display: grid;
       gap: 14px;
@@ -1203,6 +1222,49 @@
       justify-content: space-between;
       gap: 18px;
       font-size: 0.92rem;
+    }
+
+    .footer-links {
+      display: inline-flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 14px;
+    }
+
+    .footer-links a {
+      color: var(--white);
+    }
+
+    .cookie-banner {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 40;
+      width: min(420px, calc(100% - 36px));
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 8px;
+      padding: 16px;
+      color: var(--white);
+      background: rgba(23, 23, 21, 0.94);
+      box-shadow: var(--shadow);
+    }
+
+    .cookie-banner p {
+      margin: 0 0 12px;
+      color: rgba(255, 255, 255, 0.76);
+      font-size: 0.88rem;
+    }
+
+    .cookie-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .cookie-actions .btn {
+      min-height: 38px;
+      padding: 0 14px;
+      font-size: 0.88rem;
     }
 
     @media (max-width: 980px) {
@@ -1352,6 +1414,10 @@
         align-items: flex-start;
         flex-direction: column;
       }
+
+      .footer-links {
+        justify-content: flex-start;
+      }
     }
 
     @media (max-width: 420px) {
@@ -1395,7 +1461,7 @@
         <a href="#mentor">Mentor</a>
         <a href="#inscriere">Inscriere</a>
       </nav>
-      <a class="btn btn-primary" href="#inscriere" data-plan="vip">Rezerva locul</a>
+      <a class="btn btn-primary" href="#inscriere" data-plan="vip">Ia loc prioritar</a>
     </div>
   </header>
 
@@ -1409,7 +1475,7 @@
           <h1 id="hero-title">Construieste primii tai agenti AI 24/7 pentru business, job sau clienti</h1>
           <p class="lead">In 3 sesiuni live inveti sa treci de la ChatGPT folosit ocazional la agenti si workflow-uri AI care pot prelua taskuri repetitive, pot analiza informatie si pot pregati rezultate pentru tine. Fara programare. Fara teorie goala.</p>
           <div class="hero-actions">
-            <a class="btn btn-primary" href="#inscriere" data-plan="vip">Rezerva locul la workshop &rarr;</a>
+            <a class="btn btn-primary" href="#inscriere" data-plan="vip">Ia loc prioritar la workshop &rarr;</a>
             <a class="btn btn-secondary" href="#program">Vezi ce construiesti</a>
           </div>
           <div class="hero-meta" aria-label="Detalii workshop">
@@ -1782,11 +1848,11 @@
       <div class="container form-band">
         <div>
           <span class="section-kicker">Inscriere segmentata</span>
-          <h2 id="signup-title">Rezerva locul si spune-ne pe ce traseu intri.</h2>
-          <p>Primul pas ramane scurt: nume, email, telefon si traseu. Dupa rezervare trimitem onboarding-ul rapid ca sa alegem exemplele potrivite pentru tine.</p>
+          <h2 id="signup-title">Ia loc prioritar si spune-ne pe ce traseu intri.</h2>
+          <p>Primul pas ramane scurt: nume, email, telefon si traseu. Dupa inscriere trimitem onboarding-ul rapid ca sa alegem exemplele potrivite pentru tine.</p>
           <div class="signup-steps" aria-label="Pasi inscriere">
             <div class="signup-step">
-              <strong>1. Rezervi locul</strong>
+              <strong>1. Iei loc prioritar</strong>
               <span>Alegi gratuit sau VIP si primesti linkul pe email plus reminder pe WhatsApp.</span>
             </div>
             <div class="signup-step">
@@ -1871,6 +1937,7 @@
           </div>
 
           <button class="btn btn-primary" id="signupSubmit" type="submit">Continua cu acces VIP &rarr;</button>
+          <p class="consent-copy">Prin continuare, esti de acord sa folosim datele introduse pentru inscriere, confirmari, remindere si follow-up despre workshop pe email, WhatsApp sau SMS. Poti cere oricand stergerea datelor. Detalii in <a href="privacy.html">Politica de confidentialitate</a>.</p>
           <p class="form-note" id="formNote" aria-live="polite"></p>
           <div class="next-step-panel" id="nextStepPanel" hidden>
             <h3 id="nextStepTitle">Urmatorul pas</h3>
@@ -1962,9 +2029,20 @@
   <footer class="site-footer">
     <div class="container footer-row">
       <span>AI Automation Zero to Hero</span>
-      <span>Workshop live despre automatizari AI practice.</span>
+      <span class="footer-links">
+        <span>Workshop live despre automatizari AI practice.</span>
+        <a href="privacy.html">Confidentialitate</a>
+      </span>
     </div>
   </footer>
+
+  <div class="cookie-banner" id="cookieBanner" hidden>
+    <p>Folosim cookies pentru analytics si reclame, ca sa intelegem ce functioneaza si sa imbunatatim workshopul.</p>
+    <div class="cookie-actions">
+      <button class="btn btn-primary" type="button" data-cookie-accept>Accept</button>
+      <button class="btn btn-secondary" type="button" data-cookie-reject>Refuz</button>
+    </div>
+  </div>
 
   <script>
     const tabs = document.querySelectorAll(".persona-tab");
@@ -1997,10 +2075,17 @@
     const onboardingNote = document.querySelector("#onboardingNote");
     const planInputs = document.querySelectorAll('input[name="access"]');
     const planLinks = document.querySelectorAll("[data-plan]");
-    const LEAD_ENDPOINT = "";
-    const ONBOARDING_ENDPOINT = "";
-    const VIP_CHECKOUT_URL = "";
-    const DEMO_CHECKOUT_MODE = !VIP_CHECKOUT_URL;
+    const cookieBanner = document.querySelector("#cookieBanner");
+    const LEAD_ENDPOINT = "/api/lead";
+    const ONBOARDING_ENDPOINT = "/api/onboarding";
+    const CONFIG_ENDPOINT = "/api/config";
+    const publicConfigDefaults = {
+      stripePaymentLinkUrl: "",
+      whatsappFreeGroupUrl: "",
+      ga4MeasurementId: "",
+      metaPixelId: ""
+    };
+    let publicConfig = { ...publicConfigDefaults };
 
     const makeId = (prefix) => {
       if (window.crypto && typeof window.crypto.randomUUID === "function") {
@@ -2011,24 +2096,32 @@
 
     const getQueryParams = () => Object.fromEntries(new URLSearchParams(window.location.search).entries());
 
-    const saveLocalRecord = (key, record) => {
+    const loadPublicConfig = async () => {
       try {
-        const existing = JSON.parse(window.localStorage.getItem(key) || "[]");
-        existing.push(record);
-        window.localStorage.setItem(key, JSON.stringify(existing));
+        const response = await fetch(CONFIG_ENDPOINT, { headers: { accept: "application/json" } });
+        if (!response.ok) return publicConfig;
+        const config = await response.json();
+        publicConfig = { ...publicConfig, ...config };
       } catch (error) {
-        console.warn("Nu am putut salva local recordul.", error);
+        console.warn("Config endpoint indisponibil.", error);
       }
+      return publicConfig;
     };
 
     const postJson = async (endpoint, payload) => {
-      if (!endpoint) return { skipped: true };
       const response = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
       });
-      return { ok: response.ok, status: response.status };
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        const error = new Error(result.error || "request_failed");
+        error.status = response.status;
+        error.result = result;
+        throw error;
+      }
+      return result;
     };
 
     const collectSignupPayload = (status) => {
@@ -2042,14 +2135,12 @@
       return payload;
     };
 
-    const getCheckoutUrl = (payload) => {
-      if (!VIP_CHECKOUT_URL) return "";
-      const url = new URL(VIP_CHECKOUT_URL, window.location.href);
+    const getCheckoutUrl = (payload, fallbackUrl = "") => {
+      const rawUrl = fallbackUrl || publicConfig.stripePaymentLinkUrl || "";
+      if (!rawUrl) return "";
+      const url = new URL(rawUrl, window.location.href);
+      url.searchParams.set("client_reference_id", payload.leadId);
       url.searchParams.set("lead_id", payload.leadId);
-      url.searchParams.set("email", payload.email || "");
-      url.searchParams.set("phone", payload.phone || "");
-      url.searchParams.set("persona", payload.persona || "");
-      url.searchParams.set("access", "vip");
       return url.toString();
     };
 
@@ -2057,7 +2148,6 @@
       const url = new URL("thank-you.html", window.location.href);
       url.searchParams.set("access", access);
       url.searchParams.set("lead_id", payload.leadId);
-      if (payload.email) url.searchParams.set("email", payload.email);
       Object.entries(extraParams).forEach(([key, value]) => {
         url.searchParams.set(key, value);
       });
@@ -2083,7 +2173,7 @@
       }
 
       setNextStep({
-        title: "Locul gratuit este rezervat.",
+        title: "Locul prioritar gratuit este salvat.",
         text: "Vei primi linkul si reminderul pe email si WhatsApp. Daca vrei replay-uri, workbook si lab pe cazul tau, poti face upgrade la VIP.",
         actions: `
           <button class="btn btn-primary" type="button" data-upgrade-vip>Fa upgrade la VIP - 19 EUR</button>
@@ -2103,14 +2193,9 @@
         return;
       }
 
-      if (DEMO_CHECKOUT_MODE) {
-        window.location.href = getThankYouUrl(payload, "vip", { payment: "success", demo: "1" });
-        return;
-      }
-
       setNextStep({
         title: "Cererea VIP este salvata.",
-        text: "Urmatorul pas este confirmarea accesului VIP de 19 EUR. Cand conectam procesatorul, acest pas va deschide automat checkout-ul.",
+        text: "Plata VIP se activeaza dupa ce conectam Stripe pe SRL. Pana atunci, avem datele tale si te putem contacta manual pentru confirmare.",
         actions: `
           <button class="btn btn-primary" type="button" data-open-onboarding>Completeaza onboardingul VIP</button>
           <button class="btn btn-secondary" type="button" data-switch-free>Schimba pe gratuit</button>
@@ -2118,19 +2203,9 @@
       });
     };
 
-    const showPaidVipConfirmation = () => {
-      setSelectedPlan("vip");
-      setNextStep({
-        title: "Accesul VIP este confirmat.",
-        text: "Urmatorul pas este onboardingul rapid, ca sa stim ce proces sau agent AI vrei sa lucram mai aproape de cazul tau.",
-        actions: `<button class="btn btn-primary" type="button" data-open-onboarding>Completeaza onboardingul VIP</button>`
-      });
-      showOnboarding();
-    };
-
     const updatePlanCopy = () => {
       const selectedPlan = document.querySelector('input[name="access"]:checked')?.value || "vip";
-      submitButton.textContent = selectedPlan === "vip" ? "Continua cu acces VIP \u2192" : "Rezerva loc gratuit \u2192";
+      submitButton.textContent = selectedPlan === "vip" ? "Continua cu acces VIP \u2192" : "Ia loc prioritar gratuit \u2192";
       note.textContent = "";
     };
 
@@ -2175,19 +2250,22 @@
       submitButton.textContent = "Se salveaza...";
       note.textContent = "";
 
-      saveLocalRecord("aiwebinar_leads", payload);
-
+      let leadResult = {};
       try {
-        await postJson(LEAD_ENDPOINT, payload);
+        leadResult = await postJson(LEAD_ENDPOINT, payload);
       } catch (error) {
         console.warn("Lead endpoint indisponibil.", error);
+        note.textContent = error.result?.message || "Nu am putut salva inscrierea. Incearca din nou in cateva secunde.";
+        submitButton.disabled = false;
+        submitButton.textContent = selectedPlan === "vip" ? "Continua cu acces VIP \u2192" : "Ia loc prioritar gratuit \u2192";
+        return;
       }
 
       if (selectedPlan === "vip") {
         note.textContent = "Perfect. Am salvat intentia VIP.";
-        showVipNextStep(payload, getCheckoutUrl(payload));
+        showVipNextStep(payload, leadResult.checkoutUrl || getCheckoutUrl(payload));
       } else {
-        note.textContent = "Locul gratuit este rezervat.";
+        note.textContent = "Locul prioritar gratuit este salvat.";
         showFreeConfirmation(payload);
       }
 
@@ -2201,30 +2279,80 @@
       payload.onboardingId = makeId("onboarding");
       payload.createdAt = new Date().toISOString();
       payload.signupEmail = form.elements.email?.value || "";
-      payload.signupPhone = form.elements.phone?.value || "";
       payload.access = document.querySelector('input[name="access"]:checked')?.value || "vip";
       payload.persona = document.querySelector('input[name="persona"]:checked')?.value || "";
-
-      saveLocalRecord("aiwebinar_onboarding", payload);
 
       try {
         await postJson(ONBOARDING_ENDPOINT, payload);
       } catch (error) {
         console.warn("Onboarding endpoint indisponibil.", error);
+        onboardingNote.textContent = error.result?.message || "Nu am putut salva onboardingul. Incearca din nou in cateva secunde.";
+        return;
       }
 
       onboardingNote.textContent = "Multumim. Am salvat onboardingul si il folosim pentru exemplele din workshop.";
     });
 
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("payment") === "vip_success" || params.get("vip") === "success") {
-      const url = new URL("thank-you.html", window.location.href);
-      url.searchParams.set("access", "vip");
-      url.searchParams.set("payment", "success");
-      window.location.href = url.toString();
-    }
+    const loadGa4 = () => {
+      if (!publicConfig.ga4MeasurementId || window.__aiWebinarGa4Loaded) return;
+      window.__aiWebinarGa4Loaded = true;
+      const script = document.createElement("script");
+      script.async = true;
+      script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(publicConfig.ga4MeasurementId)}`;
+      document.head.appendChild(script);
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function gtag() { window.dataLayer.push(arguments); };
+      window.gtag("js", new Date());
+      window.gtag("config", publicConfig.ga4MeasurementId);
+    };
+
+    const loadMetaPixel = () => {
+      if (!publicConfig.metaPixelId || window.__aiWebinarPixelLoaded) return;
+      window.__aiWebinarPixelLoaded = true;
+      window.fbq = function fbq() {
+        window.fbq.callMethod ? window.fbq.callMethod.apply(window.fbq, arguments) : window.fbq.queue.push(arguments);
+      };
+      if (!window._fbq) window._fbq = window.fbq;
+      window.fbq.push = window.fbq;
+      window.fbq.loaded = true;
+      window.fbq.version = "2.0";
+      window.fbq.queue = [];
+      const script = document.createElement("script");
+      script.async = true;
+      script.src = "https://connect.facebook.net/en_US/fbevents.js";
+      document.head.appendChild(script);
+      window.fbq("init", publicConfig.metaPixelId);
+      window.fbq("track", "PageView");
+    };
+
+    const enableTracking = () => {
+      loadGa4();
+      loadMetaPixel();
+    };
+
+    const initCookieBanner = () => {
+      if (!cookieBanner) return;
+      const preference = window.localStorage.getItem("aiwebinar_cookie_consent");
+      if (preference === "accepted") {
+        enableTracking();
+        return;
+      }
+      if (preference === "rejected") return;
+
+      cookieBanner.hidden = false;
+      cookieBanner.querySelector("[data-cookie-accept]").addEventListener("click", () => {
+        window.localStorage.setItem("aiwebinar_cookie_consent", "accepted");
+        cookieBanner.hidden = true;
+        enableTracking();
+      });
+      cookieBanner.querySelector("[data-cookie-reject]").addEventListener("click", () => {
+        window.localStorage.setItem("aiwebinar_cookie_consent", "rejected");
+        cookieBanner.hidden = true;
+      });
+    };
 
     updatePlanCopy();
+    loadPublicConfig().then(initCookieBanner);
 
     const canvas = document.querySelector("#systemCanvas");
     const ctx = canvas.getContext("2d");
@@ -2284,6 +2412,10 @@
       });
 
       nodes.forEach((node, index) => {
+        if (width < 720) {
+          return;
+        }
+
         const pulse = Math.sin(time / 900 + index) * 3;
         const x = node.x * width + driftX * (index % 2 ? 0.3 : -0.2);
         const y = node.y * height + driftY * (index % 2 ? -0.22 : 0.2);

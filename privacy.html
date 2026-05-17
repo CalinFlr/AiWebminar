@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Politica de confidentialitate | AI Automation Zero to Hero</title>
+  <meta name="description" content="Politica de confidentialitate pentru workshopul AI Automation Zero to Hero.">
+  <style>
+    :root {
+      --ink: #171715;
+      --paper: #f7f3e9;
+      --line: rgba(23, 23, 21, 0.16);
+      --white: #ffffff;
+      --muted: #6d675e;
+      --teal: #2f7d7a;
+      --coral: #d96f55;
+      --shadow: 0 18px 50px rgba(23, 23, 21, 0.14);
+      --max: 920px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--ink);
+    }
+
+    body {
+      min-height: 100dvh;
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .container {
+      width: min(var(--max), calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .site-header,
+    .site-footer {
+      color: var(--white);
+      background: var(--ink);
+    }
+
+    .nav,
+    .footer-row {
+      min-height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--white);
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: var(--teal);
+      font-size: 0.82rem;
+    }
+
+    .btn {
+      min-height: 42px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      border-radius: 8px;
+      padding: 0 16px;
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.08);
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    main {
+      flex: 1 0 auto;
+      padding: 64px 0;
+    }
+
+    article {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: clamp(24px, 4vw, 44px);
+      background: rgba(255, 255, 255, 0.68);
+      box-shadow: var(--shadow);
+    }
+
+    h1 {
+      margin: 0 0 18px;
+      font-size: clamp(2.2rem, 6vw, 3.8rem);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin: 32px 0 10px;
+      font-size: 1.35rem;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    p,
+    li {
+      color: var(--muted);
+    }
+
+    .lead {
+      max-width: 720px;
+      margin-bottom: 28px;
+      font-size: 1.08rem;
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+
+    .placeholder {
+      border-left: 4px solid var(--coral);
+      padding: 12px 14px;
+      background: rgba(217, 111, 85, 0.1);
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .site-footer {
+      flex-shrink: 0;
+      padding: 24px 0;
+      color: rgba(255, 255, 255, 0.68);
+    }
+
+    @media (max-width: 640px) {
+      .nav,
+      .footer-row {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 14px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="index.html">
+        <span class="brand-mark">AI</span>
+        <span>AI Automation Zero to Hero</span>
+      </a>
+      <a class="btn" href="index.html#inscriere">Inapoi la inscriere</a>
+    </div>
+  </header>
+
+  <main>
+    <article class="container">
+      <h1>Politica de confidentialitate</h1>
+      <p class="lead">Aceasta pagina explica pe scurt cum folosim datele introduse pentru inscrierea la workshopul AI Automation Zero to Hero.</p>
+
+      <p class="placeholder">Datele firmei, CUI-ul, adresa sediului si emailul oficial de contact se completeaza inainte de traficul platit.</p>
+
+      <h2>Ce date colectam</h2>
+      <p>Putem colecta nume, email, telefon, tipul de participant, raspunsuri de onboarding, linkuri publice relevante, date despre accesul ales si parametri de campanie.</p>
+
+      <h2>De ce le folosim</h2>
+      <ul>
+        <li>pentru inscriere, confirmari si remindere despre workshop;</li>
+        <li>pentru acces in grupurile WhatsApp free sau VIP;</li>
+        <li>pentru onboarding, exemple relevante si follow-up dupa workshop;</li>
+        <li>pentru procesarea platii VIP prin Stripe si facturare prin Oblio;</li>
+        <li>pentru masurarea performantei paginii si reclamelor, doar dupa acceptarea cookies.</li>
+      </ul>
+
+      <h2>Unde pot ajunge datele</h2>
+      <p>Datele pot fi procesate prin Cloudflare Pages, Make, Google Sheets, Gmail/Google Workspace, Stripe, Oblio, WhatsApp Business, Google Analytics 4 si Meta Pixel, in functie de optiunile activate.</p>
+
+      <h2>WhatsApp, email si SMS</h2>
+      <p>Prin continuarea formularului, esti de acord sa fii contactat pentru confirmari, remindere si follow-up despre workshop pe email, WhatsApp sau SMS. Poti cere oprirea comunicarilor sau stergerea datelor.</p>
+
+      <h2>Cookies si tracking</h2>
+      <p>Google Analytics 4 si Meta Pixel pornesc doar daca accepti bannerul de cookies. Daca refuzi, pagina ramane functionala, dar nu incarcam trackingul de analytics si reclame.</p>
+
+      <h2>Plati si facturare</h2>
+      <p>Platile VIP sunt procesate prin Stripe pe SRL. Facturarea fiscala se face prin Oblio, manual sau semi-automat in v1, apoi automatizat dupa validarea fluxului.</p>
+
+      <h2>Stergerea datelor</h2>
+      <p>Poti cere oricand stergerea sau corectarea datelor tale folosind emailul de contact al organizatorului. Pana la completarea datelor finale ale firmei, foloseste canalul prin care ai primit confirmarea inscrierii.</p>
+
+      <h2>Actualizare</h2>
+      <p>Ultima actualizare: 17 mai 2026.</p>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-row">
+      <span>AI Automation Zero to Hero</span>
+      <span>Workshop live despre automatizari AI practice.</span>
+    </div>
+  </footer>
+</body>
+</html>

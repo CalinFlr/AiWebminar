@@ -1,0 +1,8 @@
+name = "aiwebminar"
+compatibility_date = "2026-04-28"
+pages_build_output_dir = "."
+
+[vars]
+WORKSHOP_STATUS = "tbd"
+EXPECTED_VIP_AMOUNT = "1900"
+EXPECTED_VIP_CURRENCY = "eur"
