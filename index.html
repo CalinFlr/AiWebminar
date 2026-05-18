@@ -2101,7 +2101,43 @@
       free_signup: "Lead",
       vip_intent: "Lead",
       begin_checkout: "InitiateCheckout",
+      select_plan: "CustomEvent",
+      open_onboarding: "CustomEvent",
       onboarding_submit: "CompleteRegistration"
+    };
+    const googleConsentConfig = {
+      analytics_storage: "denied",
+      ad_storage: "denied",
+      ad_user_data: "denied",
+      ad_personalization: "denied"
+    };
+
+    const cleanTrackingParams = (params = {}) => Object.fromEntries(
+      Object.entries(params).filter(([, value]) => value !== undefined && value !== null && value !== "")
+    );
+
+    const makeTrackingEventId = (eventName, params = {}) => {
+      const key = params.event_id || params.session_id || params.onboarding_id || params.lead_id || `${Date.now()}_${Math.random().toString(16).slice(2)}`;
+      return `aiw_${eventName}_${String(key).replace(/[^a-zA-Z0-9_-]/g, "").slice(0, 80)}`;
+    };
+
+    const initConsentMode = () => {
+      window.dataLayer = window.dataLayer || [];
+      if (typeof window.gtag !== "function") {
+        window.gtag = function gtag() { window.dataLayer.push(arguments); };
+      }
+      window.gtag("consent", "default", googleConsentConfig);
+    };
+
+    const updateGoogleConsent = (granted) => {
+      if (typeof window.gtag !== "function") return;
+      const value = granted ? "granted" : "denied";
+      window.gtag("consent", "update", {
+        analytics_storage: value,
+        ad_storage: value,
+        ad_user_data: value,
+        ad_personalization: value
+      });
     };
 
     const getCookiePreference = () => {
@@ -2113,22 +2149,26 @@
     };
 
     const dispatchTrackingEvent = (eventName, params = {}) => {
+      const cleanParams = cleanTrackingParams(params);
       if (typeof window.gtag === "function") {
-        window.gtag("event", eventName, params);
+        window.gtag("event", eventName, cleanParams);
       }
       if (typeof window.fbq === "function") {
         const metaEvent = metaEventByName[eventName] || "CustomEvent";
-        const metaParams = {
+        const metaParams = cleanTrackingParams({
           content_name: eventName,
-          currency: params.currency,
-          value: params.value,
-          status: params.status,
-          access: params.access
-        };
+          content_category: cleanParams.persona,
+          content_ids: cleanParams.lead_id ? [cleanParams.lead_id] : undefined,
+          currency: cleanParams.currency,
+          value: cleanParams.value,
+          status: cleanParams.status,
+          access: cleanParams.access
+        });
+        const metaOptions = cleanParams.event_id ? { eventID: cleanParams.event_id } : undefined;
         if (metaEvent === "CustomEvent") {
-          window.fbq("trackCustom", eventName, metaParams);
+          window.fbq("trackCustom", eventName, metaParams, metaOptions);
         } else {
-          window.fbq("track", metaEvent, metaParams);
+          window.fbq("track", metaEvent, metaParams, metaOptions);
         }
       }
     };
@@ -2140,9 +2180,11 @@
         name: eventName,
         params: {
           page_location: window.location.href,
+          page_title: document.title,
           ...params
         }
       };
+      event.params.event_id = makeTrackingEventId(eventName, event.params);
       if (preference !== "accepted") {
         trackingQueue.push(event);
         return;
@@ -2264,7 +2306,9 @@
           text: "Am salvat datele tale. Dupa plata de 100 RON, aproximativ 20 EUR, revii la onboardingul pentru cazul tau.",
           actions: `<a class="btn btn-primary" href="${checkoutUrl}">Continua la plata VIP - 100 RON</a>`
         });
-        window.location.href = checkoutUrl;
+        window.setTimeout(() => {
+          window.location.href = checkoutUrl;
+        }, 250);
         return;
       }
 
@@ -2292,12 +2336,22 @@
     };
 
     planInputs.forEach((input) => {
-      input.addEventListener("change", updatePlanCopy);
+      input.addEventListener("change", () => {
+        updatePlanCopy();
+        trackFunnelEvent("select_plan", {
+          access: input.value,
+          placement: "form_toggle"
+        });
+      });
     });
 
     planLinks.forEach((link) => {
       link.addEventListener("click", () => {
         setSelectedPlan(link.dataset.plan);
+        trackFunnelEvent("select_plan", {
+          access: link.dataset.plan,
+          placement: link.textContent.trim().slice(0, 80)
+        });
       });
     });
 
@@ -2311,6 +2365,9 @@
         showFreeConfirmation();
       }
       if (event.target.closest("[data-open-onboarding]")) {
+        trackFunnelEvent("open_onboarding", {
+          access: document.querySelector('input[name="access"]:checked')?.value || "vip"
+        });
         showOnboarding();
       }
     });
@@ -2405,9 +2462,14 @@
       script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(publicConfig.ga4MeasurementId)}`;
       document.head.appendChild(script);
       window.dataLayer = window.dataLayer || [];
-      window.gtag = function gtag() { window.dataLayer.push(arguments); };
+      if (typeof window.gtag !== "function") {
+        window.gtag = function gtag() { window.dataLayer.push(arguments); };
+      }
       window.gtag("js", new Date());
-      window.gtag("config", publicConfig.ga4MeasurementId);
+      window.gtag("config", publicConfig.ga4MeasurementId, {
+        page_title: document.title,
+        page_location: window.location.href
+      });
     };
 
     const loadMetaPixel = () => {
@@ -2430,6 +2492,7 @@
     };
 
     const enableTracking = () => {
+      updateGoogleConsent(true);
       loadGa4();
       loadMetaPixel();
       flushTrackingQueue();
@@ -2452,11 +2515,13 @@
       });
       cookieBanner.querySelector("[data-cookie-reject]").addEventListener("click", () => {
         window.localStorage.setItem(COOKIE_CONSENT_KEY, "rejected");
+        updateGoogleConsent(false);
         trackingQueue.length = 0;
         cookieBanner.hidden = true;
       });
     };
 
+    initConsentMode();
     updatePlanCopy();
     loadPublicConfig().then(initCookieBanner);
 

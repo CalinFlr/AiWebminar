@@ -16,6 +16,8 @@ export async function onRequestGet({ env }) {
   const stripeServerConfigured = Boolean(env.STRIPE_SECRET_KEY && env.STRIPE_WEBHOOK_SECRET);
   const whatsappFreeGroupConfigured = Boolean(env.WHATSAPP_FREE_GROUP_URL);
   const whatsappVipGroupConfigured = Boolean(env.WHATSAPP_VIP_GROUP_URL);
+  const ga4Configured = Boolean(env.GA4_MEASUREMENT_ID);
+  const metaPixelConfigured = Boolean(env.META_PIXEL_ID);
 
   return json({
     ok: true,
@@ -33,6 +35,8 @@ export async function onRequestGet({ env }) {
     opsWebhookConfigured: Boolean(d1Configured || googleOpsConfigured || makeFallbackConfigured),
     ga4MeasurementId: env.GA4_MEASUREMENT_ID || "",
     metaPixelId: env.META_PIXEL_ID || "",
+    ga4Configured,
+    metaPixelConfigured,
     workshopStatus: env.WORKSHOP_STATUS || "tbd",
     workshopLiveUrlConfigured: Boolean(env.WORKSHOP_LIVE_URL)
   });
