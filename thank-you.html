@@ -637,8 +637,8 @@
       `;
       sideBadge.textContent = "Recomandat";
       sideTitle.textContent = "VIP-ul te ajuta sa aplici pe cazul tau.";
-      sideText.textContent = "Daca vrei sa revii la demo-uri si sa intri in Implementation Lab, upgrade-ul de 19 EUR este urmatorul pas.";
-      sideActions.innerHTML = `${linkButton("Vreau VIP - 19 EUR", getCheckoutUrl(), "btn btn-primary", "Plata VIP se activeaza curand")}`;
+      sideText.textContent = "Daca vrei sa revii la demo-uri si sa intri in Implementation Lab, upgrade-ul de 100 RON este urmatorul pas.";
+      sideActions.innerHTML = `${linkButton("Vreau VIP - 100 RON", getCheckoutUrl(), "btn btn-primary", "Plata VIP se activeaza curand")}`;
       onboardingIntro.textContent = "Pentru free, onboardingul ne ajuta sa alegem exemple mai apropiate de contextul tau.";
     };
 
@@ -654,7 +654,7 @@
       sideBadge.textContent = "VIP";
       sideTitle.textContent = "Accesul premium este blocat pana la confirmare.";
       sideText.textContent = "Asta protejeaza grupul premium si materialele VIP.";
-      sideActions.innerHTML = `${linkButton("Reia plata VIP - 19 EUR", getCheckoutUrl(), "btn btn-primary", "Plata VIP se activeaza curand")}`;
+      sideActions.innerHTML = `${linkButton("Reia plata VIP - 100 RON", getCheckoutUrl(), "btn btn-primary", "Plata VIP se activeaza curand")}`;
     };
 
     const renderVipBlocked = (message = "Nu putem confirma plata VIP inca.") => {
@@ -663,7 +663,7 @@
       stateTitle.textContent = "Accesul VIP nu este confirmat inca.";
       stateLead.textContent = message;
       primaryActions.innerHTML = `
-        ${linkButton("Reia plata VIP - 19 EUR", getCheckoutUrl(), "btn btn-primary", "Plata VIP se activeaza curand")}
+        ${linkButton("Reia plata VIP - 100 RON", getCheckoutUrl(), "btn btn-primary", "Plata VIP se activeaza curand")}
         <button class="btn btn-secondary" type="button" data-scroll-onboarding>Completeaza onboardingul</button>
       `;
       statusList.innerHTML = `

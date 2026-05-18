@@ -59,11 +59,11 @@ async function verifyStripeSignature(payload, header, secret) {
 }
 
 function getExpectedAmount(env) {
-  return Number(env.EXPECTED_VIP_AMOUNT || "1900");
+  return Number(env.EXPECTED_VIP_AMOUNT || "10000");
 }
 
 function getExpectedCurrency(env) {
-  return String(env.EXPECTED_VIP_CURRENCY || "eur").toLowerCase();
+  return String(env.EXPECTED_VIP_CURRENCY || "ron").toLowerCase();
 }
 
 function validateCheckoutSession(session, env) {

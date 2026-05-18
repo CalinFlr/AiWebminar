@@ -6,8 +6,8 @@ const baseEnv = {
   STRIPE_SECRET_KEY: "sk_test_local",
   STRIPE_PAYMENT_LINK_ID: "plink_expected",
   STRIPE_WEBHOOK_SECRET: "whsec_local",
-  EXPECTED_VIP_AMOUNT: "1900",
-  EXPECTED_VIP_CURRENCY: "eur",
+  EXPECTED_VIP_AMOUNT: "10000",
+  EXPECTED_VIP_CURRENCY: "ron",
   WHATSAPP_VIP_GROUP_URL: "https://chat.whatsapp.com/vip"
 };
 
@@ -26,8 +26,8 @@ function stripeSession(overrides = {}) {
     payment_status: "paid",
     client_reference_id: "lead_123",
     payment_link: "plink_expected",
-    amount_total: 1900,
-    currency: "eur",
+    amount_total: 10000,
+    currency: "ron",
     customer_details: { email: "buyer@example.com" },
     ...overrides
   };

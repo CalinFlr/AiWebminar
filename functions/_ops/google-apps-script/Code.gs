@@ -412,11 +412,11 @@ function vipIntentEmail(record) {
   var checkoutUrl = String(record.checkoutUrl || "").trim();
   var paymentLines = checkoutUrl
     ? [
-      "Finalizeaza plata VIP de 19 EUR prin Stripe aici:",
+      "Finalizeaza plata VIP de 100 RON prin Stripe aici:",
       checkoutUrl
     ]
     : [
-      "Plata VIP de 19 EUR se finalizeaza prin Stripe imediat ce activam checkout-ul pe SRL."
+      "Plata VIP de 100 RON se finalizeaza prin Stripe imediat ce activam checkout-ul pe SRL."
     ];
 
   return [
