@@ -774,7 +774,12 @@
       });
     };
 
-    const getTurnstileToken = (formName) => publicConfig.turnstileSiteKey ? (turnstileTokens.get(formName) || "") : "";
+    const getTurnstileToken = (formName) => {
+      if (!publicConfig.turnstileSiteKey) return "";
+      const container = document.querySelector(`[data-turnstile-form="${formName}"]`);
+      const fieldToken = container?.querySelector('[name="cf-turnstile-response"]')?.value || "";
+      return turnstileTokens.get(formName) || fieldToken;
+    };
 
     const resetTurnstile = (formName) => {
       const widgetId = turnstileWidgets.get(formName);

@@ -367,6 +367,13 @@ async function testConfigExposesOnlyTurnstileSiteKey() {
   assert.equal(Object.hasOwn(body, "TURNSTILE_SECRET_KEY"), false);
 }
 
+async function testFrontendReadsTurnstileHiddenFallback() {
+  const indexHtml = await readFile(new URL("../index.html", import.meta.url), "utf8");
+  const thankYouHtml = await readFile(new URL("../thank-you.html", import.meta.url), "utf8");
+  assert.match(indexHtml, /cf-turnstile-response/);
+  assert.match(thankYouHtml, /cf-turnstile-response/);
+}
+
 async function testStaticGuardBlocksInternalArtifacts() {
   const response = await staticGuard({
     request: request("https://aiwebminar.test/package.json"),
@@ -507,6 +514,7 @@ const tests = [
   testThankYouTrackingDoesNotSendStripeSessionId,
   testConfigDoesNotExposeWhatsappGroupUrls,
   testConfigExposesOnlyTurnstileSiteKey,
+  testFrontendReadsTurnstileHiddenFallback,
   testStaticGuardBlocksInternalArtifacts,
   testStaticGuardAllowsPublicPages,
   testFreeAccessRequiresSafeLeadId,
