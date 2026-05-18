@@ -145,8 +145,10 @@ export async function onRequestPost({ request, env }) {
       const status = ops.skipped || String(ops.error || "").includes("not_configured") ? 503 : 502;
       return json({ ok: false, error: ops.error || "payment_webhook_failed", ops }, { status });
     }
-    if (hasD1(env)) {
+    if (hasD1(env) && !ops.duplicate) {
       ops.sync = await postOpsWebhook(env, "payment", record, env.MAKE_PAYMENT_WEBHOOK_URL);
+    } else if (hasD1(env)) {
+      ops.sync = { skipped: true, reason: "duplicate_event" };
     }
   }
 
