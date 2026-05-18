@@ -663,7 +663,10 @@
 
     .toolkit-visual {
       min-height: 360px;
-      position: relative;
+      display: grid;
+      align-content: center;
+      gap: 14px;
+      padding: 28px;
       overflow: hidden;
       border-radius: 8px;
       background: var(--ink);
@@ -671,8 +674,7 @@
     }
 
     .tool-card {
-      position: absolute;
-      width: 56%;
+      width: min(78%, 360px);
       border: 1px solid rgba(255, 255, 255, 0.16);
       border-radius: 8px;
       padding: 16px;
@@ -681,19 +683,17 @@
     }
 
     .tool-card:nth-child(1) {
-      top: 34px;
-      left: 28px;
+      justify-self: start;
     }
 
     .tool-card:nth-child(2) {
-      top: 132px;
-      right: 28px;
+      justify-self: end;
       background: rgba(47, 125, 122, 0.28);
     }
 
     .tool-card:nth-child(3) {
-      bottom: 34px;
-      left: 58px;
+      justify-self: start;
+      margin-left: 42px;
       background: rgba(184, 149, 76, 0.24);
     }
 
@@ -1382,8 +1382,9 @@
       .tool-card:nth-child(1),
       .tool-card:nth-child(2),
       .tool-card:nth-child(3) {
-        position: static;
         width: 100%;
+        justify-self: stretch;
+        margin-left: 0;
       }
 
       .persona-tabs,
@@ -1684,7 +1685,7 @@
       </div>
     </section>
 
-    <section class="section section-alt" aria-labelledby="toolkit-title">
+    <section class="section section-alt" id="ce-primesti" aria-labelledby="toolkit-title">
       <div class="container toolkit">
         <div class="toolkit-visual" aria-hidden="true">
           <div class="tool-card">
