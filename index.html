@@ -941,6 +941,13 @@
       color: var(--muted);
     }
 
+    .price-note {
+      margin: -8px 0 18px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
     .price-card .mini-list {
       margin-bottom: 26px;
     }
@@ -1830,6 +1837,7 @@
             <span class="price-badge">Recomandat</span>
             <h3>VIP Implementation Lab</h3>
             <div class="price">100 <span>RON</span></div>
+            <p class="price-note">aprox. 20 EUR pentru diaspora</p>
             <ul class="mini-list">
               <li>Tot ce este inclus in workshopul live.</li>
               <li>Replay-uri cu timestamp-uri, ca sa poti reveni la demo-uri.</li>
@@ -1928,7 +1936,7 @@
               <label class="plan-choice">
                 <input type="radio" name="access" value="vip" checked>
                 <span class="plan-choice-body">
-                  <strong>VIP Implementation Lab - 100 RON</strong>
+                  <strong>VIP Implementation Lab - 100 RON / aprox. 20 EUR</strong>
                   <em>Recomandat</em>
                   <small>Replay-uri, workbook, hot seats si roadmap pe cazul tau.</small>
                 </span>
@@ -2191,7 +2199,7 @@
       if (checkoutUrl) {
         setNextStep({
           title: "Te trimitem catre plata VIP.",
-          text: "Am salvat datele tale. Dupa plata de 100 RON revii la onboardingul pentru cazul tau.",
+          text: "Am salvat datele tale. Dupa plata de 100 RON, aproximativ 20 EUR, revii la onboardingul pentru cazul tau.",
           actions: `<a class="btn btn-primary" href="${checkoutUrl}">Continua la plata VIP - 100 RON</a>`
         });
         window.location.href = checkoutUrl;
