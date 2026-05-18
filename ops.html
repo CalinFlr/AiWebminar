@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ops | AIWebminar</title>
+  <meta name="robots" content="noindex,nofollow">
+  <style>
+    :root {
+      --ink: #171715;
+      --paper: #f7f3e9;
+      --muted: #6d675e;
+      --line: rgba(23, 23, 21, 0.16);
+      --white: #fff;
+      --teal: #2f7d7a;
+      --coral: #d96f55;
+      --green: #2f7d4f;
+      --red: #ad3f34;
+      --shadow: 0 18px 50px rgba(23, 23, 21, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100dvh;
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    main {
+      width: min(980px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 36px 0 56px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(2.2rem, 7vw, 4.2rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin: 0 0 14px;
+      font-size: 1.2rem;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    p {
+      color: var(--muted);
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .topbar {
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--ink);
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      color: var(--white);
+      background: var(--teal);
+      font-size: 0.82rem;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.68);
+      box-shadow: var(--shadow);
+    }
+
+    .token-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      min-height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 0 12px;
+      color: var(--ink);
+      background: var(--white);
+      font: inherit;
+    }
+
+    button,
+    .btn {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      padding: 0 14px;
+      color: var(--white);
+      background: var(--ink);
+      font: inherit;
+      font-weight: 900;
+      text-decoration: none;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .btn-secondary {
+      color: var(--ink);
+      border-color: var(--line);
+      background: var(--white);
+    }
+
+    .export-grid,
+    .status-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .export-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: 14px;
+    }
+
+    .status-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid var(--line);
+      padding: 10px 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .status-item:last-child {
+      border-bottom: 0;
+    }
+
+    .pill {
+      border-radius: 999px;
+      padding: 4px 9px;
+      color: var(--white);
+      background: var(--red);
+      font-size: 0.78rem;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .pill.is-ok {
+      background: var(--green);
+    }
+
+    .note {
+      min-height: 24px;
+      margin: 12px 0 0;
+      color: var(--coral);
+      font-weight: 800;
+    }
+
+    code {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 2px 5px;
+      background: rgba(255, 255, 255, 0.7);
+      font-size: 0.9em;
+    }
+
+    @media (max-width: 780px) {
+      .topbar,
+      .layout,
+      .token-row,
+      .export-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="topbar">
+      <a class="brand" href="index.html">
+        <span class="brand-mark">AI</span>
+        <span>AIWebminar Ops</span>
+      </a>
+      <a class="btn btn-secondary" href="index.html">Landing page</a>
+    </div>
+
+    <section class="panel" aria-labelledby="title">
+      <h1 id="title">Ops dashboard</h1>
+      <p>Exporturi CSV si status de configurare pentru funnel. Tokenul ramane in browserul tau si se trimite doar catre endpointul de export.</p>
+    </section>
+
+    <div class="layout" style="margin-top: 18px;">
+      <section class="panel" aria-labelledby="exports-title">
+        <h2 id="exports-title">Export CSV</h2>
+        <div class="token-row">
+          <input id="adminToken" type="password" autocomplete="off" placeholder="ADMIN_EXPORT_TOKEN">
+          <button type="button" id="toggleToken">Arata</button>
+        </div>
+        <div class="export-grid" id="exportGrid">
+          <button type="button" data-export="leads">Leads</button>
+          <button type="button" data-export="onboarding">Onboarding</button>
+          <button type="button" data-export="payments">Payments</button>
+          <button type="button" data-export="reminders">Reminders</button>
+        </div>
+        <p class="note" id="exportNote" aria-live="polite"></p>
+      </section>
+
+      <aside class="panel" aria-labelledby="status-title">
+        <h2 id="status-title">Status live</h2>
+        <div class="status-grid" id="statusGrid">
+          <p>Se incarca...</p>
+        </div>
+      </aside>
+    </div>
+
+    <section class="panel" style="margin-top: 18px;" aria-labelledby="next-title">
+      <h2 id="next-title">Urmatoarele setari</h2>
+      <p>Stripe: seteaza Payment Link URL, Payment Link ID, Secret Key si Webhook Secret. WhatsApp: seteaza linkurile free si VIP. Privacy: completeaza datele firmei inainte de ads.</p>
+      <p>Export rapid: endpointul <code>/api/export?type=leads</code> accepta tokenul prin header <code>Authorization: Bearer</code>.</p>
+    </section>
+  </main>
+
+  <script>
+    const configEndpoint = "/api/config";
+    const exportEndpoint = "/api/export";
+    const tokenInput = document.querySelector("#adminToken");
+    const toggleToken = document.querySelector("#toggleToken");
+    const exportGrid = document.querySelector("#exportGrid");
+    const exportNote = document.querySelector("#exportNote");
+    const statusGrid = document.querySelector("#statusGrid");
+
+    const statusItems = [
+      ["Ops provider", "opsProvider", "cloudflare_d1"],
+      ["D1", "d1Configured", true],
+      ["Stripe link", "stripePaymentLinkConfigured", true],
+      ["Stripe server", "stripeServerConfigured", true],
+      ["VIP gate", "vipGateConfigured", true],
+      ["WhatsApp free", "whatsappFreeGroupConfigured", true],
+      ["WhatsApp VIP", "whatsappVipGroupConfigured", true],
+      ["GA4", "ga4MeasurementId", "present"],
+      ["Meta Pixel", "metaPixelId", "present"]
+    ];
+
+    const isOk = (value, expected) => {
+      if (expected === "present") return Boolean(value);
+      return value === expected;
+    };
+
+    const renderStatus = (config) => {
+      statusGrid.innerHTML = statusItems.map(([label, key, expected]) => {
+        const value = config[key];
+        const ok = isOk(value, expected);
+        const display = typeof value === "boolean" ? (value ? "setat" : "lipsa") : (value || "lipsa");
+        return `
+          <div class="status-item">
+            <span>${label}</span>
+            <span class="pill ${ok ? "is-ok" : ""}">${display}</span>
+          </div>
+        `;
+      }).join("");
+    };
+
+    const loadStatus = async () => {
+      try {
+        const response = await fetch(configEndpoint, { headers: { accept: "application/json" } });
+        const config = await response.json();
+        renderStatus(config);
+      } catch (error) {
+        statusGrid.innerHTML = "<p>Nu am putut incarca statusul.</p>";
+      }
+    };
+
+    toggleToken.addEventListener("click", () => {
+      const visible = tokenInput.type === "text";
+      tokenInput.type = visible ? "password" : "text";
+      toggleToken.textContent = visible ? "Arata" : "Ascunde";
+    });
+
+    const filenameFromResponse = (response, fallback) => {
+      const disposition = response.headers.get("content-disposition") || "";
+      const match = disposition.match(/filename="([^"]+)"/);
+      return match ? match[1] : fallback;
+    };
+
+    const downloadBlob = (blob, filename) => {
+      const objectUrl = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = objectUrl;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(objectUrl);
+    };
+
+    exportGrid.addEventListener("click", async (event) => {
+      const button = event.target.closest("[data-export]");
+      if (!button) return;
+      const token = tokenInput.value.trim();
+      if (!token) {
+        exportNote.textContent = "Introdu ADMIN_EXPORT_TOKEN.";
+        tokenInput.focus();
+        return;
+      }
+      exportNote.textContent = "Generez exportul...";
+      const url = new URL(exportEndpoint, window.location.href);
+      url.searchParams.set("type", button.dataset.export);
+      try {
+        const response = await fetch(url.toString(), {
+          headers: {
+            accept: "text/csv",
+            authorization: `Bearer ${token}`
+          }
+        });
+        if (!response.ok) {
+          let error = "export_failed";
+          try {
+            const payload = await response.json();
+            error = payload.error || error;
+          } catch (_) {
+            error = response.statusText || error;
+          }
+          throw new Error(error);
+        }
+        const blob = await response.blob();
+        downloadBlob(blob, filenameFromResponse(response, `aiwebminar-${button.dataset.export}.csv`));
+        exportNote.textContent = "Export generat.";
+      } catch (error) {
+        exportNote.textContent = `Nu am putut genera exportul: ${error.message}`;
+      }
+    });
+
+    loadStatus();
+  </script>
+</body>
+</html>
