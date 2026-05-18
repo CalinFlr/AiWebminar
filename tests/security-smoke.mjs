@@ -1,4 +1,11 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+import { readJson as readRequestJson } from "../functions/_shared/http.js";
+import { onRequest as staticGuard } from "../functions/_middleware.js";
+import { onRequestGet as config } from "../functions/api/config.js";
+import { onRequestGet as exportCsv } from "../functions/api/export.js";
+import { onRequestGet as freeAccess } from "../functions/api/free-access.js";
+import { onRequestPost as onboarding } from "../functions/api/onboarding.js";
 import { onRequestGet as vipAccess } from "../functions/api/vip-access.js";
 import { onRequestPost as stripeWebhook } from "../functions/api/stripe-webhook.js";
 
@@ -42,6 +49,18 @@ function fakeD1(changes = 1) {
           run: async () => {
             this.writes.push({ query, values });
             return { meta: { changes } };
+          },
+          all: async () => {
+            this.writes.push({ query, values });
+            return { results: [] };
+          },
+          first: async () => {
+            this.writes.push({ query, values });
+            return {
+              lead_id: values[0] || "a9196fad-fb81-4a99-9abd-e7f8d77bf69b",
+              access: "free",
+              status: "free_registered"
+            };
           }
         })
       };
@@ -66,6 +85,16 @@ async function stripeSignature(payload, secret, timestamp = Math.floor(Date.now(
 async function testVipAccessBlocksMissingSession() {
   const response = await vipAccess({
     request: request("https://aiwebminar.test/api/vip-access"),
+    env: baseEnv
+  });
+  const body = await readJson(response);
+  assert.equal(response.status, 403);
+  assert.equal(body.error, "missing_session");
+}
+
+async function testVipAccessBlocksUnsafeSessionId() {
+  const response = await vipAccess({
+    request: request("https://aiwebminar.test/api/vip-access?session_id=cs_%2F..%2Fsecret"),
     env: baseEnv
   });
   const body = await readJson(response);
@@ -118,9 +147,165 @@ async function testVipAccessAllowsExpectedPaidSession() {
     assert.equal(body.ok, true);
     assert.equal(body.access, "vip");
     assert.equal(body.leadId, "lead_123");
+    assert.equal(Object.hasOwn(body, "email"), false);
   } finally {
     globalThis.fetch = originalFetch;
   }
+}
+
+function onboardingPayload(overrides = {}) {
+  return {
+    onboardingId: "onboarding_123",
+    leadId: "lead_123",
+    signupEmail: "buyer@example.com",
+    access: "vip",
+    persona: "business",
+    stripeSessionId: "cs_test_123",
+    automationIdea: "Vreau un agent pentru follow-up.",
+    currentTools: "Sheets",
+    publicLink: "",
+    desiredOutcome: "Sa raspunda mai repede leadurilor.",
+    createdAt: "2026-05-18T00:00:00.000Z",
+    ...overrides
+  };
+}
+
+async function testOnboardingDowngradesUnverifiedVipAccess() {
+  const db = fakeD1();
+  const response = await onboarding({
+    request: request("https://aiwebminar.test/api/onboarding", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(onboardingPayload({ stripeSessionId: "" }))
+    }),
+    env: { ...baseEnv, AIWEBMINAR_DB: db }
+  });
+  const body = await readJson(response);
+  assert.equal(response.status, 200);
+  assert.equal(body.access, "vip_unverified");
+  assert.equal(body.vipVerified, false);
+  assert.equal(db.writes[0].values[3], "vip_unverified");
+}
+
+async function testOnboardingKeepsVipOnlyForVerifiedPayment() {
+  const originalFetch = globalThis.fetch;
+  const db = fakeD1();
+  globalThis.fetch = async () => new Response(JSON.stringify(stripeSession()), {
+    headers: { "content-type": "application/json" }
+  });
+
+  try {
+    const response = await onboarding({
+      request: request("https://aiwebminar.test/api/onboarding", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(onboardingPayload())
+      }),
+      env: { ...baseEnv, AIWEBMINAR_DB: db }
+    });
+    const body = await readJson(response);
+    assert.equal(response.status, 200);
+    assert.equal(body.access, "vip");
+    assert.equal(body.vipVerified, true);
+    assert.equal(db.writes[0].values[3], "vip");
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+}
+
+async function testExportRejectsTokenInQueryString() {
+  const response = await exportCsv({
+    request: request("https://aiwebminar.test/api/export?token=admin_secret"),
+    env: { ADMIN_EXPORT_TOKEN: "admin_secret", AIWEBMINAR_DB: fakeD1() }
+  });
+  const body = await readJson(response);
+  assert.equal(response.status, 403);
+  assert.equal(body.error, "forbidden");
+}
+
+async function testExportAllowsBearerToken() {
+  const response = await exportCsv({
+    request: request("https://aiwebminar.test/api/export?type=payments", {
+      headers: { authorization: "Bearer admin_secret" }
+    }),
+    env: { ADMIN_EXPORT_TOKEN: "admin_secret", AIWEBMINAR_DB: fakeD1() }
+  });
+  assert.equal(response.status, 200);
+  assert.equal(response.headers.get("content-type"), "text/csv; charset=utf-8");
+}
+
+async function testReadJsonRejectsOversizedBodyWithoutTrustingContentLength() {
+  await assert.rejects(
+    readRequestJson(request("https://aiwebminar.test/api/lead", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ value: "x".repeat(16001) })
+    })),
+    /payload_too_large/
+  );
+}
+
+async function testThankYouTrackingDoesNotSendStripeSessionId() {
+  const html = await readFile(new URL("../thank-you.html", import.meta.url), "utf8");
+  assert.match(html, /stripSensitiveParamsFromAddressBar/);
+  assert.match(html, /window\.history\.replaceState/);
+  assert.match(html, /url\.searchParams\.delete\("session_id"\)/);
+  assert.doesNotMatch(html, /page_location:\s*window\.location\.href/);
+  assert.doesNotMatch(html, /session_id:\s*(?:sessionId|payload\.stripeSessionId|vipData\.sessionId)/);
+}
+
+async function testConfigDoesNotExposeWhatsappGroupUrls() {
+  const response = await config({
+    env: {
+      ...baseEnv,
+      STRIPE_PAYMENT_LINK_URL: "https://buy.stripe.com/test",
+      WHATSAPP_FREE_GROUP_URL: "https://chat.whatsapp.com/free"
+    }
+  });
+  const body = await readJson(response);
+  assert.equal(response.status, 200);
+  assert.equal(body.whatsappFreeGroupConfigured, true);
+  assert.equal(Object.hasOwn(body, "whatsappFreeGroupUrl"), false);
+}
+
+async function testStaticGuardBlocksInternalArtifacts() {
+  const response = await staticGuard({
+    request: request("https://aiwebminar.test/package.json"),
+    next: async () => new Response("public")
+  });
+  assert.equal(response.status, 404);
+  assert.equal(await response.text(), "Not found");
+}
+
+async function testStaticGuardAllowsPublicPages() {
+  const response = await staticGuard({
+    request: request("https://aiwebminar.test/privacy.html"),
+    next: async () => new Response("public")
+  });
+  assert.equal(response.status, 200);
+  assert.equal(await response.text(), "public");
+}
+
+async function testFreeAccessRequiresSafeLeadId() {
+  const response = await freeAccess({
+    request: request("https://aiwebminar.test/api/free-access?lead_id=../package.json"),
+    env: { ...baseEnv, WHATSAPP_FREE_GROUP_URL: "https://chat.whatsapp.com/free", AIWEBMINAR_DB: fakeD1() }
+  });
+  const body = await readJson(response);
+  assert.equal(response.status, 403);
+  assert.equal(body.error, "missing_lead");
+}
+
+async function testFreeAccessReturnsGroupForSavedLead() {
+  const response = await freeAccess({
+    request: request("https://aiwebminar.test/api/free-access?lead_id=a9196fad-fb81-4a99-9abd-e7f8d77bf69b"),
+    env: { ...baseEnv, WHATSAPP_FREE_GROUP_URL: "https://chat.whatsapp.com/free", AIWEBMINAR_DB: fakeD1() }
+  });
+  const body = await readJson(response);
+  assert.equal(response.status, 200);
+  assert.equal(body.ok, true);
+  assert.equal(body.leadId, "a9196fad-fb81-4a99-9abd-e7f8d77bf69b");
+  assert.equal(body.whatsappFreeGroupUrl, "https://chat.whatsapp.com/free");
 }
 
 async function testStripeWebhookRejectsInvalidSignature() {
@@ -207,10 +392,22 @@ async function testStripeWebhookDoesNotSyncDuplicatePayment() {
 }
 
 const tests = [
+  testReadJsonRejectsOversizedBodyWithoutTrustingContentLength,
   testVipAccessBlocksMissingSession,
+  testVipAccessBlocksUnsafeSessionId,
   testVipAccessRequiresPaymentLinkConfig,
   testVipAccessBlocksMismatchedAmount,
   testVipAccessAllowsExpectedPaidSession,
+  testOnboardingDowngradesUnverifiedVipAccess,
+  testOnboardingKeepsVipOnlyForVerifiedPayment,
+  testExportRejectsTokenInQueryString,
+  testExportAllowsBearerToken,
+  testThankYouTrackingDoesNotSendStripeSessionId,
+  testConfigDoesNotExposeWhatsappGroupUrls,
+  testStaticGuardBlocksInternalArtifacts,
+  testStaticGuardAllowsPublicPages,
+  testFreeAccessRequiresSafeLeadId,
+  testFreeAccessReturnsGroupForSavedLead,
   testStripeWebhookRejectsInvalidSignature,
   testStripeWebhookIgnoresWrongPaymentLink,
   testStripeWebhookStoresExpectedPayment,

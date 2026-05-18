@@ -52,20 +52,35 @@ function csv(rows, columns) {
 }
 
 function getToken(request) {
-  const url = new URL(request.url);
   const bearer = request.headers.get("authorization") || "";
   if (bearer.toLowerCase().startsWith("bearer ")) {
     return bearer.slice(7).trim();
   }
-  return url.searchParams.get("token") || "";
+  return "";
+}
+
+function safeEqual(a, b) {
+  const left = String(a || "");
+  const right = String(b || "");
+  let result = left.length ^ right.length;
+  const length = Math.max(left.length, right.length);
+
+  for (let index = 0; index < length; index += 1) {
+    result |= (left.charCodeAt(index) || 0) ^ (right.charCodeAt(index) || 0);
+  }
+
+  return result === 0;
 }
 
 export async function onRequestGet({ request, env }) {
   if (!env.ADMIN_EXPORT_TOKEN) {
     return json({ ok: false, error: "admin_export_token_not_configured" }, { status: 503 });
   }
-  if (getToken(request) !== env.ADMIN_EXPORT_TOKEN) {
-    return json({ ok: false, error: "forbidden" }, { status: 403 });
+  if (!safeEqual(getToken(request), env.ADMIN_EXPORT_TOKEN)) {
+    return json({ ok: false, error: "forbidden" }, {
+      status: 403,
+      headers: { "www-authenticate": "Bearer" }
+    });
   }
   if (!hasD1(env)) {
     return json({ ok: false, error: "d1_not_configured" }, { status: 503 });

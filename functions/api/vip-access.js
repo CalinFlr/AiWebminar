@@ -18,6 +18,10 @@ function isPaidSession(session) {
   return session && session.payment_status === "paid" && session.status === "complete";
 }
 
+function isSafeSessionId(sessionId) {
+  return /^cs_[A-Za-z0-9_]{6,120}$/.test(sessionId);
+}
+
 function getExpectedAmount(env) {
   return Number(env.EXPECTED_VIP_AMOUNT || "10000");
 }
@@ -31,7 +35,7 @@ export async function onRequestGet({ request, env }) {
   const sessionId = url.searchParams.get("session_id") || "";
   const leadId = url.searchParams.get("lead_id") || "";
 
-  if (!sessionId || !sessionId.startsWith("cs_")) {
+  if (!sessionId || !isSafeSessionId(sessionId)) {
     return json({
       ok: false,
       access: "blocked",
@@ -114,7 +118,6 @@ export async function onRequestGet({ request, env }) {
     access: "vip",
     sessionId,
     leadId: session.client_reference_id,
-    email: session.customer_details?.email || session.customer_email || "",
     amountTotal: session.amount_total || 0,
     currency: session.currency || "eur",
     whatsappVipGroupUrl: env.WHATSAPP_VIP_GROUP_URL || "",

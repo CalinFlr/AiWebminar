@@ -1,6 +1,6 @@
 name = "aiwebminar"
 compatibility_date = "2026-04-28"
-pages_build_output_dir = "."
+pages_build_output_dir = "dist"
 
 [vars]
 PUBLIC_SITE_URL = "https://aiwebminar.pages.dev"

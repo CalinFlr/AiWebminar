@@ -25,7 +25,6 @@ export async function onRequestGet({ env }) {
     stripePaymentLinkConfigured,
     stripeServerConfigured,
     vipGateConfigured: Boolean(stripePaymentLinkConfigured && env.STRIPE_SECRET_KEY),
-    whatsappFreeGroupUrl: env.WHATSAPP_FREE_GROUP_URL || "",
     whatsappFreeGroupConfigured,
     whatsappVipGroupConfigured,
     opsProvider: getOpsProvider(env),

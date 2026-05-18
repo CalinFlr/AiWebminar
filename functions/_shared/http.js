@@ -18,8 +18,9 @@ export function methodNotAllowed() {
 }
 
 export async function readJson(request) {
+  const maxLength = 16000;
   const length = Number(request.headers.get("content-length") || "0");
-  if (length > 16000) {
+  if (length > maxLength) {
     throw new Error("payload_too_large");
   }
 
@@ -28,7 +29,16 @@ export async function readJson(request) {
     throw new Error("invalid_content_type");
   }
 
-  return request.json();
+  const text = await request.text();
+  if (text.length > maxLength) {
+    throw new Error("payload_too_large");
+  }
+
+  try {
+    return JSON.parse(text);
+  } catch (error) {
+    throw new Error("invalid_json");
+  }
 }
 
 export async function postWebhook(url, payload) {

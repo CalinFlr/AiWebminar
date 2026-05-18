@@ -534,6 +534,7 @@
     const ONBOARDING_ENDPOINT = "/api/onboarding";
     const CONFIG_ENDPOINT = "/api/config";
     const VIP_ACCESS_ENDPOINT = "/api/vip-access";
+    const FREE_ACCESS_ENDPOINT = "/api/free-access";
 
     const params = new URLSearchParams(window.location.search);
     const sessionId = params.get("session_id") || "";
@@ -582,6 +583,19 @@
     const cleanTrackingParams = (params = {}) => Object.fromEntries(
       Object.entries(params).filter(([, value]) => value !== undefined && value !== null && value !== "")
     );
+
+    const getTrackingPageLocation = () => {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("session_id");
+      return url.toString();
+    };
+
+    const stripSensitiveParamsFromAddressBar = () => {
+      if (!window.history?.replaceState || !sessionId) return;
+      const url = new URL(window.location.href);
+      url.searchParams.delete("session_id");
+      window.history.replaceState({}, document.title, url.toString());
+    };
 
     const makeTrackingEventId = (eventName, params = {}, onceKey = "") => {
       const key = onceKey || params.event_id || params.session_id || params.onboarding_id || params.lead_id || `${Date.now()}_${Math.random().toString(16).slice(2)}`;
@@ -673,7 +687,7 @@
         name: eventName,
         onceKey: options.onceKey || "",
         params: {
-          page_location: window.location.href,
+          page_location: getTrackingPageLocation(),
           page_title: document.title,
           ...params
         }
@@ -744,17 +758,32 @@
       return `<a class="${className}" href="${href}" target="_blank" rel="noopener">${label}</a>`;
     };
 
+    const fetchFreeAccess = async () => {
+      if (!leadId) return {};
+      try {
+        const url = new URL(FREE_ACCESS_ENDPOINT, window.location.href);
+        url.searchParams.set("lead_id", leadId);
+        const response = await fetch(url.toString(), { headers: { accept: "application/json" } });
+        const result = await response.json().catch(() => ({}));
+        return response.ok && result.ok ? result : {};
+      } catch (error) {
+        console.warn("Free access endpoint indisponibil.", error);
+        return {};
+      }
+    };
+
     const scrollToOnboarding = () => {
       document.querySelector("#onboarding").scrollIntoView({ behavior: "smooth", block: "start" });
     };
 
-    const renderFree = () => {
+    const renderFree = async () => {
+      const freeData = await fetchFreeAccess();
       confirmedAccess = "free";
       stateKicker.textContent = "Loc prioritar gratuit";
       stateTitle.textContent = "Locul tau prioritar este salvat.";
       stateLead.textContent = "Vei primi linkul workshopului pe email si reminder pe WhatsApp inainte de fiecare sesiune.";
       primaryActions.innerHTML = `
-        ${linkButton("Intra in grupul WhatsApp gratuit", publicConfig.whatsappFreeGroupUrl, "btn btn-primary", "Grupul WhatsApp gratuit se activeaza curand")}
+        ${linkButton("Intra in grupul WhatsApp gratuit", freeData.whatsappFreeGroupUrl, "btn btn-primary", "Grupul WhatsApp gratuit se activeaza curand")}
         <button class="btn btn-secondary" type="button" data-scroll-onboarding>Completeaza onboardingul</button>
       `;
       statusList.innerHTML = `
@@ -832,7 +861,6 @@
       trackFunnelEvent("vip_purchase", {
         access: "vip",
         lead_id: vipData.leadId || leadId,
-        session_id: vipData.sessionId || sessionId,
         value: Number(vipData.amountTotal || 10000) / 100,
         currency: String(vipData.currency || "ron").toUpperCase()
       }, { onceKey: `vip_${vipData.sessionId || sessionId || leadId}` });
@@ -871,7 +899,6 @@
           trackFunnelEvent("join_whatsapp_group", {
             access: confirmedAccess,
             lead_id: leadId,
-            session_id: sessionId,
             group_type: confirmedAccess === "vip" ? "vip" : "free"
           });
         }
@@ -887,8 +914,7 @@
       if (event.target.closest("[data-scroll-onboarding]")) {
         trackFunnelEvent("open_onboarding", {
           access: confirmedAccess,
-          lead_id: leadId,
-          session_id: sessionId
+          lead_id: leadId
         });
         scrollToOnboarding();
       }
@@ -916,8 +942,7 @@
       trackFunnelEvent("onboarding_submit", {
         access: payload.access,
         lead_id: payload.leadId || "",
-        onboarding_id: payload.onboardingId,
-        session_id: payload.stripeSessionId || ""
+        onboarding_id: payload.onboardingId
       });
     });
 
@@ -935,7 +960,7 @@
       window.gtag("js", new Date());
       window.gtag("config", publicConfig.ga4MeasurementId, {
         page_title: document.title,
-        page_location: window.location.href
+        page_location: getTrackingPageLocation()
       });
     };
 
@@ -989,6 +1014,7 @@
     };
 
     initConsentMode();
+    stripSensitiveParamsFromAddressBar();
     loadPublicConfig().then(() => {
       initCookieBanner();
       if (requestedVip) {
