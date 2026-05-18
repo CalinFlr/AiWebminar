@@ -391,11 +391,12 @@ function sendVipEmail(record) {
   var html = brandedEmail(
     "VIP confirmat",
     "Accesul tau VIP este confirmat.",
-    "Plata a fost verificata si accesul premium este activ.",
+    "Salut. Plata a fost verificata si accesul premium este activ. De aici intri in zona in care nu mai discutam AI ca jucarie, ci ca sistem pe cazul tau.",
     [
       "Intra in grupul WhatsApp VIP pentru link, remindere si materialele premium.",
       "Completeaza onboardingul ca sa stim ce proces vrei sa aducem mai aproape de workshop.",
-      "VIP include replay-uri, workbook, Implementation Lab si roadmap pe cazul tau."
+      "VIP include replay-uri, workbook, Implementation Lab si roadmap pe cazul tau.",
+      "Pastreaza emailul acesta: dupa workshop il folosim ca reper pentru urmatorii pasi si pentru materialele promise."
     ],
     vipGroupUrl ? "Intra in grupul WhatsApp VIP" : "Deschide pagina de confirmare",
     vipGroupUrl || thankYouUrl,
@@ -422,11 +423,13 @@ function freeLeadEmail(record) {
   var html = brandedEmail(
     "Inscriere confirmata",
     "Locul tau prioritar este salvat.",
-    "Salut, " + firstName(record.name) + ". Esti pe lista pentru workshopul Agenti AI 24/7.",
+    "Salut, " + firstName(record.name) + ". Esti pe lista pentru workshopul Agenti AI 24/7. Nu e un webinar despre prompturi dragute, ci despre cum incepi sa gandesti agenti AI care fac treaba cap-coada.",
     [
       "Intra in grupul WhatsApp gratuit pentru link, anunturi si remindere.",
       "Vei vedea demo-uri live cu agenti AI, browser automation si workflow-uri multi-agent.",
-      "Cand confirmam datele sesiunilor, primesti detaliile pe email si in grup."
+      "O sa legam exemplele de nevoi reale: business, job, consultanta, research, continut si procese repetitive.",
+      "Cand confirmam datele sesiunilor, primesti detaliile pe email si in grup.",
+      "Daca vrei sa lucrezi mai aplicat pe cazul tau, VIP-ul adauga replay-uri, workbook si Implementation Lab."
     ],
     "Intra in grupul WhatsApp",
     groupUrl,
@@ -460,11 +463,13 @@ function vipIntentEmail(record) {
   var html = brandedEmail(
     "VIP Implementation Lab",
     "Cererea ta VIP este salvata.",
-    "Salut, " + firstName(record.name) + ". Am salvat intentia ta pentru VIP Implementation Lab.",
+    "Salut, " + firstName(record.name) + ". Am salvat intentia ta pentru VIP Implementation Lab. Asta este partea pentru oamenii care nu vor doar sa asiste, ci vor sa plece cu un plan clar pentru cazul lor.",
     [
       "Investitie: " + price + ". Plata se proceseaza in RON; pentru diaspora banca face conversia automat.",
       "Dupa plata primesti acces la grupul WhatsApp VIP, replay-uri, workbook si Implementation Lab.",
-      "Scopul este sa pleci cu un roadmap de implementare pe cazul tau, nu doar cu idei frumoase."
+      "Scopul este sa pleci cu un roadmap de implementare pe cazul tau, nu doar cu idei frumoase.",
+      "In VIP ne uitam la brief, context, pasi, verificari si unde merita cu adevarat sa pui un agent AI.",
+      "Daca ai deja o idee, o aduci. Daca nu ai, o construim din durerea reala: timp pierdut, follow-up, research, operatiuni sau continut."
     ],
     checkoutUrl ? "Continua la plata VIP" : "Deschide pagina workshopului",
     checkoutUrl || getProp("PUBLIC_SITE_URL", "https://aiwebminar.pages.dev"),
@@ -494,37 +499,37 @@ function sendEmail(to, subject, body, htmlBody) {
 function brandedEmail(kicker, title, intro, bullets, ctaLabel, ctaUrl, footerBrand) {
   var list = (bullets || []).map(function(item) {
     return [
-      "<li style=\"margin:0 0 10px 0;color:#24313f;line-height:1.55;\">",
+      "<li style=\"margin:0 0 12px 0;color:#dfe8ef;line-height:1.55;font-size:16px;\">",
       escapeHtml(item),
       "</li>"
     ].join("");
   }).join("");
   var cta = ctaUrl ? [
-    "<a href=\"", escapeAttr(ctaUrl), "\" style=\"display:inline-block;background:#0f766e;color:#ffffff;text-decoration:none;",
-    "font-weight:700;border-radius:8px;padding:14px 20px;margin-top:8px;\">",
+    "<a href=\"", escapeAttr(ctaUrl), "\" style=\"display:inline-block;background:#58b7ae;color:#10231f;text-decoration:none;",
+    "font-weight:800;border-radius:8px;padding:15px 22px;margin-top:10px;\">",
     escapeHtml(ctaLabel || "Deschide"),
     "</a>"
   ].join("") : "";
 
   return [
-    "<div style=\"margin:0;padding:0;background:#f4f7f6;font-family:Arial,Helvetica,sans-serif;color:#17212b;\">",
-    "<div style=\"max-width:640px;margin:0 auto;padding:28px 16px;\">",
-    "<div style=\"background:#ffffff;border:1px solid #dde7e4;border-radius:12px;overflow:hidden;\">",
-    "<div style=\"background:#10231f;color:#ffffff;padding:22px 24px;\">",
-    "<div style=\"font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#8dd5c9;font-weight:700;\">AIWebminar</div>",
-    "<div style=\"font-size:20px;line-height:1.25;font-weight:800;margin-top:6px;\">Agenti AI 24/7 pentru business real</div>",
+    "<div style=\"margin:0;padding:0;background:#111417;font-family:Arial,Helvetica,sans-serif;color:#eef4f5;\">",
+    "<div style=\"max-width:640px;margin:0 auto;padding:22px 12px;\">",
+    "<div style=\"background:#1d2025;border:1px solid #2f3d39;border-radius:14px;overflow:hidden;box-shadow:0 18px 44px rgba(0,0,0,.28);\">",
+    "<div style=\"background:#cfe7e1;color:#101820;padding:28px 34px;\">",
+    "<div style=\"font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:#2f665f;font-weight:800;\">AIWebminar</div>",
+    "<div style=\"font-size:26px;line-height:1.15;font-weight:900;margin-top:10px;\">Agenti AI 24/7 pentru business real</div>",
     "</div>",
-    "<div style=\"padding:26px 24px 24px;\">",
-    "<div style=\"font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#0f766e;font-weight:800;margin-bottom:10px;\">",
+    "<div style=\"padding:34px 34px 28px;\">",
+    "<div style=\"font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#6dc8bd;font-weight:900;margin-bottom:14px;\">",
     escapeHtml(kicker || "Confirmare"),
     "</div>",
-    "<h1 style=\"font-size:26px;line-height:1.2;margin:0 0 12px;color:#10231f;\">", escapeHtml(title), "</h1>",
-    "<p style=\"font-size:16px;line-height:1.6;margin:0 0 18px;color:#24313f;\">", escapeHtml(intro), "</p>",
-    list ? "<ul style=\"padding-left:20px;margin:0 0 18px;\">" + list + "</ul>" : "",
+    "<h1 style=\"font-size:34px;line-height:1.12;margin:0 0 20px;color:#ffffff;\">", escapeHtml(title), "</h1>",
+    "<p style=\"font-size:18px;line-height:1.62;margin:0 0 24px;color:#dfe8ef;\">", escapeHtml(intro), "</p>",
+    list ? "<ul style=\"padding-left:24px;margin:0 0 22px;\">" + list + "</ul>" : "",
     cta,
-    "<div style=\"border-top:1px solid #e6eeeb;margin-top:24px;padding-top:16px;color:#5b6875;font-size:13px;line-height:1.5;\">",
+    "<div style=\"border-top:1px solid #30363d;margin-top:30px;padding-top:22px;color:#aab6c2;font-size:14px;line-height:1.55;\">",
     "Diferenta dintre un prompt simpatic si un sistem AI util? 15 ani de experienta in sisteme care nu au voie sa cada.",
-    "<br><strong style=\"color:#10231f;\">", escapeHtml(footerBrand || "Calin Florea"), "</strong>",
+    "<br><strong style=\"color:#ffffff;\">", escapeHtml(footerBrand || "Calin Florea"), "</strong>",
     "</div>",
     "</div>",
     "</div>",

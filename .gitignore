@@ -6,5 +6,6 @@
 .clasp.json
 .wrangler/
 dist/
+email-previews/
 test-results/
 playwright-report/
