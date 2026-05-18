@@ -2094,6 +2094,67 @@
       metaPixelId: ""
     };
     let publicConfig = { ...publicConfigDefaults };
+    const COOKIE_CONSENT_KEY = "aiwebinar_cookie_consent";
+    const trackingQueue = [];
+    const metaEventByName = {
+      free_signup: "Lead",
+      vip_intent: "Lead",
+      begin_checkout: "InitiateCheckout",
+      onboarding_submit: "CompleteRegistration"
+    };
+
+    const getCookiePreference = () => {
+      try {
+        return window.localStorage.getItem(COOKIE_CONSENT_KEY);
+      } catch (error) {
+        return "";
+      }
+    };
+
+    const dispatchTrackingEvent = (eventName, params = {}) => {
+      if (typeof window.gtag === "function") {
+        window.gtag("event", eventName, params);
+      }
+      if (typeof window.fbq === "function") {
+        const metaEvent = metaEventByName[eventName] || "CustomEvent";
+        const metaParams = {
+          content_name: eventName,
+          currency: params.currency,
+          value: params.value,
+          status: params.status,
+          access: params.access
+        };
+        if (metaEvent === "CustomEvent") {
+          window.fbq("trackCustom", eventName, metaParams);
+        } else {
+          window.fbq("track", metaEvent, metaParams);
+        }
+      }
+    };
+
+    const trackFunnelEvent = (eventName, params = {}) => {
+      const preference = getCookiePreference();
+      if (preference === "rejected") return;
+      const event = {
+        name: eventName,
+        params: {
+          page_location: window.location.href,
+          ...params
+        }
+      };
+      if (preference !== "accepted") {
+        trackingQueue.push(event);
+        return;
+      }
+      dispatchTrackingEvent(event.name, event.params);
+    };
+
+    const flushTrackingQueue = () => {
+      while (trackingQueue.length) {
+        const event = trackingQueue.shift();
+        dispatchTrackingEvent(event.name, event.params);
+      }
+    };
 
     const makeId = (prefix) => {
       if (window.crypto && typeof window.crypto.randomUUID === "function") {
@@ -2276,9 +2337,32 @@
 
       if (selectedPlan === "vip") {
         note.textContent = "Perfect. Am salvat intentia VIP.";
+        trackFunnelEvent("vip_intent", {
+          access: "vip",
+          lead_id: payload.leadId,
+          persona: payload.persona,
+          status,
+          value: 100,
+          currency: "RON"
+        });
+        trackFunnelEvent("begin_checkout", {
+          access: "vip",
+          lead_id: payload.leadId,
+          persona: payload.persona,
+          value: 100,
+          currency: "RON"
+        });
         showVipNextStep(payload, leadResult.checkoutUrl || getCheckoutUrl(payload));
       } else {
         note.textContent = "Locul prioritar gratuit este salvat.";
+        trackFunnelEvent("free_signup", {
+          access: "free",
+          lead_id: payload.leadId,
+          persona: payload.persona,
+          status,
+          value: 0,
+          currency: "RON"
+        });
         showFreeConfirmation(payload);
       }
 
@@ -2304,6 +2388,12 @@
       }
 
       onboardingNote.textContent = "Multumim. Am salvat onboardingul si il folosim pentru exemplele din workshop.";
+      trackFunnelEvent("onboarding_submit", {
+        access: payload.access,
+        persona: payload.persona,
+        lead_id: payload.leadId || "",
+        onboarding_id: payload.onboardingId
+      });
     });
 
     const loadGa4 = () => {
@@ -2341,11 +2431,12 @@
     const enableTracking = () => {
       loadGa4();
       loadMetaPixel();
+      flushTrackingQueue();
     };
 
     const initCookieBanner = () => {
       if (!cookieBanner) return;
-      const preference = window.localStorage.getItem("aiwebinar_cookie_consent");
+      const preference = getCookiePreference();
       if (preference === "accepted") {
         enableTracking();
         return;
@@ -2354,12 +2445,13 @@
 
       cookieBanner.hidden = false;
       cookieBanner.querySelector("[data-cookie-accept]").addEventListener("click", () => {
-        window.localStorage.setItem("aiwebinar_cookie_consent", "accepted");
+        window.localStorage.setItem(COOKIE_CONSENT_KEY, "accepted");
         cookieBanner.hidden = true;
         enableTracking();
       });
       cookieBanner.querySelector("[data-cookie-reject]").addEventListener("click", () => {
-        window.localStorage.setItem("aiwebinar_cookie_consent", "rejected");
+        window.localStorage.setItem(COOKIE_CONSENT_KEY, "rejected");
+        trackingQueue.length = 0;
         cookieBanner.hidden = true;
       });
     };

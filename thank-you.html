@@ -547,6 +547,14 @@
       ga4MeasurementId: "",
       metaPixelId: ""
     };
+    const COOKIE_CONSENT_KEY = "aiwebinar_cookie_consent";
+    const TRACKED_PREFIX = "aiwebinar_tracked_";
+    const trackingQueue = [];
+    const metaEventByName = {
+      free_thank_you: "CompleteRegistration",
+      vip_purchase: "Purchase",
+      onboarding_submit: "CompleteRegistration"
+    };
 
     const stateKicker = document.querySelector("#stateKicker");
     const stateTitle = document.querySelector("#stateTitle");
@@ -567,6 +575,82 @@
         return window.crypto.randomUUID();
       }
       return `${prefix}_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+    };
+
+    const getCookiePreference = () => {
+      try {
+        return window.localStorage.getItem(COOKIE_CONSENT_KEY);
+      } catch (error) {
+        return "";
+      }
+    };
+
+    const dispatchTrackingEvent = (eventName, params = {}) => {
+      if (typeof window.gtag === "function") {
+        window.gtag("event", eventName, params);
+      }
+      if (typeof window.fbq === "function") {
+        const metaEvent = metaEventByName[eventName] || "CustomEvent";
+        const metaParams = {
+          content_name: eventName,
+          currency: params.currency,
+          value: params.value,
+          status: params.status,
+          access: params.access
+        };
+        if (metaEvent === "CustomEvent") {
+          window.fbq("trackCustom", eventName, metaParams);
+        } else {
+          window.fbq("track", metaEvent, metaParams);
+        }
+      }
+    };
+
+    const markTracked = (key) => {
+      if (!key) return;
+      try {
+        window.localStorage.setItem(`${TRACKED_PREFIX}${key}`, "1");
+      } catch (error) {
+        // Ignore storage errors; tracking should never block the page.
+      }
+    };
+
+    const wasTracked = (key) => {
+      if (!key) return false;
+      try {
+        return window.localStorage.getItem(`${TRACKED_PREFIX}${key}`) === "1";
+      } catch (error) {
+        return false;
+      }
+    };
+
+    const trackFunnelEvent = (eventName, params = {}, options = {}) => {
+      const preference = getCookiePreference();
+      if (preference === "rejected") return;
+      if (options.onceKey && wasTracked(options.onceKey)) return;
+      const event = {
+        name: eventName,
+        onceKey: options.onceKey || "",
+        params: {
+          page_location: window.location.href,
+          ...params
+        }
+      };
+      if (preference !== "accepted") {
+        trackingQueue.push(event);
+        return;
+      }
+      dispatchTrackingEvent(event.name, event.params);
+      markTracked(event.onceKey);
+    };
+
+    const flushTrackingQueue = () => {
+      while (trackingQueue.length) {
+        const event = trackingQueue.shift();
+        if (event.onceKey && wasTracked(event.onceKey)) continue;
+        dispatchTrackingEvent(event.name, event.params);
+        markTracked(event.onceKey);
+      }
     };
 
     const loadPublicConfig = async () => {
@@ -640,6 +724,12 @@
       sideText.textContent = "Daca vrei sa revii la demo-uri si sa intri in Implementation Lab, upgrade-ul de 100 RON, aproximativ 20 EUR, este urmatorul pas.";
       sideActions.innerHTML = `${linkButton("Vreau VIP - 100 RON", getCheckoutUrl(), "btn btn-primary", "Plata VIP se activeaza curand")}`;
       onboardingIntro.textContent = "Pentru free, onboardingul ne ajuta sa alegem exemple mai apropiate de contextul tau.";
+      trackFunnelEvent("free_thank_you", {
+        access: "free",
+        lead_id: leadId,
+        value: 0,
+        currency: "RON"
+      }, { onceKey: `free_${leadId || "anonymous"}` });
     };
 
     const renderVipLoading = () => {
@@ -696,6 +786,13 @@
       sideText.textContent = "Raspunsurile tale devin baza pentru exemple, hot seats si roadmap-ul de implementare pe 7 zile.";
       sideActions.innerHTML = `<button class="btn btn-primary" type="button" data-scroll-onboarding>Completeaza acum</button>`;
       onboardingIntro.textContent = "Pentru VIP, onboardingul devine baza roadmap-ului de implementare pe 7 zile.";
+      trackFunnelEvent("vip_purchase", {
+        access: "vip",
+        lead_id: vipData.leadId || leadId,
+        session_id: vipData.sessionId || sessionId,
+        value: Number(vipData.amountTotal || 10000) / 100,
+        currency: String(vipData.currency || "ron").toUpperCase()
+      }, { onceKey: `vip_${vipData.sessionId || sessionId || leadId}` });
     };
 
     const verifyVipAccess = async () => {
@@ -748,6 +845,12 @@
       }
 
       onboardingNote.textContent = "Multumim. Am salvat onboardingul si il folosim pentru exemplele din workshop.";
+      trackFunnelEvent("onboarding_submit", {
+        access: payload.access,
+        lead_id: payload.leadId || "",
+        onboarding_id: payload.onboardingId,
+        session_id: payload.stripeSessionId || ""
+      });
     });
 
     const loadGa4 = () => {
@@ -785,11 +888,12 @@
     const enableTracking = () => {
       loadGa4();
       loadMetaPixel();
+      flushTrackingQueue();
     };
 
     const initCookieBanner = () => {
       if (!cookieBanner) return;
-      const preference = window.localStorage.getItem("aiwebinar_cookie_consent");
+      const preference = getCookiePreference();
       if (preference === "accepted") {
         enableTracking();
         return;
@@ -798,23 +902,24 @@
 
       cookieBanner.hidden = false;
       cookieBanner.querySelector("[data-cookie-accept]").addEventListener("click", () => {
-        window.localStorage.setItem("aiwebinar_cookie_consent", "accepted");
+        window.localStorage.setItem(COOKIE_CONSENT_KEY, "accepted");
         cookieBanner.hidden = true;
         enableTracking();
       });
       cookieBanner.querySelector("[data-cookie-reject]").addEventListener("click", () => {
-        window.localStorage.setItem("aiwebinar_cookie_consent", "rejected");
+        window.localStorage.setItem(COOKIE_CONSENT_KEY, "rejected");
+        trackingQueue.length = 0;
         cookieBanner.hidden = true;
       });
     };
 
     loadPublicConfig().then(() => {
+      initCookieBanner();
       if (requestedVip) {
         verifyVipAccess();
       } else {
         renderFree();
       }
-      initCookieBanner();
     });
   </script>
 </body>
