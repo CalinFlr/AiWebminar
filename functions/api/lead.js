@@ -1,3 +1,4 @@
+import { guardPublicWrite } from "../_shared/abuse.js";
 import { buildPaymentLink, buildReminderLinks, cleanEmail, cleanEnum, cleanPhone, cleanText, cleanUtm, getBaseUrl, json, methodNotAllowed, postOpsWebhook, readJson } from "../_shared/http.js";
 import { hasD1, saveLeadRecord } from "../_shared/storage.js";
 
@@ -12,7 +13,8 @@ function normalizeLead(payload) {
     status: cleanEnum(payload.status, ["free_registered", "vip_intent"], ""),
     createdAt: cleanText(payload.createdAt, 40),
     pageUrl: cleanText(payload.pageUrl, 500),
-    utm: cleanUtm(payload.utm)
+    utm: cleanUtm(payload.utm),
+    turnstileToken: cleanText(payload.turnstileToken, 2048)
   };
 }
 
@@ -34,6 +36,23 @@ export async function onRequestPost({ request, env }) {
   if (missing.length) {
     return json({ ok: false, error: "missing_fields", fields: missing }, { status: 400 });
   }
+
+  const guard = await guardPublicWrite({
+    request,
+    env,
+    endpoint: "lead",
+    email: payload.email,
+    leadId: payload.leadId,
+    turnstileToken: payload.turnstileToken
+  });
+  if (!guard.ok) {
+    return json({ ok: false, error: guard.error, message: guard.message }, {
+      status: guard.status,
+      headers: guard.headers || {}
+    });
+  }
+
+  delete payload.turnstileToken;
 
   const access = payload.access;
   const baseUrl = getBaseUrl(request, env);

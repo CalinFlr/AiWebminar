@@ -307,6 +307,14 @@
       font-weight: 900;
     }
 
+    .turnstile-slot {
+      min-height: 0;
+    }
+
+    .turnstile-slot:not(:empty) {
+      margin-top: -2px;
+    }
+
     .consent-copy {
       margin: -2px 0 0;
       color: var(--muted);
@@ -504,6 +512,7 @@
             <label for="desiredOutcome">Cum ar arata un rezultat bun dupa 7 zile?</label>
             <textarea id="desiredOutcome" name="desiredOutcome" placeholder="Ex: un agent care pregateste postari, un raport saptamanal, un demo pentru clienti..." required></textarea>
           </div>
+          <div class="turnstile-slot" data-turnstile-form="onboarding"></div>
           <button class="btn btn-primary" type="submit">Trimite onboardingul &rarr;</button>
           <p class="consent-copy">Prin trimitere, esti de acord sa folosim raspunsurile pentru exemple, confirmari, remindere si follow-up despre workshop. Poti cere oricand stergerea datelor. Detalii in <a href="privacy.html">Politica de confidentialitate</a>.</p>
           <p class="note" id="onboardingNote" aria-live="polite"></p>
@@ -546,11 +555,15 @@
       stripePaymentLinkUrl: "",
       whatsappFreeGroupUrl: "",
       ga4MeasurementId: "",
-      metaPixelId: ""
+      metaPixelId: "",
+      turnstileSiteKey: ""
     };
     const COOKIE_CONSENT_KEY = "aiwebinar_cookie_consent";
     const TRACKED_PREFIX = "aiwebinar_tracked_";
     const trackingQueue = [];
+    const turnstileTokens = new Map();
+    const turnstileWidgets = new Map();
+    let turnstileScriptPromise = null;
     const metaEventByName = {
       free_thank_you: "CompleteRegistration",
       vip_purchase: "Purchase",
@@ -720,6 +733,55 @@
         console.warn("Config endpoint indisponibil.", error);
       }
       return publicConfig;
+    };
+
+    const loadTurnstileScript = () => {
+      if (!publicConfig.turnstileSiteKey) return Promise.resolve(false);
+      if (window.turnstile) return Promise.resolve(true);
+      if (turnstileScriptPromise) return turnstileScriptPromise;
+
+      turnstileScriptPromise = new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+        script.async = true;
+        script.defer = true;
+        script.onload = () => resolve(true);
+        script.onerror = () => reject(new Error("turnstile_script_failed"));
+        document.head.appendChild(script);
+      });
+
+      return turnstileScriptPromise;
+    };
+
+    const renderTurnstileWidgets = async () => {
+      if (!publicConfig.turnstileSiteKey) return;
+      try {
+        await loadTurnstileScript();
+      } catch (error) {
+        console.warn("Turnstile indisponibil.", error);
+        return;
+      }
+      document.querySelectorAll("[data-turnstile-form]").forEach((container) => {
+        const formName = container.dataset.turnstileForm;
+        if (!formName || turnstileWidgets.has(formName) || !window.turnstile) return;
+        const widgetId = window.turnstile.render(container, {
+          sitekey: publicConfig.turnstileSiteKey,
+          callback: (token) => turnstileTokens.set(formName, token),
+          "expired-callback": () => turnstileTokens.delete(formName),
+          "error-callback": () => turnstileTokens.delete(formName)
+        });
+        turnstileWidgets.set(formName, widgetId);
+      });
+    };
+
+    const getTurnstileToken = (formName) => publicConfig.turnstileSiteKey ? (turnstileTokens.get(formName) || "") : "";
+
+    const resetTurnstile = (formName) => {
+      const widgetId = turnstileWidgets.get(formName);
+      if (widgetId && window.turnstile) {
+        window.turnstile.reset(widgetId);
+      }
+      turnstileTokens.delete(formName);
     };
 
     const postJson = async (endpoint, payload) => {
@@ -929,12 +991,14 @@
       payload.access = confirmedAccess;
       payload.stripeSessionId = sessionId;
       payload.createdAt = new Date().toISOString();
+      payload.turnstileToken = getTurnstileToken("onboarding");
 
       try {
         await postJson(ONBOARDING_ENDPOINT, payload);
       } catch (error) {
         console.warn("Onboarding endpoint indisponibil.", error);
         onboardingNote.textContent = error.result?.message || "Nu am putut salva onboardingul. Incearca din nou in cateva secunde.";
+        resetTurnstile("onboarding");
         return;
       }
 
@@ -1016,6 +1080,7 @@
     initConsentMode();
     stripSensitiveParamsFromAddressBar();
     loadPublicConfig().then(() => {
+      renderTurnstileWidgets();
       initCookieBanner();
       if (requestedVip) {
         verifyVipAccess();

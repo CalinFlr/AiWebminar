@@ -5,6 +5,7 @@ import { onRequest as staticGuard } from "../functions/_middleware.js";
 import { onRequestGet as config } from "../functions/api/config.js";
 import { onRequestGet as exportCsv } from "../functions/api/export.js";
 import { onRequestGet as freeAccess } from "../functions/api/free-access.js";
+import { onRequestPost as lead } from "../functions/api/lead.js";
 import { onRequestPost as onboarding } from "../functions/api/onboarding.js";
 import { onRequestGet as vipAccess } from "../functions/api/vip-access.js";
 import { onRequestPost as stripeWebhook } from "../functions/api/stripe-webhook.js";
@@ -40,7 +41,8 @@ function stripeSession(overrides = {}) {
   };
 }
 
-function fakeD1(changes = 1) {
+function fakeD1(changes = 1, options = {}) {
+  const rateLimitCounts = [...(options.rateLimitCounts || [])];
   return {
     writes: [],
     prepare(query) {
@@ -56,6 +58,12 @@ function fakeD1(changes = 1) {
           },
           first: async () => {
             this.writes.push({ query, values });
+            if (query.includes("rate_limits")) {
+              return { count: rateLimitCounts.length ? rateLimitCounts.shift() : 1 };
+            }
+            if (!query.includes("FROM leads")) {
+              return {};
+            }
             return {
               lead_id: values[0] || "a9196fad-fb81-4a99-9abd-e7f8d77bf69b",
               access: "free",
@@ -66,6 +74,10 @@ function fakeD1(changes = 1) {
       };
     }
   };
+}
+
+function findWrite(db, text) {
+  return db.writes.find((write) => write.query.includes(text));
 }
 
 async function stripeSignature(payload, secret, timestamp = Math.floor(Date.now() / 1000)) {
@@ -170,6 +182,22 @@ function onboardingPayload(overrides = {}) {
   };
 }
 
+function leadPayload(overrides = {}) {
+  return {
+    leadId: "a9196fad-fb81-4a99-9abd-e7f8d77bf69b",
+    name: "Security Test",
+    email: "security@example.com",
+    phone: "0700000000",
+    persona: "business",
+    access: "free",
+    status: "free_registered",
+    createdAt: "2026-05-18T00:00:00.000Z",
+    pageUrl: "https://aiwebminar.test/",
+    utm: {},
+    ...overrides
+  };
+}
+
 async function testOnboardingDowngradesUnverifiedVipAccess() {
   const db = fakeD1();
   const response = await onboarding({
@@ -184,7 +212,7 @@ async function testOnboardingDowngradesUnverifiedVipAccess() {
   assert.equal(response.status, 200);
   assert.equal(body.access, "vip_unverified");
   assert.equal(body.vipVerified, false);
-  assert.equal(db.writes[0].values[3], "vip_unverified");
+  assert.equal(findWrite(db, "INSERT OR IGNORE INTO onboarding").values[3], "vip_unverified");
 }
 
 async function testOnboardingKeepsVipOnlyForVerifiedPayment() {
@@ -207,10 +235,65 @@ async function testOnboardingKeepsVipOnlyForVerifiedPayment() {
     assert.equal(response.status, 200);
     assert.equal(body.access, "vip");
     assert.equal(body.vipVerified, true);
-    assert.equal(db.writes[0].values[3], "vip");
+    assert.equal(findWrite(db, "INSERT OR IGNORE INTO onboarding").values[3], "vip");
   } finally {
     globalThis.fetch = originalFetch;
   }
+}
+
+async function testLeadRequiresTurnstileWhenConfigured() {
+  const response = await lead({
+    request: request("https://aiwebminar.test/api/lead", {
+      method: "POST",
+      headers: { "content-type": "application/json", "cf-connecting-ip": "203.0.113.10" },
+      body: JSON.stringify(leadPayload())
+    }),
+    env: { ...baseEnv, TURNSTILE_SECRET_KEY: "turnstile_secret", AIWEBMINAR_DB: fakeD1() }
+  });
+  const body = await readJson(response);
+  assert.equal(response.status, 403);
+  assert.equal(body.error, "turnstile_required");
+}
+
+async function testLeadAllowsValidTurnstileToken() {
+  const originalFetch = globalThis.fetch;
+  const db = fakeD1();
+  globalThis.fetch = async () => new Response(JSON.stringify({ success: true }), {
+    headers: { "content-type": "application/json" }
+  });
+
+  try {
+    const response = await lead({
+      request: request("https://aiwebminar.test/api/lead", {
+        method: "POST",
+        headers: { "content-type": "application/json", "cf-connecting-ip": "203.0.113.11" },
+        body: JSON.stringify(leadPayload({ turnstileToken: "valid-token" }))
+      }),
+      env: { ...baseEnv, TURNSTILE_SECRET_KEY: "turnstile_secret", AIWEBMINAR_DB: db }
+    });
+    const body = await readJson(response);
+    assert.equal(response.status, 200);
+    assert.equal(body.ok, true);
+    assert.equal(findWrite(db, "INSERT OR IGNORE INTO leads").values[0], "a9196fad-fb81-4a99-9abd-e7f8d77bf69b");
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+}
+
+async function testLeadRateLimitBlocksBeforePersistence() {
+  const db = fakeD1(1, { rateLimitCounts: [31] });
+  const response = await lead({
+    request: request("https://aiwebminar.test/api/lead", {
+      method: "POST",
+      headers: { "content-type": "application/json", "cf-connecting-ip": "203.0.113.12" },
+      body: JSON.stringify(leadPayload())
+    }),
+    env: { ...baseEnv, AIWEBMINAR_DB: db }
+  });
+  const body = await readJson(response);
+  assert.equal(response.status, 429);
+  assert.equal(body.error, "rate_limited");
+  assert.equal(findWrite(db, "INSERT OR IGNORE INTO leads"), undefined);
 }
 
 async function testExportRejectsTokenInQueryString() {
@@ -266,6 +349,22 @@ async function testConfigDoesNotExposeWhatsappGroupUrls() {
   assert.equal(response.status, 200);
   assert.equal(body.whatsappFreeGroupConfigured, true);
   assert.equal(Object.hasOwn(body, "whatsappFreeGroupUrl"), false);
+  assert.equal(Object.hasOwn(body, "TURNSTILE_SECRET_KEY"), false);
+}
+
+async function testConfigExposesOnlyTurnstileSiteKey() {
+  const response = await config({
+    env: {
+      ...baseEnv,
+      TURNSTILE_SITE_KEY: "0x4AAAA_public",
+      TURNSTILE_SECRET_KEY: "secret_value"
+    }
+  });
+  const body = await readJson(response);
+  assert.equal(response.status, 200);
+  assert.equal(body.turnstileSiteKey, "0x4AAAA_public");
+  assert.equal(body.turnstileConfigured, true);
+  assert.equal(Object.hasOwn(body, "TURNSTILE_SECRET_KEY"), false);
 }
 
 async function testStaticGuardBlocksInternalArtifacts() {
@@ -400,10 +499,14 @@ const tests = [
   testVipAccessAllowsExpectedPaidSession,
   testOnboardingDowngradesUnverifiedVipAccess,
   testOnboardingKeepsVipOnlyForVerifiedPayment,
+  testLeadRequiresTurnstileWhenConfigured,
+  testLeadAllowsValidTurnstileToken,
+  testLeadRateLimitBlocksBeforePersistence,
   testExportRejectsTokenInQueryString,
   testExportAllowsBearerToken,
   testThankYouTrackingDoesNotSendStripeSessionId,
   testConfigDoesNotExposeWhatsappGroupUrls,
+  testConfigExposesOnlyTurnstileSiteKey,
   testStaticGuardBlocksInternalArtifacts,
   testStaticGuardAllowsPublicPages,
   testFreeAccessRequiresSafeLeadId,

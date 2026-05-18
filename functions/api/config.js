@@ -18,6 +18,7 @@ export async function onRequestGet({ env }) {
   const whatsappVipGroupConfigured = Boolean(env.WHATSAPP_VIP_GROUP_URL);
   const ga4Configured = Boolean(env.GA4_MEASUREMENT_ID);
   const metaPixelConfigured = Boolean(env.META_PIXEL_ID);
+  const turnstileConfigured = Boolean(env.TURNSTILE_SITE_KEY && env.TURNSTILE_SECRET_KEY);
 
   return json({
     ok: true,
@@ -34,8 +35,10 @@ export async function onRequestGet({ env }) {
     opsWebhookConfigured: Boolean(d1Configured || googleOpsConfigured || makeFallbackConfigured),
     ga4MeasurementId: env.GA4_MEASUREMENT_ID || "",
     metaPixelId: env.META_PIXEL_ID || "",
+    turnstileSiteKey: env.TURNSTILE_SITE_KEY || "",
     ga4Configured,
     metaPixelConfigured,
+    turnstileConfigured,
     workshopStatus: env.WORKSHOP_STATUS || "tbd",
     workshopLiveUrlConfigured: Boolean(env.WORKSHOP_LIVE_URL)
   });

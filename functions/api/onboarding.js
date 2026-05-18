@@ -1,3 +1,4 @@
+import { guardPublicWrite } from "../_shared/abuse.js";
 import { cleanEmail, cleanEnum, cleanLongText, cleanText, cleanUrl, json, methodNotAllowed, postOpsWebhook, readJson } from "../_shared/http.js";
 import { hasD1, saveOnboardingRecord } from "../_shared/storage.js";
 
@@ -85,7 +86,8 @@ function normalizeOnboarding(payload) {
     currentTools: cleanText(payload.currentTools, 500),
     publicLink: cleanUrl(payload.publicLink),
     desiredOutcome: cleanLongText(payload.desiredOutcome, 1600),
-    createdAt: cleanText(payload.createdAt, 40)
+    createdAt: cleanText(payload.createdAt, 40),
+    turnstileToken: cleanText(payload.turnstileToken, 2048)
   };
 }
 
@@ -107,6 +109,23 @@ export async function onRequestPost({ request, env }) {
   if (missing.length) {
     return json({ ok: false, error: "missing_fields", fields: missing }, { status: 400 });
   }
+
+  const guard = await guardPublicWrite({
+    request,
+    env,
+    endpoint: "onboarding",
+    email: payload.signupEmail,
+    leadId: payload.leadId,
+    turnstileToken: payload.turnstileToken
+  });
+  if (!guard.ok) {
+    return json({ ok: false, error: guard.error, message: guard.message }, {
+      status: guard.status,
+      headers: guard.headers || {}
+    });
+  }
+
+  delete payload.turnstileToken;
 
   const vipVerification = await verifyVipOnboarding(payload, env);
   payload.access = vipVerification.access;

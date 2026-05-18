@@ -1119,6 +1119,14 @@
       font-weight: 800;
     }
 
+    .turnstile-slot {
+      min-height: 0;
+    }
+
+    .turnstile-slot:not(:empty) {
+      margin-top: -2px;
+    }
+
     .consent-copy {
       margin: -2px 0 0;
       color: rgba(255, 255, 255, 0.58);
@@ -1945,6 +1953,7 @@
             </div>
           </div>
 
+          <div class="turnstile-slot" data-turnstile-form="signup"></div>
           <button class="btn btn-primary" id="signupSubmit" type="submit">Continua cu acces VIP &rarr;</button>
           <p class="consent-copy">Prin continuare, esti de acord sa folosim datele introduse pentru inscriere, confirmari, remindere si follow-up despre workshop pe email, WhatsApp sau SMS. Poti cere oricand stergerea datelor. Detalii in <a href="privacy.html">Politica de confidentialitate</a>.</p>
           <p class="form-note" id="formNote" aria-live="polite"></p>
@@ -1984,6 +1993,7 @@
             <label for="desiredOutcome">Cum ar arata un rezultat bun dupa 7 zile?</label>
             <textarea id="desiredOutcome" name="desiredOutcome" placeholder="Ex: un agent care pregateste postari, un raport saptamanal, un demo pentru clienti..." required></textarea>
           </div>
+          <div class="turnstile-slot" data-turnstile-form="onboarding"></div>
           <button class="btn btn-primary" type="submit">Trimite onboardingul &rarr;</button>
           <p class="form-note" id="onboardingNote" aria-live="polite"></p>
         </form>
@@ -2092,9 +2102,13 @@
       stripePaymentLinkUrl: "",
       whatsappFreeGroupUrl: "",
       ga4MeasurementId: "",
-      metaPixelId: ""
+      metaPixelId: "",
+      turnstileSiteKey: ""
     };
     let publicConfig = { ...publicConfigDefaults };
+    const turnstileTokens = new Map();
+    const turnstileWidgets = new Map();
+    let turnstileScriptPromise = null;
     const COOKIE_CONSENT_KEY = "aiwebinar_cookie_consent";
     const trackingQueue = [];
     const metaEventByName = {
@@ -2220,6 +2234,55 @@
       return publicConfig;
     };
 
+    const loadTurnstileScript = () => {
+      if (!publicConfig.turnstileSiteKey) return Promise.resolve(false);
+      if (window.turnstile) return Promise.resolve(true);
+      if (turnstileScriptPromise) return turnstileScriptPromise;
+
+      turnstileScriptPromise = new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+        script.async = true;
+        script.defer = true;
+        script.onload = () => resolve(true);
+        script.onerror = () => reject(new Error("turnstile_script_failed"));
+        document.head.appendChild(script);
+      });
+
+      return turnstileScriptPromise;
+    };
+
+    const renderTurnstileWidgets = async () => {
+      if (!publicConfig.turnstileSiteKey) return;
+      try {
+        await loadTurnstileScript();
+      } catch (error) {
+        console.warn("Turnstile indisponibil.", error);
+        return;
+      }
+      document.querySelectorAll("[data-turnstile-form]").forEach((container) => {
+        const formName = container.dataset.turnstileForm;
+        if (!formName || turnstileWidgets.has(formName) || !window.turnstile) return;
+        const widgetId = window.turnstile.render(container, {
+          sitekey: publicConfig.turnstileSiteKey,
+          callback: (token) => turnstileTokens.set(formName, token),
+          "expired-callback": () => turnstileTokens.delete(formName),
+          "error-callback": () => turnstileTokens.delete(formName)
+        });
+        turnstileWidgets.set(formName, widgetId);
+      });
+    };
+
+    const getTurnstileToken = (formName) => publicConfig.turnstileSiteKey ? (turnstileTokens.get(formName) || "") : "";
+
+    const resetTurnstile = (formName) => {
+      const widgetId = turnstileWidgets.get(formName);
+      if (widgetId && window.turnstile) {
+        window.turnstile.reset(widgetId);
+      }
+      turnstileTokens.delete(formName);
+    };
+
     const postJson = async (endpoint, payload) => {
       const response = await fetch(endpoint, {
         method: "POST",
@@ -2244,6 +2307,7 @@
       payload.createdAt = new Date().toISOString();
       payload.pageUrl = window.location.href;
       payload.utm = getQueryParams();
+      payload.turnstileToken = getTurnstileToken("signup");
       return payload;
     };
 
@@ -2390,6 +2454,7 @@
         note.textContent = error.result?.message || "Nu am putut salva inscrierea. Incearca din nou in cateva secunde.";
         submitButton.disabled = false;
         submitButton.textContent = selectedPlan === "vip" ? "Continua cu acces VIP \u2192" : "Ia loc prioritar gratuit \u2192";
+        resetTurnstile("signup");
         return;
       }
 
@@ -2436,12 +2501,14 @@
       payload.signupEmail = form.elements.email?.value || "";
       payload.access = document.querySelector('input[name="access"]:checked')?.value || "vip";
       payload.persona = document.querySelector('input[name="persona"]:checked')?.value || "";
+      payload.turnstileToken = getTurnstileToken("onboarding");
 
       try {
         await postJson(ONBOARDING_ENDPOINT, payload);
       } catch (error) {
         console.warn("Onboarding endpoint indisponibil.", error);
         onboardingNote.textContent = error.result?.message || "Nu am putut salva onboardingul. Incearca din nou in cateva secunde.";
+        resetTurnstile("onboarding");
         return;
       }
 
@@ -2523,7 +2590,10 @@
 
     initConsentMode();
     updatePlanCopy();
-    loadPublicConfig().then(initCookieBanner);
+    loadPublicConfig().then(() => {
+      renderTurnstileWidgets();
+      initCookieBanner();
+    });
 
     const canvas = document.querySelector("#systemCanvas");
     const ctx = canvas.getContext("2d");
