@@ -380,7 +380,7 @@ function sendVipEmail(record) {
     "Accesul tau VIP este confirmat.",
     "",
     vipGroupUrl
-      ? "Intra in grupul WhatsApp VIP pentru link, remindere si materialele premium:\n" + vipGroupUrl
+      ? "Intra in grupul WhatsApp AI WEBMINAR PRO pentru link, remindere si materialele premium:\n" + vipGroupUrl
       : "Pagina ta de confirmare VIP este aici:\n" + thankYouUrl,
     "",
     "Urmatorul pas este onboardingul, ca sa stim ce proces vrei sa aducem mai aproape de workshop:",
@@ -393,12 +393,12 @@ function sendVipEmail(record) {
     "Accesul tau VIP este confirmat.",
     "Salut. Plata a fost verificata si accesul premium este activ. De aici intri in zona in care nu mai discutam AI ca jucarie, ci ca sistem pe cazul tau.",
     [
-      "Intra in grupul WhatsApp VIP pentru link, remindere si materialele premium.",
+      "Intra in grupul WhatsApp AI WEBMINAR PRO pentru link, remindere si materialele premium.",
       "Completeaza onboardingul ca sa stim ce proces vrei sa aducem mai aproape de workshop.",
       "VIP include replay-uri, workbook, Implementation Lab si roadmap pe cazul tau.",
       "Pastreaza emailul acesta: dupa workshop il folosim ca reper pentru urmatorii pasi si pentru materialele promise."
     ],
-    vipGroupUrl ? "Intra in grupul WhatsApp VIP" : "Deschide pagina de confirmare",
+    vipGroupUrl ? "Intra in AI WEBMINAR PRO" : "Deschide pagina de confirmare",
     vipGroupUrl || thankYouUrl,
     "AIWebminar by Calin Florea"
   );
@@ -413,7 +413,7 @@ function freeLeadEmail(record) {
     "",
     "Ai loc prioritar la workshopul Agenti AI 24/7.",
     "",
-    "Intra in grupul WhatsApp gratuit pentru link, anunturi si remindere:",
+    "Intra in grupul WhatsApp AI WEBMINAR FREE pentru link, anunturi si remindere:",
     groupUrl || "[link grup WhatsApp]",
     "",
     "Cand confirmam datele sesiunilor, primesti detaliile pe email si in grup.",
@@ -425,13 +425,13 @@ function freeLeadEmail(record) {
     "Locul tau prioritar este salvat.",
     "Salut, " + firstName(record.name) + ". Esti pe lista pentru workshopul Agenti AI 24/7. Nu e un webinar despre prompturi dragute, ci despre cum incepi sa gandesti agenti AI care fac treaba cap-coada.",
     [
-      "Intra in grupul WhatsApp gratuit pentru link, anunturi si remindere.",
+      "Intra in grupul WhatsApp AI WEBMINAR FREE pentru link, anunturi si remindere.",
       "Vei vedea demo-uri live cu agenti AI, browser automation si workflow-uri multi-agent.",
       "O sa legam exemplele de nevoi reale: business, job, consultanta, research, continut si procese repetitive.",
       "Cand confirmam datele sesiunilor, primesti detaliile pe email si in grup.",
       "Daca vrei sa lucrezi mai aplicat pe cazul tau, VIP-ul adauga replay-uri, workbook si Implementation Lab."
     ],
-    "Intra in grupul WhatsApp",
+    "Intra in AI WEBMINAR FREE",
     groupUrl,
     "AIWebminar by Calin Florea"
   );
@@ -456,7 +456,7 @@ function vipIntentEmail(record) {
     "Am salvat intentia ta pentru VIP Implementation Lab.",
     "",
     paymentLines.join("\n"),
-    "Dupa plata, primesti acces la grupul WhatsApp VIP, replay-uri, workbook si Implementation Lab.",
+    "Dupa plata, primesti acces la grupul WhatsApp AI WEBMINAR PRO, replay-uri, workbook si Implementation Lab.",
     "",
     "Calin"
   ].join("\n");
@@ -466,7 +466,7 @@ function vipIntentEmail(record) {
     "Salut, " + firstName(record.name) + ". Am salvat intentia ta pentru VIP Implementation Lab. Asta este partea pentru oamenii care nu vor doar sa asiste, ci vor sa plece cu un plan clar pentru cazul lor.",
     [
       "Investitie: " + price + ". Plata se proceseaza in RON; pentru diaspora banca face conversia automat.",
-      "Dupa plata primesti acces la grupul WhatsApp VIP, replay-uri, workbook si Implementation Lab.",
+      "Dupa plata primesti acces la grupul WhatsApp AI WEBMINAR PRO, replay-uri, workbook si Implementation Lab.",
       "Scopul este sa pleci cu un roadmap de implementare pe cazul tau, nu doar cu idei frumoase.",
       "In VIP ne uitam la brief, context, pasi, verificari si unde merita cu adevarat sa pui un agent AI.",
       "Daca ai deja o idee, o aduci. Daca nu ai, o construim din durerea reala: timp pierdut, follow-up, research, operatiuni sau continut."

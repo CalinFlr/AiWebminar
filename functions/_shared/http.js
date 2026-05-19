@@ -220,8 +220,9 @@ export function normalizePhone(phone = "") {
 export function buildReminderLinks({ phone, name, access, freeGroupUrl, vipGroupUrl }) {
   const normalizedPhone = normalizePhone(phone);
   const groupUrl = access === "vip" ? vipGroupUrl : freeGroupUrl;
+  const groupName = access === "vip" ? "AI WEBMINAR PRO" : "AI WEBMINAR FREE";
   const firstName = String(name || "").trim().split(/\s+/)[0] || "Salut";
-  const message = `${firstName}, ai loc prioritar la workshopul Agenti AI 24/7. Intra in grupul WhatsApp pentru link, remindere si anunturi: ${groupUrl || "[link grup WhatsApp]"}`;
+  const message = `${firstName}, ai loc prioritar la workshopul Agenti AI 24/7. Intra in grupul WhatsApp ${groupName} pentru link, remindere si anunturi: ${groupUrl || "[link grup WhatsApp]"}`;
   const encoded = encodeURIComponent(message);
 
   return {
