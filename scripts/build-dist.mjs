@@ -3,6 +3,7 @@ import { cp, mkdir, rm } from "node:fs/promises";
 const staticFiles = [
   "index.html",
   "thank-you.html",
+  "ops.html",
   "privacy.html",
   "404.html",
   "mentor.jpeg",

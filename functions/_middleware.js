@@ -4,8 +4,7 @@ const BLOCKED_STATIC_PATHS = [
   /^\/tests(?:\/|$)/i,
   /^\/functions(?:\/|$)/i,
   /^\/migrations(?:\/|$)/i,
-  /^\/scripts(?:\/|$)/i,
-  /^\/ops\.html$/i
+  /^\/scripts(?:\/|$)/i
 ];
 
 function isBlockedStaticPath(pathname) {
