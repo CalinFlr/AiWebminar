@@ -1,6 +1,8 @@
 import { createServer } from "node:http";
+import { execFile } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import { extname, join, normalize } from "node:path";
+import { promisify } from "node:util";
 
 await loadLocalEnv();
 
@@ -8,6 +10,8 @@ const port = Number(process.env.OPS_PORT || 8789);
 const remoteBaseUrl = (process.env.OPS_REMOTE_BASE_URL || "https://aiwebminar.pages.dev").replace(/\/+$/, "");
 const adminExportToken = process.env.OPS_ADMIN_EXPORT_TOKEN || process.env.ADMIN_EXPORT_TOKEN || "";
 const root = process.cwd();
+const execFileAsync = promisify(execFile);
+const whatsappDesktopScript = normalize(join(root, "..", "tools", "whatsapp-desktop", "send-whatsapp.sh"));
 
 const contentTypes = {
   ".html": "text/html; charset=utf-8",
@@ -26,8 +30,14 @@ const server = createServer(async (request, response) => {
       sendJson(response, {
         ok: true,
         remoteBaseUrl,
-        adminExportTokenConfigured: Boolean(adminExportToken)
+        adminExportTokenConfigured: Boolean(adminExportToken),
+        whatsappDesktopAvailable: process.platform === "darwin"
       });
+      return;
+    }
+
+    if (url.pathname === "/api/whatsapp-desktop") {
+      await handleWhatsappDesktop(request, response);
       return;
     }
 
@@ -86,6 +96,91 @@ function resolveStaticFile(pathname) {
   return fullPath.startsWith(root) ? fullPath : "";
 }
 
+async function handleWhatsappDesktop(request, response) {
+  if (request.method !== "POST") {
+    sendJson(response, { ok: false, error: "method_not_allowed" }, 405);
+    return;
+  }
+
+  if (process.platform !== "darwin") {
+    sendJson(response, { ok: false, error: "whatsapp_desktop_mac_only" }, 400);
+    return;
+  }
+
+  let payload;
+  try {
+    payload = await readJsonBody(request);
+  } catch (error) {
+    sendJson(response, { ok: false, error: "invalid_json", message: error.message }, 400);
+    return;
+  }
+
+  const target = String(payload.target || "").trim().toLowerCase();
+  const message = String(payload.message || "").trim();
+  const mode = String(payload.mode || "preview").trim().toLowerCase();
+  const validTargets = new Set(["free", "vip", "both"]);
+  const validModes = new Set(["preview", "send"]);
+
+  if (!validTargets.has(target)) {
+    sendJson(response, { ok: false, error: "invalid_target" }, 400);
+    return;
+  }
+
+  if (!validModes.has(mode)) {
+    sendJson(response, { ok: false, error: "invalid_mode" }, 400);
+    return;
+  }
+
+  if (!message || message.length > 3000) {
+    sendJson(response, { ok: false, error: "invalid_message" }, 400);
+    return;
+  }
+
+  if (target === "both" && mode === "preview") {
+    sendJson(response, { ok: false, error: "both_preview_disabled" }, 400);
+    return;
+  }
+
+  try {
+    const { stdout, stderr } = await execFileAsync(
+      whatsappDesktopScript,
+      [target, message, mode === "send" ? "--send" : "--preview"],
+      {
+        cwd: root,
+        timeout: 45000,
+        maxBuffer: 1024 * 64
+      }
+    );
+
+    sendJson(response, {
+      ok: true,
+      target,
+      mode,
+      stdout: stdout.trim(),
+      stderr: stderr.trim()
+    });
+  } catch (error) {
+    sendJson(response, {
+      ok: false,
+      error: "whatsapp_desktop_failed",
+      message: error.message,
+      stdout: String(error.stdout || "").trim(),
+      stderr: String(error.stderr || "").trim()
+    }, 500);
+  }
+}
+
+async function readJsonBody(request) {
+  let body = "";
+  for await (const chunk of request) {
+    body += chunk;
+    if (body.length > 12000) {
+      throw new Error("request_body_too_large");
+    }
+  }
+  return body ? JSON.parse(body) : {};
+}
+
 async function proxyApi(request, response, localUrl) {
   const targetUrl = new URL(`${remoteBaseUrl}${localUrl.pathname}`);
   localUrl.searchParams.forEach((value, key) => targetUrl.searchParams.set(key, value));
@@ -128,8 +223,8 @@ async function loadLocalEnv() {
   }
 }
 
-function sendJson(response, payload) {
-  response.writeHead(200, {
+function sendJson(response, payload, status = 200) {
+  response.writeHead(status, {
     "content-type": "application/json; charset=utf-8",
     "cache-control": "no-store"
   });

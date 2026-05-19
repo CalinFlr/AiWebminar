@@ -52,6 +52,13 @@
       letter-spacing: 0;
     }
 
+    h3 {
+      margin: 22px 0 10px;
+      font-size: 1rem;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
     p {
       color: var(--muted);
     }
@@ -252,6 +259,56 @@
       white-space: pre-wrap;
     }
 
+    .live-cockpit {
+      display: grid;
+      gap: 12px;
+    }
+
+    .live-row {
+      display: grid;
+      grid-template-columns: 160px minmax(0, 1fr);
+      gap: 10px;
+      align-items: end;
+    }
+
+    .field-label {
+      display: grid;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 0.88rem;
+      font-weight: 800;
+    }
+
+    .live-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .btn-danger {
+      background: var(--red);
+    }
+
+    .send-log {
+      display: grid;
+      gap: 8px;
+    }
+
+    .send-log-item {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px 12px;
+      background: rgba(255, 255, 255, 0.74);
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .divider {
+      height: 1px;
+      margin: 18px 0;
+      background: var(--line);
+    }
+
     code {
       border: 1px solid var(--line);
       border-radius: 6px;
@@ -267,6 +324,7 @@
       .export-grid,
       .whatsapp-toolbar,
       .message-grid,
+      .live-row,
       .reminder-card {
         grid-template-columns: 1fr;
       }
@@ -320,7 +378,50 @@
 
     <section class="panel" style="margin-top: 18px;" aria-labelledby="whatsapp-title">
       <h2 id="whatsapp-title">WhatsApp console</h2>
-      <p>Automatizarea MVP foloseste linkuri oficiale <code>wa.me</code>: mesajul este generat aici, iar trimiterea ramane confirmata manual in WhatsApp. Pentru grupuri, copiezi mesajul si il postezi in grupul potrivit.</p>
+      <p>Control local pentru grupurile Free/VIP prin WhatsApp Desktop. Mesajele aprobate pot fi puse in preview sau trimise direct.</p>
+
+      <div class="live-cockpit" aria-label="WhatsApp live cockpit">
+        <div class="live-row">
+          <label class="field-label" for="webinarWhatsappTarget">
+            Grup
+            <select id="webinarWhatsappTarget">
+              <option value="free">Free</option>
+              <option value="vip">VIP</option>
+              <option value="both">Both</option>
+            </select>
+          </label>
+
+          <label class="field-label" for="webinarWhatsappTemplate">
+            Mesaj aprobat
+            <select id="webinarWhatsappTemplate">
+              <option value="tMinus10">T-10 minute</option>
+              <option value="liveNow">Suntem live</option>
+              <option value="practice">Partea practica</option>
+              <option value="qa">Q&A</option>
+              <option value="offer">Oferta / pas urmator</option>
+              <option value="final">Final + replay</option>
+              <option value="delay">Intarziere tehnica</option>
+              <option value="custom">Custom</option>
+            </select>
+          </label>
+        </div>
+
+        <textarea id="webinarWhatsappMessage" aria-label="Mesaj grup WhatsApp"></textarea>
+
+        <div class="live-actions">
+          <button type="button" id="webinarWhatsappPreview" class="btn-secondary">Preview</button>
+          <button type="button" id="webinarWhatsappSend" class="btn-danger">Send</button>
+          <button type="button" id="webinarWhatsappCopy" class="btn-secondary">Copiaza</button>
+        </div>
+
+        <p class="note" id="webinarWhatsappNote" aria-live="polite"></p>
+        <div class="send-log" id="webinarWhatsappLog"></div>
+      </div>
+
+      <div class="divider"></div>
+
+      <h3>WhatsApp 1-la-1</h3>
+      <p>Zona de mai jos ramane pentru mesaje individuale prin <code>wa.me</code>, pe baza queue-ului de remindere.</p>
 
       <div class="whatsapp-toolbar">
         <select id="whatsappTemplate" aria-label="Template WhatsApp">
@@ -353,11 +454,20 @@
     const configEndpoint = "/api/config";
     const exportEndpoint = "/api/export";
     const localStatusEndpoint = "/api/local-ops-status";
+    const whatsappDesktopEndpoint = "/api/whatsapp-desktop";
     const tokenInput = document.querySelector("#adminToken");
     const toggleToken = document.querySelector("#toggleToken");
     const exportGrid = document.querySelector("#exportGrid");
     const exportNote = document.querySelector("#exportNote");
     const statusGrid = document.querySelector("#statusGrid");
+    const webinarWhatsappTarget = document.querySelector("#webinarWhatsappTarget");
+    const webinarWhatsappTemplate = document.querySelector("#webinarWhatsappTemplate");
+    const webinarWhatsappMessage = document.querySelector("#webinarWhatsappMessage");
+    const webinarWhatsappPreview = document.querySelector("#webinarWhatsappPreview");
+    const webinarWhatsappSend = document.querySelector("#webinarWhatsappSend");
+    const webinarWhatsappCopy = document.querySelector("#webinarWhatsappCopy");
+    const webinarWhatsappNote = document.querySelector("#webinarWhatsappNote");
+    const webinarWhatsappLog = document.querySelector("#webinarWhatsappLog");
     const whatsappTemplate = document.querySelector("#whatsappTemplate");
     const customWhatsappMessage = document.querySelector("#customWhatsappMessage");
     const loadWhatsappQueue = document.querySelector("#loadWhatsappQueue");
@@ -415,6 +525,10 @@
         if (!response.ok) return;
         const status = await response.json();
         serverSideTokenConfigured = Boolean(status.adminExportTokenConfigured);
+        if (status.whatsappDesktopAvailable === false) {
+          webinarWhatsappNote.textContent = "Controlul WhatsApp Desktop este disponibil doar pe Mac in aceasta versiune.";
+          setWebinarBusy(true);
+        }
         if (serverSideTokenConfigured) {
           tokenInput.placeholder = "Token setat server-side local";
           tokenInput.disabled = true;
@@ -569,6 +683,127 @@
       custom: ""
     };
 
+    const webinarGroupTemplates = {
+      tMinus10: {
+        free: [
+          "Incepem in 10 minute.",
+          "",
+          "Intra acum ca sa prinzi partea practica de la inceput:",
+          "{live_link}"
+        ].join("\n"),
+        vip: [
+          "VIP reminder: incepem in 10 minute.",
+          "",
+          "Recomand sa intri de la inceput, pentru ca voi explica si partea de implementare concreta + urmatorii pasi.",
+          "{live_link}"
+        ].join("\n"),
+        both: [
+          "Incepem in 10 minute.",
+          "",
+          "Intra acum aici:",
+          "{live_link}"
+        ].join("\n")
+      },
+      liveNow: {
+        free: [
+          "Suntem live acum.",
+          "",
+          "Daca vrei sa vezi cum poti folosi AI concret in business/job, intra aici:",
+          "{live_link}"
+        ].join("\n"),
+        vip: [
+          "Suntem live acum.",
+          "",
+          "Pentru VIP: pregateste o intrebare concreta despre cazul tau. La final prioritizam implementarea.",
+          "{live_link}"
+        ].join("\n"),
+        both: [
+          "Suntem live acum.",
+          "",
+          "Intra aici:",
+          "{live_link}"
+        ].join("\n")
+      },
+      practice: {
+        free: [
+          "Am ajuns la partea cea mai practica: cum transformi AI-ul intr-un sistem care lucreaza pentru tine.",
+          "",
+          "Intra acum daca nu esti deja in live."
+        ].join("\n"),
+        vip: [
+          "Pentru VIP: acum intram in zona aplicata. Noteaza unde vrei primul sistem AI: lead-uri, follow-up, suport, vanzari sau operatiuni."
+        ].join("\n"),
+        both: [
+          "Am ajuns la partea practica. Intra acum daca nu esti deja in live."
+        ].join("\n")
+      },
+      qa: {
+        free: [
+          "Pregatim Q&A.",
+          "",
+          "Scrie intrebarea ta aici in grup si aleg cateva exemple utile pentru toata lumea."
+        ].join("\n"),
+        vip: [
+          "VIP Q&A: scrie intrebarea ta concreta despre implementare, funnel sau automatizari. Le prioritizez pe cele aplicate."
+        ].join("\n"),
+        both: [
+          "Pregatim Q&A. Scrie intrebarea ta aici in grup."
+        ].join("\n")
+      },
+      offer: {
+        free: [
+          "Am deschis urmatorul pas pentru cei care vor sa aplice concret ce am lucrat azi.",
+          "",
+          "Detalii aici:",
+          "{offer_link}",
+          "",
+          "Bonusurile sunt disponibile pana la {deadline}."
+        ].join("\n"),
+        vip: [
+          "Pentru VIP: am deschis urmatorul pas aplicat.",
+          "",
+          "Daca vrei sa construim sistemul tau AI cu pasi, verificari si roadmap, vezi detaliile aici:",
+          "{offer_link}",
+          "",
+          "Bonusurile VIP sunt disponibile pana la {deadline}."
+        ].join("\n"),
+        both: [
+          "Am deschis urmatorul pas. Detalii aici:",
+          "{offer_link}",
+          "",
+          "Bonusurile sunt disponibile pana la {deadline}."
+        ].join("\n")
+      },
+      final: {
+        free: [
+          "Multumesc ca ai fost live.",
+          "",
+          "Pun aici replay-ul si urmatorul pas imediat ce sunt gata:",
+          "{replay_link}"
+        ].join("\n"),
+        vip: [
+          "Multumesc ca ai fost live.",
+          "",
+          "Pentru VIP: pastreaza intrebarile si exemplele tale concrete. Pun aici replay-ul si urmatorul pas:",
+          "{replay_link}"
+        ].join("\n"),
+        both: [
+          "Multumesc ca ai fost live. Replay-ul apare aici:",
+          "{replay_link}"
+        ].join("\n")
+      },
+      delay: {
+        free: "Avem o mica intarziere tehnica. Revenim in cateva minute, ramaneti aproape.",
+        vip: "Avem o mica intarziere tehnica. Revenim in cateva minute. Multumesc pentru rabdare.",
+        both: "Avem o mica intarziere tehnica. Revenim in cateva minute."
+      },
+      custom: {
+        free: "",
+        vip: "",
+        both: ""
+      }
+    };
+
     const applyTemplate = (template, row = {}) => template
       .replaceAll("{name}", row.name || "Salut")
       .replaceAll("{access}", row.access || "")
@@ -587,6 +822,94 @@
         access: "free",
         persona: "business"
       });
+    };
+
+    const selectedWebinarTemplate = () => {
+      const template = webinarGroupTemplates[webinarWhatsappTemplate.value] || webinarGroupTemplates.custom;
+      return template[webinarWhatsappTarget.value] || template.free || "";
+    };
+
+    const refreshWebinarMessage = () => {
+      if (webinarWhatsappTemplate.value === "custom" && webinarWhatsappMessage.value.trim()) {
+        updateWebinarButtons();
+        return;
+      }
+      webinarWhatsappMessage.value = selectedWebinarTemplate();
+      updateWebinarButtons();
+    };
+
+    const hasUnresolvedPlaceholders = (message) => /\{[a-z_]+\}/i.test(message);
+
+    const updateWebinarButtons = () => {
+      const target = webinarWhatsappTarget.value;
+      webinarWhatsappPreview.disabled = target === "both";
+      if (target === "both") {
+        webinarWhatsappPreview.title = "Preview pentru Both este dezactivat ca sa nu ramana drafturi in doua grupuri.";
+      } else {
+        webinarWhatsappPreview.removeAttribute("title");
+      }
+    };
+
+    const setWebinarBusy = (busy) => {
+      webinarWhatsappTarget.disabled = busy;
+      webinarWhatsappTemplate.disabled = busy;
+      webinarWhatsappMessage.disabled = busy;
+      webinarWhatsappPreview.disabled = busy || webinarWhatsappTarget.value === "both";
+      webinarWhatsappSend.disabled = busy;
+      webinarWhatsappCopy.disabled = busy;
+    };
+
+    const appendWebinarLog = ({ target, mode, message }) => {
+      const item = document.createElement("div");
+      item.className = "send-log-item";
+      item.textContent = `${new Date().toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit" })} · ${mode} · ${target.toUpperCase()} · ${message.slice(0, 90)}`;
+      webinarWhatsappLog.prepend(item);
+    };
+
+    const runWebinarWhatsapp = async (mode) => {
+      const target = webinarWhatsappTarget.value;
+      const message = webinarWhatsappMessage.value.trim();
+
+      if (!message) {
+        webinarWhatsappNote.textContent = "Scrie sau alege un mesaj inainte.";
+        webinarWhatsappMessage.focus();
+        return;
+      }
+
+      if (mode === "send" && hasUnresolvedPlaceholders(message)) {
+        webinarWhatsappNote.textContent = "Mesajul are placeholderi nerezolvati. Inlocuieste {live_link}, {offer_link}, {deadline} sau {replay_link}.";
+        webinarWhatsappMessage.focus();
+        return;
+      }
+
+      if (mode === "send") {
+        const confirmed = window.confirm(`Trimiti acum mesajul in ${target.toUpperCase()}?`);
+        if (!confirmed) return;
+      }
+
+      setWebinarBusy(true);
+      webinarWhatsappNote.textContent = mode === "send" ? "Deschid grupul si trimit mesajul..." : "Deschid grupul si pun mesajul ca draft...";
+
+      try {
+        const response = await fetch(whatsappDesktopEndpoint, {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+            accept: "application/json"
+          },
+          body: JSON.stringify({ target, message, mode })
+        });
+        const payload = await response.json();
+        if (!response.ok || !payload.ok) {
+          throw new Error(payload.error || payload.message || "whatsapp_failed");
+        }
+        webinarWhatsappNote.textContent = mode === "send" ? "Mesaj trimis." : "Draft pus in WhatsApp. Verifica textul, apoi apasa Enter in WhatsApp.";
+        appendWebinarLog({ target, mode, message });
+      } catch (error) {
+        webinarWhatsappNote.textContent = `Nu am putut controla WhatsApp: ${error.message}`;
+      } finally {
+        setWebinarBusy(false);
+      }
     };
 
     const renderWhatsappQueue = (rows) => {
@@ -661,6 +984,25 @@
       }
     });
 
+    webinarWhatsappTarget.addEventListener("change", refreshWebinarMessage);
+    webinarWhatsappTemplate.addEventListener("change", refreshWebinarMessage);
+    webinarWhatsappMessage.addEventListener("input", () => {
+      if (webinarWhatsappTemplate.value !== "custom") {
+        webinarWhatsappTemplate.value = "custom";
+      }
+      updateWebinarButtons();
+    });
+    webinarWhatsappPreview.addEventListener("click", () => runWebinarWhatsapp("preview"));
+    webinarWhatsappSend.addEventListener("click", () => runWebinarWhatsapp("send"));
+    webinarWhatsappCopy.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(webinarWhatsappMessage.value.trim());
+        webinarWhatsappNote.textContent = "Mesajul live este copiat.";
+      } catch (_) {
+        webinarWhatsappNote.textContent = "Nu am putut copia automat.";
+      }
+    });
+
     whatsappTemplate.addEventListener("change", refreshGroupPreview);
     customWhatsappMessage.addEventListener("input", refreshGroupPreview);
 
@@ -694,6 +1036,7 @@
 
     const escapeAttr = (value) => escapeHtml(value).replace(/'/g, "&#39;");
 
+    refreshWebinarMessage();
     refreshGroupPreview();
     loadStatus();
   </script>
