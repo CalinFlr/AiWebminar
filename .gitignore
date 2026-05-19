@@ -3,6 +3,7 @@
 .env
 .env.*
 .dev.vars
+.dev.vars.local
 .clasp.json
 .wrangler/
 dist/

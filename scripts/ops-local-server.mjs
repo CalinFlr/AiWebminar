@@ -2,8 +2,11 @@ import { createServer } from "node:http";
 import { readFile } from "node:fs/promises";
 import { extname, join, normalize } from "node:path";
 
+await loadLocalEnv();
+
 const port = Number(process.env.OPS_PORT || 8789);
 const remoteBaseUrl = (process.env.OPS_REMOTE_BASE_URL || "https://aiwebminar.pages.dev").replace(/\/+$/, "");
+const adminExportToken = process.env.OPS_ADMIN_EXPORT_TOKEN || process.env.ADMIN_EXPORT_TOKEN || "";
 const root = process.cwd();
 
 const contentTypes = {
@@ -18,6 +21,15 @@ const contentTypes = {
 const server = createServer(async (request, response) => {
   try {
     const url = new URL(request.url || "/", `http://localhost:${port}`);
+
+    if (url.pathname === "/api/local-ops-status") {
+      sendJson(response, {
+        ok: true,
+        remoteBaseUrl,
+        adminExportTokenConfigured: Boolean(adminExportToken)
+      });
+      return;
+    }
 
     if (url.pathname === "/api/config" || url.pathname === "/api/export") {
       await proxyApi(request, response, url);
@@ -44,6 +56,7 @@ const server = createServer(async (request, response) => {
 server.listen(port, () => {
   console.log(`AIWebminar local ops: http://localhost:${port}/ops`);
   console.log(`Proxy API: ${remoteBaseUrl}`);
+  console.log(`Admin export token: ${adminExportToken ? "configured" : "missing"}`);
 });
 
 function resolveStaticFile(pathname) {
@@ -72,6 +85,8 @@ async function proxyApi(request, response, localUrl) {
   const authorization = request.headers.authorization;
   if (authorization) {
     headers.authorization = authorization;
+  } else if (localUrl.pathname === "/api/export" && adminExportToken) {
+    headers.authorization = `Bearer ${adminExportToken}`;
   }
   headers.accept = request.headers.accept || "application/json";
 
@@ -83,6 +98,33 @@ async function proxyApi(request, response, localUrl) {
     "cache-control": "no-store"
   });
   response.end(Buffer.from(body));
+}
+
+async function loadLocalEnv() {
+  for (const filename of [".dev.vars.local", ".env.local"]) {
+    try {
+      const content = await readFile(join(process.cwd(), filename), "utf8");
+      for (const line of content.split(/\r?\n/)) {
+        const trimmed = line.trim();
+        if (!trimmed || trimmed.startsWith("#")) continue;
+        const match = trimmed.match(/^([A-Za-z_][A-Za-z0-9_]*)=(.*)$/);
+        if (!match) continue;
+        const [, key, rawValue] = match;
+        if (process.env[key]) continue;
+        process.env[key] = rawValue.replace(/^["']|["']$/g, "");
+      }
+    } catch (_) {
+      // Optional local secret file.
+    }
+  }
+}
+
+function sendJson(response, payload) {
+  response.writeHead(200, {
+    "content-type": "application/json; charset=utf-8",
+    "cache-control": "no-store"
+  });
+  response.end(JSON.stringify(payload));
 }
 
 function sendText(response, status, text) {

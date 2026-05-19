@@ -290,7 +290,7 @@
 
     <section class="panel" aria-labelledby="title">
       <h1 id="title">Ops dashboard</h1>
-      <p>Exporturi CSV si status de configurare pentru funnel. Tokenul ramane in browserul tau si se trimite doar catre endpointul de export.</p>
+      <p>Exporturi CSV, status de configurare si WhatsApp console pentru funnel. Local, tokenul poate sta server-side in <code>.dev.vars.local</code>, fara sa fie afisat in browser.</p>
     </section>
 
     <div class="layout" style="margin-top: 18px;">
@@ -351,6 +351,7 @@
   <script>
     const configEndpoint = "/api/config";
     const exportEndpoint = "/api/export";
+    const localStatusEndpoint = "/api/local-ops-status";
     const tokenInput = document.querySelector("#adminToken");
     const toggleToken = document.querySelector("#toggleToken");
     const exportGrid = document.querySelector("#exportGrid");
@@ -363,6 +364,7 @@
     const groupMessagePreview = document.querySelector("#groupMessagePreview");
     const whatsappNote = document.querySelector("#whatsappNote");
     const whatsappQueue = document.querySelector("#whatsappQueue");
+    let serverSideTokenConfigured = false;
 
     const statusItems = [
       ["Ops provider", "opsProvider", "cloudflare_d1"],
@@ -397,11 +399,29 @@
 
     const loadStatus = async () => {
       try {
+        await loadLocalOpsStatus();
         const response = await fetch(configEndpoint, { headers: { accept: "application/json" } });
         const config = await response.json();
         renderStatus(config);
       } catch (error) {
         statusGrid.innerHTML = "<p>Nu am putut incarca statusul.</p>";
+      }
+    };
+
+    const loadLocalOpsStatus = async () => {
+      try {
+        const response = await fetch(localStatusEndpoint, { headers: { accept: "application/json" } });
+        if (!response.ok) return;
+        const status = await response.json();
+        serverSideTokenConfigured = Boolean(status.adminExportTokenConfigured);
+        if (serverSideTokenConfigured) {
+          tokenInput.placeholder = "Token setat server-side local";
+          tokenInput.disabled = true;
+          toggleToken.disabled = true;
+          toggleToken.textContent = "Setat";
+        }
+      } catch (_) {
+        serverSideTokenConfigured = false;
       }
     };
 
@@ -428,20 +448,28 @@
       URL.revokeObjectURL(objectUrl);
     };
 
-    const fetchCsv = async (type) => {
+    const authHeaders = () => {
+      const headers = { accept: "text/csv" };
       const token = tokenInput.value.trim();
-      if (!token) {
-        tokenInput.focus();
-        throw new Error("Introdu ADMIN_EXPORT_TOKEN.");
+      if (token) {
+        headers.authorization = `Bearer ${token}`;
       }
+      return headers;
+    };
+
+    const requireTokenOrServerToken = () => {
+      if (serverSideTokenConfigured || tokenInput.value.trim()) return;
+      tokenInput.focus();
+      throw new Error("Introdu ADMIN_EXPORT_TOKEN sau seteaza-l local in .dev.vars.local.");
+    };
+
+    const fetchCsv = async (type) => {
+      requireTokenOrServerToken();
 
       const url = new URL(exportEndpoint, window.location.href);
       url.searchParams.set("type", type);
       const response = await fetch(url.toString(), {
-        headers: {
-          accept: "text/csv",
-          authorization: `Bearer ${token}`
-        }
+        headers: authHeaders()
       });
 
       if (!response.ok) {
@@ -596,21 +624,13 @@
     exportGrid.addEventListener("click", async (event) => {
       const button = event.target.closest("[data-export]");
       if (!button) return;
-      const token = tokenInput.value.trim();
-      if (!token) {
-        exportNote.textContent = "Introdu ADMIN_EXPORT_TOKEN.";
-        tokenInput.focus();
-        return;
-      }
       exportNote.textContent = "Generez exportul...";
       const url = new URL(exportEndpoint, window.location.href);
       url.searchParams.set("type", button.dataset.export);
       try {
+        requireTokenOrServerToken();
         const response = await fetch(url.toString(), {
-          headers: {
-            accept: "text/csv",
-            authorization: `Bearer ${token}`
-          }
+          headers: authHeaders()
         });
         if (!response.ok) {
           let error = "export_failed";
