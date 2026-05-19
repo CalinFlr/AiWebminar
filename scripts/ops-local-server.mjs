@@ -55,6 +55,7 @@ const server = createServer(async (request, response) => {
 
 server.listen(port, () => {
   console.log(`AIWebminar local ops: http://localhost:${port}/ops`);
+  console.log(`AIWebminar email previews: http://localhost:${port}/emails`);
   console.log(`Proxy API: ${remoteBaseUrl}`);
   console.log(`Admin export token: ${adminExportToken ? "configured" : "missing"}`);
 });
@@ -64,6 +65,14 @@ function resolveStaticFile(pathname) {
     ["/", "ops.html"],
     ["/ops", "ops.html"],
     ["/ops.html", "ops.html"],
+    ["/emails", "email-previews/index.html"],
+    ["/emails.html", "email-previews/index.html"],
+    ["/email-previews", "email-previews/index.html"],
+    ["/email-previews/", "email-previews/index.html"],
+    ["/email-previews/index.html", "email-previews/index.html"],
+    ["/email-previews/free-confirmation.html", "email-previews/free-confirmation.html"],
+    ["/email-previews/vip-intent.html", "email-previews/vip-intent.html"],
+    ["/email-previews/vip-confirmed.html", "email-previews/vip-confirmed.html"],
     ["/index.html", "index.html"],
     ["/privacy.html", "privacy.html"],
     ["/thank-you.html", "thank-you.html"],
