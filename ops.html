@@ -110,7 +110,8 @@
     }
 
     input,
-    select {
+    select,
+    textarea {
       width: 100%;
       min-height: 44px;
       border: 1px solid var(--line);
@@ -119,6 +120,12 @@
       color: var(--ink);
       background: var(--white);
       font: inherit;
+    }
+
+    textarea {
+      min-height: 128px;
+      padding: 12px;
+      resize: vertical;
     }
 
     button,
@@ -192,6 +199,59 @@
       font-weight: 800;
     }
 
+    .whatsapp-toolbar,
+    .message-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .whatsapp-toolbar {
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      align-items: end;
+      margin-top: 14px;
+    }
+
+    .message-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: 14px;
+    }
+
+    .reminder-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .reminder-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      gap: 10px;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.74);
+    }
+
+    .reminder-card strong,
+    .reminder-card small {
+      display: block;
+    }
+
+    .reminder-card small {
+      color: var(--muted);
+    }
+
+    .message-preview {
+      min-height: 88px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.74);
+      white-space: pre-wrap;
+    }
+
     code {
       border: 1px solid var(--line);
       border-radius: 6px;
@@ -204,7 +264,10 @@
       .topbar,
       .layout,
       .token-row,
-      .export-grid {
+      .export-grid,
+      .whatsapp-toolbar,
+      .message-grid,
+      .reminder-card {
         grid-template-columns: 1fr;
       }
 
@@ -254,9 +317,33 @@
       </aside>
     </div>
 
+    <section class="panel" style="margin-top: 18px;" aria-labelledby="whatsapp-title">
+      <h2 id="whatsapp-title">WhatsApp console</h2>
+      <p>Automatizarea MVP foloseste linkuri oficiale <code>wa.me</code>: mesajul este generat aici, iar trimiterea ramane confirmata manual in WhatsApp. Pentru grupuri, copiezi mesajul si il postezi in grupul potrivit.</p>
+
+      <div class="whatsapp-toolbar">
+        <select id="whatsappTemplate" aria-label="Template WhatsApp">
+          <option value="dayBefore">Reminder cu o zi inainte</option>
+          <option value="sameDay">Reminder in ziua workshopului</option>
+          <option value="vipNudge">Nudge VIP</option>
+          <option value="custom">Mesaj custom</option>
+        </select>
+        <button type="button" id="loadWhatsappQueue">Incarca queue</button>
+        <button type="button" id="copyGroupMessage" class="btn-secondary">Copiaza mesaj grup</button>
+      </div>
+
+      <div class="message-grid">
+        <textarea id="customWhatsappMessage" placeholder="Mesaj custom. Poti folosi {name}, {access}, {persona}."></textarea>
+        <div class="message-preview" id="groupMessagePreview"></div>
+      </div>
+
+      <p class="note" id="whatsappNote" aria-live="polite"></p>
+      <div class="reminder-list" id="whatsappQueue"></div>
+    </section>
+
     <section class="panel" style="margin-top: 18px;" aria-labelledby="next-title">
       <h2 id="next-title">Urmatoarele setari</h2>
-      <p>Stripe: seteaza Payment Link URL, Payment Link ID, Secret Key si Webhook Secret. WhatsApp: seteaza linkurile free si VIP. Privacy: completeaza datele firmei inainte de ads.</p>
+      <p>Stripe: seteaza Payment Link URL, Payment Link ID, Secret Key si Webhook Secret. WhatsApp Cloud API poate fi adaugat ulterior pentru mesaje 1-la-1 cu template-uri aprobate. Privacy: completeaza datele firmei inainte de ads.</p>
       <p>Export rapid: endpointul <code>/api/export?type=leads</code> accepta tokenul prin header <code>Authorization: Bearer</code>.</p>
     </section>
   </main>
@@ -269,6 +356,13 @@
     const exportGrid = document.querySelector("#exportGrid");
     const exportNote = document.querySelector("#exportNote");
     const statusGrid = document.querySelector("#statusGrid");
+    const whatsappTemplate = document.querySelector("#whatsappTemplate");
+    const customWhatsappMessage = document.querySelector("#customWhatsappMessage");
+    const loadWhatsappQueue = document.querySelector("#loadWhatsappQueue");
+    const copyGroupMessage = document.querySelector("#copyGroupMessage");
+    const groupMessagePreview = document.querySelector("#groupMessagePreview");
+    const whatsappNote = document.querySelector("#whatsappNote");
+    const whatsappQueue = document.querySelector("#whatsappQueue");
 
     const statusItems = [
       ["Ops provider", "opsProvider", "cloudflare_d1"],
@@ -334,6 +428,169 @@
       URL.revokeObjectURL(objectUrl);
     };
 
+    const fetchCsv = async (type) => {
+      const token = tokenInput.value.trim();
+      if (!token) {
+        tokenInput.focus();
+        throw new Error("Introdu ADMIN_EXPORT_TOKEN.");
+      }
+
+      const url = new URL(exportEndpoint, window.location.href);
+      url.searchParams.set("type", type);
+      const response = await fetch(url.toString(), {
+        headers: {
+          accept: "text/csv",
+          authorization: `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        let error = "export_failed";
+        try {
+          const payload = await response.json();
+          error = payload.error || error;
+        } catch (_) {
+          error = response.statusText || error;
+        }
+        throw new Error(error);
+      }
+
+      return response.text();
+    };
+
+    const parseCsv = (csv) => {
+      const rows = [];
+      let row = [];
+      let value = "";
+      let quoted = false;
+
+      for (let index = 0; index < csv.length; index += 1) {
+        const char = csv[index];
+        const next = csv[index + 1];
+
+        if (quoted) {
+          if (char === "\"" && next === "\"") {
+            value += "\"";
+            index += 1;
+          } else if (char === "\"") {
+            quoted = false;
+          } else {
+            value += char;
+          }
+        } else if (char === "\"") {
+          quoted = true;
+        } else if (char === ",") {
+          row.push(value);
+          value = "";
+        } else if (char === "\n") {
+          row.push(value);
+          rows.push(row);
+          row = [];
+          value = "";
+        } else if (char !== "\r") {
+          value += char;
+        }
+      }
+
+      if (value || row.length) {
+        row.push(value);
+        rows.push(row);
+      }
+
+      const headers = rows.shift() || [];
+      return rows
+        .filter((csvRow) => csvRow.some((cell) => cell.trim()))
+        .map((csvRow) => Object.fromEntries(headers.map((header, index) => [header, csvRow[index] || ""])));
+    };
+
+    const normalizeWhatsAppNumber = (phone) => {
+      const digits = String(phone || "").replace(/\D/g, "");
+      if (!digits) return "";
+      if (digits.startsWith("00")) return digits.slice(2);
+      if (digits.startsWith("0")) return `40${digits.slice(1)}`;
+      return digits;
+    };
+
+    const messageTemplates = {
+      dayBefore: [
+        "Salut, {name}. Reminder rapid pentru workshopul Agenti AI 24/7.",
+        "",
+        "Maine intram in partea practica: agenti AI, browser automation si workflow-uri care pot prelua taskuri repetitive.",
+        "",
+        "Te rog intra si in grupul WhatsApp, acolo pun linkul final si anunturile importante.",
+        "",
+        "Calin"
+      ].join("\n"),
+      sameDay: [
+        "Salut, {name}. Azi e sesiunea Agenti AI 24/7.",
+        "",
+        "Pregateste o idee reala din business/job: lead-uri, research, continut, documente, follow-up sau operatiuni.",
+        "",
+        "Scopul nu e sa pleci cu un prompt frumos, ci cu un workflow pe care il poti replica.",
+        "",
+        "Calin"
+      ].join("\n"),
+      vipNudge: [
+        "Salut, {name}. Daca vrei sa lucram mai aplicat pe cazul tau, VIP Implementation Lab este partea unde intram in brief, pasi, verificari si roadmap.",
+        "",
+        "E pentru oameni care vor sa transforme AI-ul din demo in sistem util.",
+        "",
+        "Calin"
+      ].join("\n"),
+      custom: ""
+    };
+
+    const applyTemplate = (template, row = {}) => template
+      .replaceAll("{name}", row.name || "Salut")
+      .replaceAll("{access}", row.access || "")
+      .replaceAll("{persona}", row.persona || "");
+
+    const selectedTemplateText = (row = {}) => {
+      const template = whatsappTemplate.value === "custom"
+        ? customWhatsappMessage.value
+        : messageTemplates[whatsappTemplate.value];
+      return applyTemplate(template, row);
+    };
+
+    const refreshGroupPreview = () => {
+      groupMessagePreview.textContent = selectedTemplateText({
+        name: "tuturor",
+        access: "free",
+        persona: "business"
+      });
+    };
+
+    const renderWhatsappQueue = (rows) => {
+      const reminders = rows
+        .filter((row) => (row.channel || "").toLowerCase() === "whatsapp")
+        .filter((row) => normalizeWhatsAppNumber(row.phone));
+
+      if (!reminders.length) {
+        whatsappQueue.innerHTML = "";
+        whatsappNote.textContent = "Nu am gasit remindere WhatsApp cu telefon valid.";
+        return;
+      }
+
+      whatsappQueue.innerHTML = reminders.map((row, index) => {
+        const phone = normalizeWhatsAppNumber(row.phone);
+        const message = selectedTemplateText(row) || row.message || "";
+        const href = `https://wa.me/${encodeURIComponent(phone)}?text=${encodeURIComponent(message)}`;
+        return `
+          <article class="reminder-card">
+            <div>
+              <strong>${escapeHtml(row.name || "Lead fara nume")}</strong>
+              <small>${escapeHtml(row.phone || "")} · ${escapeHtml(row.access || "")} · ${escapeHtml(row.persona || "")}</small>
+            </div>
+            <button type="button" class="btn-secondary" data-copy-message="${index}">Copiaza</button>
+            <a class="btn" href="${escapeAttr(href)}" target="_blank" rel="noopener">Trimite 1-la-1</a>
+          </article>
+        `;
+      }).join("");
+
+      whatsappQueue.dataset.messages = JSON.stringify(reminders.map((row) => selectedTemplateText(row) || row.message || ""));
+      whatsappNote.textContent = `Am incarcat ${reminders.length} mesaje WhatsApp.`;
+    };
+
     exportGrid.addEventListener("click", async (event) => {
       const button = event.target.closest("[data-export]");
       if (!button) return;
@@ -371,6 +628,50 @@
       }
     });
 
+    loadWhatsappQueue.addEventListener("click", async () => {
+      whatsappNote.textContent = "Incarc queue-ul WhatsApp...";
+      try {
+        const csv = await fetchCsv("reminders");
+        renderWhatsappQueue(parseCsv(csv));
+      } catch (error) {
+        whatsappNote.textContent = `Nu am putut incarca queue-ul: ${error.message}`;
+      }
+    });
+
+    whatsappTemplate.addEventListener("change", refreshGroupPreview);
+    customWhatsappMessage.addEventListener("input", refreshGroupPreview);
+
+    copyGroupMessage.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(groupMessagePreview.textContent.trim());
+        whatsappNote.textContent = "Mesajul pentru grup este copiat.";
+      } catch (_) {
+        whatsappNote.textContent = "Nu am putut copia automat. Selecteaza mesajul si copiaza manual.";
+      }
+    });
+
+    whatsappQueue.addEventListener("click", async (event) => {
+      const button = event.target.closest("[data-copy-message]");
+      if (!button) return;
+      const messages = JSON.parse(whatsappQueue.dataset.messages || "[]");
+      const message = messages[Number(button.dataset.copyMessage)] || "";
+      try {
+        await navigator.clipboard.writeText(message);
+        whatsappNote.textContent = "Mesajul este copiat.";
+      } catch (_) {
+        whatsappNote.textContent = "Nu am putut copia automat.";
+      }
+    });
+
+    const escapeHtml = (value) => String(value || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+
+    const escapeAttr = (value) => escapeHtml(value).replace(/'/g, "&#39;");
+
+    refreshGroupPreview();
     loadStatus();
   </script>
 </body>
