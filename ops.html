@@ -224,7 +224,7 @@
 
     .reminder-card {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) auto auto;
+      grid-template-columns: minmax(0, 1fr) auto auto auto;
       gap: 10px;
       align-items: center;
       border: 1px solid var(--line);
@@ -575,6 +575,7 @@
         const phone = normalizeWhatsAppNumber(row.phone);
         const message = selectedTemplateText(row) || row.message || "";
         const href = `https://wa.me/${encodeURIComponent(phone)}?text=${encodeURIComponent(message)}`;
+        const desktopHref = `whatsapp://send?phone=${encodeURIComponent(phone)}&text=${encodeURIComponent(message)}`;
         return `
           <article class="reminder-card">
             <div>
@@ -582,6 +583,7 @@
               <small>${escapeHtml(row.phone || "")} · ${escapeHtml(row.access || "")} · ${escapeHtml(row.persona || "")}</small>
             </div>
             <button type="button" class="btn-secondary" data-copy-message="${index}">Copiaza</button>
+            <a class="btn btn-secondary" href="${escapeAttr(desktopHref)}">Desktop</a>
             <a class="btn" href="${escapeAttr(href)}" target="_blank" rel="noopener">Trimite 1-la-1</a>
           </article>
         `;
