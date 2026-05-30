@@ -1,0 +1,17 @@
+{
+  "name": "aiwebminar",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/landing"
+  ],
+  "scripts": {
+    "build": "npm run build -w apps/landing",
+    "check:wrangler": "npm run check:wrangler -w apps/landing",
+    "deploy:cloudflare": "npm run deploy:cloudflare -w apps/landing --",
+    "ops:local": "npm run ops:local -w apps/landing",
+    "preview:emails": "npm run preview:emails -w apps/landing",
+    "reconcile:stripe": "npm run reconcile:stripe -w apps/landing",
+    "test:security": "npm run test:security -w apps/landing"
+  }
+}
