@@ -7,6 +7,7 @@
   ],
   "scripts": {
     "build": "npm run build -w apps/landing",
+    "check:maturity": "npm run check:maturity -w apps/landing",
     "check:wrangler": "npm run check:wrangler -w apps/landing",
     "deploy:cloudflare": "npm run deploy:cloudflare -w apps/landing --",
     "ops:local": "npm run ops:local -w apps/landing",
