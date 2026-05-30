@@ -162,6 +162,7 @@ function previewIndex(previews) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <title>AIWebminar Email Previews</title>
   <style>
     body { margin: 0; background: #101316; color: #eef4f5; font-family: Arial, sans-serif; }

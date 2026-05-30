@@ -124,6 +124,7 @@ function resolveStaticFile(pathname) {
     ["/bonus.html", "bonus.html"],
     ["/privacy.html", "privacy.html"],
     ["/thank-you.html", "thank-you.html"],
+    ["/favicon.ico", "favicon.svg"],
     ["/favicon.svg", "favicon.svg"],
     ["/mentor.jpeg", "mentor.jpeg"]
   ]);
