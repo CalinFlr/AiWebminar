@@ -1,0 +1,212 @@
+{
+  "title": "AI Automation Zero to Hero",
+  "subtitle": "Ziua 1 - Test Deck",
+  "slides": [
+    {
+      "id": "day-1-hero",
+      "type": "hero",
+      "kicker": "Ziua 1",
+      "title": "De la ChatGPT la primul Workflow Brief",
+      "lead": "Alegem procesul corect inainte sa construim agentul. Azi lucram cu rol, input, output, reguli si verificare umana.",
+      "meta": [
+        "90 min + Q&A",
+        "Fitness sandbox: Petru",
+        "Final: brief aplicabil pe orice business"
+      ],
+      "preview": {
+        "title": "Workflow AI controlabil",
+        "status": "ruleaza",
+        "rows": [
+          {
+            "label": "Input",
+            "title": "Proces repetitiv",
+            "text": "Lead-uri, mesaje, intrebari, research sau continut refacut manual.",
+            "progress": 42,
+            "color": "brass"
+          },
+          {
+            "label": "Agent",
+            "title": "Reguli + verificare",
+            "text": "AI-ul primeste context, limite si criterii clare de calitate.",
+            "progress": 68,
+            "color": "teal"
+          },
+          {
+            "label": "Output",
+            "title": "Sistem reutilizabil",
+            "text": "Plan, checklist, scripturi sau raport care poate fi rulat din nou.",
+            "progress": 86,
+            "color": "coral"
+          }
+        ]
+      },
+      "notes": "Deschide cu promisiunea zilei: nu construim inca agentul complet, construim baza lui."
+    },
+    {
+      "id": "process-to-system",
+      "type": "process-map",
+      "kicker": "Traseul celor 4 zile",
+      "title": "Nu sarim direct la agent. Construim treptat.",
+      "lead": "Un workflow bun apare cand procesul este clar, apoi devine brief, skill, agent si sistem coordonat.",
+      "steps": [
+        {
+          "label": "01",
+          "title": "Proces",
+          "text": "Alegem o munca repetitiva care merita automatizata."
+        },
+        {
+          "label": "02",
+          "title": "Brief",
+          "text": "Definim input, output, reguli, limite si verificare.",
+          "highlight": true
+        },
+        {
+          "label": "03",
+          "title": "Skill",
+          "text": "Transformam procesul intr-o reteta reutilizabila."
+        },
+        {
+          "label": "04",
+          "title": "Agent",
+          "text": "Dam AI-ului un rol specializat si criterii de calitate."
+        },
+        {
+          "label": "05",
+          "title": "Orchestrator",
+          "text": "Coordonam mai multi agenti intr-un sistem controlabil."
+        }
+      ],
+      "notes": "Accent: Ziua 1 este despre proces si brief. Skills, MCP si browser automation vin dupa ce baza e limpede."
+    },
+    {
+      "id": "petru-agent-map",
+      "type": "agent-map",
+      "kicker": "Sandbox: Petru",
+      "title": "Petru nu are nevoie de un prompt. Are nevoie de o echipa de agenti.",
+      "lead": "Dar echipa incepe cu un singur proces clar: research pentru nisa fit dads.",
+      "root": {
+        "title": "Petru",
+        "text": "fitness trainer pe nisa fit dads"
+      },
+      "agents": [
+        {
+          "tag": "Fundatie",
+          "title": "Research scripturi",
+          "text": "Avatar, probleme, obiectii, hook-uri si directie de continut.",
+          "highlight": true
+        },
+        {
+          "tag": "Content",
+          "title": "Postare continut",
+          "text": "Publica dupa ce exista video sau captions aprobate."
+        },
+        {
+          "tag": "Relatie",
+          "title": "Newsletter",
+          "text": "Transforma ideile in educatie, follow-up si relatie."
+        },
+        {
+          "tag": "Ads",
+          "title": "Research ads",
+          "text": "Gaseste unghiuri, exemple si ipoteze pentru reclame."
+        },
+        {
+          "tag": "Control",
+          "title": "Supraveghere ads",
+          "text": "Urmareste metrici, semnaleaza riscuri si recomanda ajustari."
+        }
+      ],
+      "notes": "Nu promite ca toate se construiesc in Ziua 1. Arata sistemul complet ca harta de viitor."
+    },
+    {
+      "id": "workflow-brief",
+      "type": "brief-table",
+      "kicker": "Livrabil Ziua 1",
+      "title": "Workflow Brief v1 este puntea dintre idee vaga si workflow controlabil.",
+      "lead": "Daca nu putem completa acest brief, inca nu avem un proces pregatit pentru agent.",
+      "rows": [
+        {
+          "key": "Proces",
+          "question": "Ce se repeta?"
+        },
+        {
+          "key": "Input",
+          "question": "Cu ce incepe?"
+        },
+        {
+          "key": "Pasi actuali",
+          "question": "Cum se face acum manual?"
+        },
+        {
+          "key": "Output",
+          "question": "Ce rezultat vrem?"
+        },
+        {
+          "key": "Reguli",
+          "question": "Ce are voie si ce nu are voie AI-ul?"
+        },
+        {
+          "key": "Verificare",
+          "question": "Unde intra omul?"
+        },
+        {
+          "key": "Miza",
+          "question": "De ce merita: timp, bani, oameni sau calitate?"
+        }
+      ],
+      "notes": "Foloseste acest slide ca ancora pentru exercitiul live. Completeaza cu Petru, apoi generalizeaza."
+    },
+    {
+      "id": "any-business",
+      "type": "compare",
+      "kicker": "Generalizare",
+      "title": "Cazul Petru este sandbox-ul. Metoda se aplica pe orice business.",
+      "lead": "Intrebarea nu este ce tool folosim. Intrebarea este ce proces se repeta, ce input are, ce output vrem si unde verifica omul.",
+      "items": [
+        {
+          "label": "Petru",
+          "title": "Fit dads",
+          "text": "Research pentru scripturi, hook-uri, obiectii si directie de continut."
+        },
+        {
+          "label": "Cabinet",
+          "title": "Intrebari repetitive",
+          "text": "FAQ, programari, reputatie si comunicare fara date sensibile."
+        },
+        {
+          "label": "Consultant",
+          "title": "Client delivery",
+          "text": "Briefuri, research, rapoarte, follow-up si recomandari."
+        },
+        {
+          "label": "Echipa",
+          "title": "Operatiuni",
+          "text": "Checklist-uri, sumarizare, QA si transfer de context."
+        }
+      ],
+      "benefits": [
+        {
+          "value": "Timp",
+          "title": "Ore salvate",
+          "text": "Mai putina munca refacuta manual."
+        },
+        {
+          "value": "Bani",
+          "title": "Oportunitati capturate",
+          "text": "Mai putine lead-uri sau follow-up-uri pierdute."
+        },
+        {
+          "value": "Oameni",
+          "title": "Angajari amanate",
+          "text": "Procese mai clare inainte de a mari echipa."
+        },
+        {
+          "value": "Calitate",
+          "title": "Output constant",
+          "text": "Reguli si criterii aplicate de fiecare data."
+        }
+      ],
+      "notes": "Inchide cu ideea ca metoda conteaza mai mult decat nisa: proces, reguli, verificare, output."
+    }
+  ]
+}

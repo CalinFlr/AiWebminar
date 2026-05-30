@@ -1,0 +1,1126 @@
+{
+  "title": "AI Automation Zero to Hero",
+  "subtitle": "Ziua 1 - Agentul Spion de Piață",
+  "slides": [
+    {
+      "id": "calin-intro",
+      "type": "hero",
+      "kicker": "Ziua 1",
+      "title": "Eu sunt Călin. Și workshopul ăsta nu este despre prompturi.",
+      "lead": "Este despre cum transformi AI-ul dintr-un chat interesant într-un sistem care îți economisește timp, bani și energie.",
+      "meta": [
+        "Live demo",
+        "Non-tehnic",
+        "Agent Spion de Piață"
+      ],
+      "preview": {
+        "title": "De la chat la sistem",
+        "status": "începem",
+        "rows": [
+          {
+            "label": "Chat",
+            "title": "Întrebi ceva",
+            "text": "Primești un răspuns bun o dată, apoi o iei de la capăt.",
+            "progress": 34,
+            "color": "brass"
+          },
+          {
+            "label": "Proces",
+            "title": "Dai o misiune",
+            "text": "AI-ul primește context, reguli și un rezultat clar.",
+            "progress": 68,
+            "color": "teal"
+          },
+          {
+            "label": "Sistem",
+            "title": "Câștigi viteză",
+            "text": "Omul decide, AI-ul pregătește munca repetitivă.",
+            "progress": 88,
+            "color": "coral"
+          }
+        ]
+      },
+      "notes": "Vreau să încep simplu. Eu sunt Călin și motivul pentru care fac workshopul acesta este că am văzut foarte mulți oameni inteligenți blocându-se în aceeași capcană: folosesc AI-ul, dar îl folosesc ca pe un chat.\n\nÎntreabă ceva, primesc ceva, apoi a doua zi o iau de la capăt. Nu rămâne nimic construit. Nu rămâne proces. Nu rămâne memorie de lucru. Nu rămâne un sistem care să le dea viteză de fiecare dată.\n\nAici nu vreau să vă arăt încă 50 de prompturi. Prompturile sunt utile, dar nu sunt avantaj competitiv. Avantajul apare când începi să pui AI-ul într-un proces: îi dai context, îi dai reguli, îi dai o misiune clară, îi dai un rezultat de livrat și păstrezi omul la buton.\n\nĂsta e firul workshopului: cum trecem de la joacă la sistem. Cum trecem de la wow de moment la ceva ce poate fi folosit în business."
+    },
+    {
+      "id": "ai-too-small",
+      "type": "signal-list",
+      "theme": "alt",
+      "kicker": "Problema reală",
+      "title": "Problema nu este că oamenii nu folosesc AI.",
+      "lead": "Problema este că îl folosesc prea mic.",
+      "items": [
+        {
+          "label": "Email",
+          "title": "Scrie-mi un email",
+          "text": "Util o dată, dar nu construiește un proces."
+        },
+        {
+          "label": "Content",
+          "title": "Dă-mi 10 idei",
+          "text": "Sună productiv, dar rămâne izolat."
+        },
+        {
+          "label": "Caption",
+          "title": "Fă-mi un caption",
+          "text": "Rezolvă bucata mică, nu direcția."
+        },
+        {
+          "label": "Sistem",
+          "title": "Spațiu de lucru",
+          "text": "Aici apar contextul, regulile, fișierele, outputul și verificarea."
+        }
+      ],
+      "punchline": "Nu magie haotică. Magie controlată.",
+      "notes": "Mulți oameni deja folosesc ChatGPT, Claude sau alte tooluri. Dar le folosesc pentru bucăți mici: scrie-mi un email, dă-mi 10 idei, fă-mi un caption. Și da, asta ajută. Dar nu schimbă fundamental businessul.\n\nDiferența mare apare când AI-ul nu mai este doar locul unde pui o întrebare, ci devine un spațiu de lucru. Un loc unde ai fișiere, reguli, procese, exemple, outputuri și verificare.\n\nAsta vreau să vedeți azi. Nu magie haotică. Magie controlată. Nu un truc care arată bine într-un demo și apoi se rupe în realitate. Ci o logică simplă pe care o puteți recunoaște și aplica la businessul vostru.\n\nTranziția spre următorul slide: și motivul pentru care contează asta este că piața nu așteaptă până învățăm noi confortabil."
+    },
+    {
+      "id": "ai-enhanced-threat",
+      "type": "section",
+      "theme": "dark",
+      "kicker": "Schimbarea",
+      "title": "Nu AI-ul te scoate din joc.",
+      "lead": "Te scoate omul AI-enhanced, care face în 2 ore ce tu faci în 2 zile.",
+      "body": "Nu trebuie să fie mai talentat. Dacă vede piața mai repede, testează mesaje mai repede și livrează mai repede, începe să te depășească.",
+      "punchline": "Om depășit de alt om care lucrează cu sisteme.",
+      "notes": "Acum vine partea incomodă. Nu cred că frica reală este că vine AI-ul și înlocuiește pe toată lumea peste noapte. Frica reală este mai banală și mai dureroasă: cineva din piața ta începe să folosească AI-ul mai bine decât tine.\n\nNu trebuie să fie mai talentat. Nu trebuie să aibă mai multă experiență. Dacă vede piața mai repede, testează mesaje mai repede, scrie mai repede, răspunde mai repede și învață mai repede, începe să te depășească.\n\nAsta înseamnă AI-enhanced. Nu om înlocuit de robot. Om depășit de alt om care lucrează cu sisteme. Și asta contează pentru owneri, freelanceri, consultanți, angajați, oameni care vor să rămână relevanți.\n\nNu spun asta ca să sperii gratuit. O spun ca să punem miza corectă: nu învățăm un tool. Învățăm cum să nu mai fim lenți într-o piață care accelerează."
+    },
+    {
+      "id": "painful-math",
+      "type": "money-wall",
+      "kicker": "Calculul care doare",
+      "title": "2 ore pe zi par puțin. Până le calculezi.",
+      "lead": "2 ore/zi = 10 ore/săptămână = 40 ore/lună.",
+      "equation": [
+        {
+          "value": "2h/zi",
+          "label": "research, idei, verificări, refăcut texte"
+        },
+        {
+          "value": "10h/săpt.",
+          "label": "timp care se adună fără să-l simți"
+        },
+        {
+          "value": "40h/lună",
+          "label": "o săptămână de lucru pierdută"
+        }
+      ],
+      "result": {
+        "label": "Cost",
+        "value": "1.200-2.000 EUR/lună",
+        "text": "40 ore x 30-50 EUR/oră = bani aruncați în aer."
+      },
+      "losses": [
+        {
+          "label": "Bani",
+          "title": "Cash ars lent",
+          "text": "Plătești cu timpul tău în fiecare săptămână."
+        },
+        {
+          "label": "Familie",
+          "title": "Timp luat de acasă",
+          "text": "Orele pierdute nu dispar. Vin de undeva."
+        },
+        {
+          "label": "Energie",
+          "title": "Minte obosită",
+          "text": "Deciziile bune scad când lucrezi mereu în haos."
+        },
+        {
+          "label": "Piață",
+          "title": "Oportunități luate",
+          "text": "Cineva mai rapid testează înaintea ta."
+        }
+      ],
+      "punchline": "Cel mai scump lucru nu e AI-ul. Cel mai scump e să rămâi lent.",
+      "notes": "Aici vreau să fim foarte concreți. Dacă pierzi 2 ore pe zi cu research manual, idei, verificări, texte refăcute, căutat prin competiție, uitat prin social media, înseamnă 10 ore pe săptămână. Într-o lună sunt 40 de ore.\n\nDacă timpul tău valorează 30-50 EUR pe oră, asta înseamnă 1.200-2.000 EUR pe lună. Bani aruncați în aer nu pentru că ești leneș, ci pentru că lucrezi într-un mod prea manual pentru lumea în care intrăm.\n\nDar partea și mai dureroasă este că nu pierzi doar bani. Pierzi timp cu familia. Pierzi energie mentală. Pierzi oportunități. Pierzi viteza cu care ai putea testa o idee nouă. Și poate pierzi clientul de 2.000 EUR pe care îl ia cineva care s-a mișcat mai repede.\n\nPauză aici. Lasă cifrele să stea. Apoi spune: cel mai scump lucru nu e AI-ul. Cel mai scump e să rămâi lent."
+    },
+    {
+      "id": "unfair-advantage",
+      "type": "section",
+      "theme": "dark",
+      "kicker": "Reveal",
+      "title": "Azi construim primul tău avantaj neloial.",
+      "lead": "Agentul Spion de Piață.",
+      "body": "Scanează concurența, extrage unghiuri, vede ce se repetă și îți arată unde poți lovi.",
+      "punchline": "Nu rămânem în panică. Intrăm în mecanism.",
+      "notes": "După tot calculul acesta, întrebarea este: ce facem concret? Nu vreau să rămânem în teorie și panică. Azi construim primul mecanism simplu: Agentul Spion de Piață.\n\nÎl facem pe cazul lui Petru, un fitness trainer pe nișa fit dads. Dar Petru este doar sandboxul. Logica se aplică pe orice business: trainer, consultant, agenție, clinică, e-commerce, servicii locale.\n\nAgentul acesta nu este încă tot sistemul final. Dar este prima piesă care îți dă viteză: în loc să stai tu ore întregi să observi piața, agentul îți pregătește harta.\n\nTranziție: și ca să nu vorbim abstract, hai să-l cunoaștem pe Petru și să vedem de ce problema lui nu este că nu postează destul."
+    },
+    {
+      "id": "petru-not-more-posts",
+      "type": "section",
+      "theme": "alt",
+      "kicker": "Cazul de lucru",
+      "title": "Petru nu are nevoie de “mai multe postări”.",
+      "lead": "Are nevoie să știe ce vrea piața înainte să posteze.",
+      "body": "Fitness trainer pe nișa fit dads: tați ocupați, cu job, familie, stres, puțin timp și multă frustrare acumulată.",
+      "punchline": "Primul pas nu este content. Primul pas este vedere de piață.",
+      "notes": "Aici intră Petru. Petru este fitness trainer și lucrează pe nișa fit dads: tați ocupați, cu job, familie, stres, puțin timp și multă frustrare acumulată.\n\nProblema lui Petru nu este că nu poate posta. Toată lumea poate posta. Problema este că dacă postează fără direcție, intră în aceeași gălăgie ca toți ceilalți: încă un reel cu exerciții, încă un caption motivațional, încă un ‘hai că poți’.\n\nÎn realitate, înainte să posteze, Petru trebuie să știe: ce dureri are publicul, ce obiecții apar, ce promite competiția, ce se repetă prea mult și unde există un unghi liber.\n\nTranziție: deci primul pas nu este content. Primul pas este vedere de piață."
+    },
+    {
+      "id": "petru-pays-twice",
+      "type": "signal-list",
+      "theme": "alt",
+      "kicker": "Costul orbirii",
+      "title": "Dacă Petru nu vede piața, plătește de două ori.",
+      "lead": "O dată cu timpul lui. A doua oară cu clienții pe care nu îi convinge.",
+      "items": [
+        {
+          "label": "Manual",
+          "title": "Ore pierdute",
+          "text": "Profiluri, notițe, hook-uri, comentarii, comparații."
+        },
+        {
+          "label": "Generic",
+          "title": "Mesaj invizibil",
+          "text": "Dacă nu lovește durerea, conținutul devine zgomot."
+        },
+        {
+          "label": "Client",
+          "title": "2.000 EUR pierduți",
+          "text": "Un mesaj slab poate costa mai mult decât research-ul."
+        }
+      ],
+      "question": "Câți dintre voi postați sau comunicați uneori fără să fiți 100% siguri că mesajul lovește exact durerea clientului?",
+      "notes": "Dacă Petru stă manual să se uite la competitori, să caute idei, să noteze hook-uri, să compare mesaje și apoi să scrie conținut, pierde ore. Dar dacă nu face asta deloc, pierde altceva: relevanță.\n\nAsta este capcana. Ori pierzi timp făcând research manual, ori pierzi bani pentru că postezi generic. Și generic înseamnă invizibil.\n\nPentru Petru, un client poate valora 2.000 EUR. Dacă pierde un singur client pentru că mesajul lui nu lovește suficient de clar, nu a pierdut doar engagement. A pierdut bani reali.\n\nÎntrebare live: câți dintre voi postați sau comunicați uneori fără să fiți 100% siguri că mesajul lovește exact durerea clientului? Lasă oamenii să se recunoască. Aici nu îi judecăm. Le arătăm de ce agentul devine util."
+    },
+    {
+      "id": "petru-ai-team",
+      "type": "agent-map",
+      "kicker": "Viziunea",
+      "title": "Petru nu are nevoie de un prompt. Are nevoie de o mini-echipă AI.",
+      "lead": "Research, content, newsletter, ads și supraveghere ads.",
+      "root": {
+        "title": "Petru",
+        "text": "Fit dads"
+      },
+      "agents": [
+        {
+          "tag": "01",
+          "title": "Research",
+          "text": "Scanează piața și găsește direcția.",
+          "highlight": true
+        },
+        {
+          "tag": "02",
+          "title": "Content",
+          "text": "Transformă ideile aprobate în postări."
+        },
+        {
+          "tag": "03",
+          "title": "Newsletter",
+          "text": "Scrie follow-up și educație pe temele săptămânii."
+        },
+        {
+          "tag": "04",
+          "title": "Ads research",
+          "text": "Caută hook-uri, unghiuri și exemple pentru reclame."
+        },
+        {
+          "tag": "05",
+          "title": "Ads watcher",
+          "text": "Urmărește performanța și semnalează schimbări."
+        }
+      ],
+      "notes": "Pe termen lung, Petru nu are nevoie de un singur răspuns bun. Are nevoie de o mică echipă de agenți.\n\nUn agent face research și îi spune ce merită să spună în piață. Altul poate transforma ideile aprobate în postări. Altul scrie newsletter. Altul face research pentru reclame. Altul se uită la performanța reclamelor și semnalează ce trebuie schimbat.\n\nAsta este viziunea. Dar dacă încercăm să construim totul deodată, ne pierdem. De aceea Ziua 1 este despre prima piesă: agentul care vede piața.\n\nTranziție: pentru că fără research bun, toți ceilalți agenți produc mai repede ceva slab."
+    },
+    {
+      "id": "market-spy-command-center",
+      "type": "command-center",
+      "theme": "dark",
+      "kicker": "Prima piesă",
+      "title": "Primul agent nu postează. Spionează.",
+      "lead": "Se uită la piață ca să nu mai mergi pe ghicite.",
+      "center": {
+        "status": "scanare",
+        "title": "Agent Spion de Piață",
+        "text": "Transformă sursele publice în hartă de decizie."
+      },
+      "sources": [
+        {
+          "label": "Competitor A",
+          "title": "Mesaje repetate",
+          "text": "Ce promite des în conținut.",
+          "details": [
+            {
+              "key": "Hook",
+              "value": "agresiv",
+              "tone": "coral"
+            },
+            {
+              "key": "Ofertă",
+              "value": "preț",
+              "tone": "teal"
+            },
+            {
+              "key": "Durere",
+              "value": "timp",
+              "tone": "brass"
+            },
+            {
+              "key": "Unghi",
+              "value": "comparație",
+              "tone": "teal"
+            }
+          ],
+          "badges": [
+            "monitorizat"
+          ]
+        },
+        {
+          "label": "Competitor B",
+          "title": "Poziționare",
+          "text": "Cum încearcă să câștige atenția.",
+          "details": [
+            {
+              "key": "Hook",
+              "value": "curiozitate",
+              "tone": "coral"
+            },
+            {
+              "key": "Ofertă",
+              "value": "pachet",
+              "tone": "teal"
+            },
+            {
+              "key": "Durere",
+              "value": "buget",
+              "tone": "brass"
+            },
+            {
+              "key": "Unghi",
+              "value": "rezultat",
+              "tone": "teal"
+            }
+          ],
+          "badges": [
+            "monitorizat"
+          ]
+        },
+        {
+          "label": "Creator mare",
+          "title": "Patternuri",
+          "text": "Ce se repetă în nișă.",
+          "details": [
+            {
+              "key": "Hook",
+              "value": "provocare",
+              "tone": "coral"
+            },
+            {
+              "key": "Ofertă",
+              "value": "reducere",
+              "tone": "teal"
+            },
+            {
+              "key": "Durere",
+              "value": "încredere",
+              "tone": "brass"
+            },
+            {
+              "key": "Unghi",
+              "value": "social proof",
+              "tone": "teal"
+            }
+          ],
+          "badges": [
+            "monitorizat"
+          ]
+        },
+        {
+          "label": "Ads active",
+          "title": "Promisiuni",
+          "text": "Ce merită testat sau evitat.",
+          "details": [
+            {
+              "key": "Hook",
+              "value": "emoție",
+              "tone": "coral"
+            },
+            {
+              "key": "Ofertă",
+              "value": "serviciu",
+              "tone": "teal"
+            },
+            {
+              "key": "Durere",
+              "value": "complexitate",
+              "tone": "brass"
+            },
+            {
+              "key": "Unghi",
+              "value": "experiență",
+              "tone": "teal"
+            }
+          ],
+          "badges": [
+            "monitorizat"
+          ]
+        },
+        {
+          "label": "Comentarii publice",
+          "title": "Vocea pieței",
+          "text": "Întrebări, frici, blocaje reale.",
+          "details": [
+            {
+              "key": "Hook",
+              "value": "noutate",
+              "tone": "coral"
+            },
+            {
+              "key": "Ofertă",
+              "value": "abonament",
+              "tone": "teal"
+            },
+            {
+              "key": "Durere",
+              "value": "efort",
+              "tone": "brass"
+            },
+            {
+              "key": "Unghi",
+              "value": "simplitate",
+              "tone": "teal"
+            }
+          ],
+          "badges": [
+            "monitorizat"
+          ]
+        }
+      ],
+      "metrics": [
+        {
+          "icon": "◉",
+          "value": "5",
+          "label": "surse monitorizate"
+        },
+        {
+          "icon": "≈",
+          "value": "24",
+          "label": "tipare identificate"
+        },
+        {
+          "icon": "↗",
+          "value": "6",
+          "label": "unghiuri extrase"
+        },
+        {
+          "icon": "✓",
+          "value": "OK",
+          "label": "decizie umană"
+        }
+      ],
+      "punchline": "Nu automatizăm postarea. Automatizăm claritatea dinaintea postării.",
+      "notes": "Asta e important. Mulți ar începe cu agentul care postează. Pare mai spectaculos: apeși pe buton și apar postări. Dar dacă direcția e slabă, doar automatizezi zgomotul.\n\nDe aceea primul agent este Agentul Spion de Piață. El nu publică. Nu promite. Nu ia decizii finale. El pregătește harta: cine vorbește cu publicul tău, ce promite, ce teme repetă, ce dureri apar, ce unghiuri sunt obosite și unde există loc să intri mai bine.\n\nVizual, vreau să îl priviți ca pe o cameră de comandă: agentul în centru, sursele în jur, iar badge-urile sunt semnalele extrase. Hook, ofertă, durere, obiecție, unghi obosit, gol în piață.\n\nPunchline: nu automatizăm postarea. Automatizăm claritatea dinaintea postării."
+    },
+    {
+      "id": "demo-extract-gold",
+      "type": "signal-list",
+      "theme": "alt",
+      "kicker": "Ce urmărim",
+      "title": "În demo, agentul trebuie să scoată aur din piață.",
+      "lead": "Nu vrem text frumos. Vrem direcție pe care Petru o poate folosi.",
+      "items": [
+        {
+          "label": "Avatar",
+          "title": "Pentru cine vorbim",
+          "text": "Fit dads concret, nu public generic."
+        },
+        {
+          "label": "Dureri",
+          "title": "Ce îi apasă",
+          "text": "Frustrare, lipsă de timp, energie scăzută."
+        },
+        {
+          "label": "Obiecții",
+          "title": "De ce nu încep",
+          "text": "Nu am timp, nu mă țin, am mai încercat."
+        },
+        {
+          "label": "Hook-uri",
+          "title": "Ce oprește scroll-ul",
+          "text": "Tensiuni specifice, nu fraze generice."
+        },
+        {
+          "label": "Scripturi",
+          "title": "Ce poate posta",
+          "text": "Primele idei de video cu structură."
+        },
+        {
+          "label": "OK uman",
+          "title": "Ce verifică Petru",
+          "text": "Adevăr, brand, siguranță, promisiuni."
+        }
+      ],
+      "notes": "În demo nu o să ne uităm doar dacă outputul sună bine. Asta e capcana cu AI-ul. Multe lucruri sună bine. Întrebarea este: se poate folosi?\n\nVrem să vedem dacă agentul poate scoate ceva util pentru Petru: avatar, dureri, dorințe, obiecții, hook-uri, idei de scripturi și un checklist de verificare.\n\nȘi foarte important: omul rămâne la buton. Petru decide ce e adevărat, ce e potrivit pentru brandul lui, ce trebuie verificat și ce poate deveni conținut.\n\nTranziție: ca să facem asta, nu îi dăm AI-ului o dorință vagă. Îi dăm o hartă."
+    },
+    {
+      "id": "no-vague-wish",
+      "type": "section",
+      "theme": "dark",
+      "kicker": "Regula",
+      "title": "Un agent bun nu începe cu “fă-mi ceva wow”.",
+      "lead": "Începe cu o hartă clară: misiune, surse, output, limite și OK uman.",
+      "body": "Dacă îi dai o dorință vagă, primești un răspuns care poate suna impresionant, dar este greu de verificat.",
+      "punchline": "Harta este diferența dintre un prompt random și începutul unui sistem.",
+      "notes": "Aici vreau să evităm capcana clasică. Mulți oameni deschid AI-ul și spun: fă-mi o strategie, fă-mi postări, fă-mi ceva creativ. Și AI-ul face. Dar face pe baza presupunerilor lui.\n\nDacă îi dai o dorință vagă, primești un răspuns care poate suna impresionant, dar este greu de verificat. Nu știi de unde a venit. Nu știi dacă se potrivește. Nu știi dacă e prea generic.\n\nDe aceea noi nu începem cu magia. Începem cu harta. Îi spunem agentului exact ce misiune are, de unde pornește, ce vrem să livreze, ce nu are voie să facă și unde omul apasă OK.\n\nTranziție: harta asta este diferența dintre un prompt random și începutul unui sistem."
+    },
+    {
+      "id": "spy-map-five-pieces",
+      "type": "process-map",
+      "kicker": "Structura",
+      "title": "Harta Agentului Spion are 5 piese.",
+      "lead": "Dacă lipsește una, agentul începe să ghicească.",
+      "steps": [
+        {
+          "label": "01",
+          "title": "Misiune",
+          "text": "Ce urmărește agentul și de ce contează."
+        },
+        {
+          "label": "02",
+          "title": "Surse",
+          "text": "De unde are voie să se uite."
+        },
+        {
+          "label": "03",
+          "title": "Ce extrage",
+          "text": "Hook-uri, dureri, obiecții, goluri."
+        },
+        {
+          "label": "04",
+          "title": "Limite",
+          "text": "Ce nu promite, ce nu inventează."
+        },
+        {
+          "label": "05",
+          "title": "OK uman",
+          "text": "Unde decide ownerul ce se folosește.",
+          "highlight": true
+        }
+      ],
+      "notes": "Pentru demo-ul de azi, avem nevoie de o hartă simplă. Nu vreau să încărcăm oamenii cu termeni tehnici. Gândiți-vă la ea ca la fișa de lucru a agentului.\n\nPrima piesă: misiunea. Ce trebuie să facă? În cazul lui Petru: să observe piața fit dads și să găsească direcții utile.\n\nA doua: sursele. De unde se uită? Competitori, creatori, pagini publice, comentarii, reclame, exemple.\n\nA treia: ce extrage. Nu vrem un rezumat lung. Vrem hook-uri, dureri, obiecții, promisiuni, unghiuri obosite și goluri în piață.\n\nA patra: limite. Nu inventăm rezultate, nu dăm sfaturi medicale, nu publicăm automat.\n\nA cincea: OK uman. Agentul pregătește harta, dar Petru decide ce folosește."
+    },
+    {
+      "id": "sources-fuel",
+      "type": "signal-list",
+      "theme": "alt",
+      "kicker": "Input",
+      "title": "Agentul vede doar ce îi dai voie să vadă.",
+      "lead": "Sursele bune produc research bun. Sursele slabe produc zgomot elegant.",
+      "items": [
+        {
+          "label": "Real",
+          "title": "Competitori",
+          "text": "Pagini, profiluri, oferte, postări publice."
+        },
+        {
+          "label": "Public",
+          "title": "Comentarii",
+          "text": "Întrebări, frici și blocaje spuse de piață."
+        },
+        {
+          "label": "Backup",
+          "title": "Set pregătit",
+          "text": "Dacă live-ul nu merge perfect, demo-ul rămâne premium."
+        }
+      ],
+      "question": "În businessul vostru, care ar fi primele 2-3 surse pe care merită să le scaneze un agent?",
+      "notes": "Asta este o idee foarte importantă. AI-ul poate părea inteligent chiar și când lucrează cu input slab. Poate scrie frumos, poate face liste, poate suna convingător. Dar dacă sursele sunt slabe, outputul este doar zgomot elegant.\n\nPentru demo, vom folosi 2-3 surse reale sau un backup pregătit. Nu avem nevoie de 100 de linkuri. Avem nevoie de câteva exemple suficient de bune ca agentul să observe patternuri.\n\nȘi aici se vede diferența dintre om și AI. Omul alege terenul. Agentul scanează terenul. Omul decide ce devine strategie.\n\nÎntrebare live: în businessul vostru, care ar fi primele 2-3 surse pe care merită să le scaneze un agent?"
+    },
+    {
+      "id": "signals-not-summary",
+      "type": "signal-list",
+      "kicker": "Output",
+      "title": "Agentul nu face rezumat de concurență. Caută semnale.",
+      "lead": "Ce se repetă? Ce doare? Ce promite piața? Ce lipsește?",
+      "items": [
+        {
+          "label": "Repeat",
+          "title": "Mesaje repetate",
+          "text": "Ce spune toată lumea deja."
+        },
+        {
+          "label": "Promise",
+          "title": "Promisiuni",
+          "text": "Ce vinde piața ca rezultat dorit."
+        },
+        {
+          "label": "Pain",
+          "title": "Dureri",
+          "text": "Ce apare des în comunicare și comentarii."
+        },
+        {
+          "label": "Block",
+          "title": "Obiecții",
+          "text": "De ce oamenii nu cumpără sau nu încep."
+        },
+        {
+          "label": "Hook",
+          "title": "Hook-uri",
+          "text": "Formule care opresc atenția."
+        },
+        {
+          "label": "Gap",
+          "title": "Goluri",
+          "text": "Ce lipsește și poate deveni poziționare."
+        }
+      ],
+      "notes": "Dacă agentul doar rezumă concurența, nu ne ajută suficient. Rezumatul este informare. Noi vrem decizie.\n\nUn semnal este ceva care îți spune ce merită făcut mai departe. Dacă vezi că toți competitorii promit același lucru, poate e un unghi obosit. Dacă vezi aceeași obiecție în comentarii, poate e subiect de conținut. Dacă vezi o durere ignorată, poate e oportunitate.\n\nAgentul trebuie să scoată semnale, nu paragrafe frumoase. Asta îl face util pentru business.\n\nTranziție: dar semnalele nu se publică singure. Agentul pregătește. Omul decide."
+    },
+    {
+      "id": "human-decides",
+      "type": "compare",
+      "kicker": "Control",
+      "title": "Agentul pregătește. Omul decide.",
+      "lead": "Asta face sistemul puternic fără să devină periculos.",
+      "items": [
+        {
+          "label": "Agent",
+          "title": "Pregătește harta",
+          "text": "Scanează, organizează, extrage semnale și propune direcții."
+        },
+        {
+          "label": "Om",
+          "title": "Verifică adevărul",
+          "text": "Decide ce e corect, sigur și potrivit pentru brand."
+        },
+        {
+          "label": "Business",
+          "title": "Primește viteză",
+          "text": "Research-ul nu mai blochează execuția."
+        },
+        {
+          "label": "Limită",
+          "title": "Fără autopilot orb",
+          "text": "Nu publică, nu promite și nu schimbă strategia singur."
+        }
+      ],
+      "notes": "Vreau să fie foarte clar: nu construim un AI care decide singur strategia lui Petru, publică singur, promite singur și schimbă reclamele singur.\n\nÎn Ziua 1, agentul pregătește harta. Petru verifică: ce este adevărat, ce se potrivește brandului lui, ce trebuie adaptat, ce nu folosim și ce poate deveni conținut.\n\nAceastă verificare umană nu este un pas birocratic. Este exact lucrul care transformă AI-ul din risc în avantaj. AI-ul îți dă viteză. Tu îi dai judecată.\n\nTranziție: acum avem harta. Putem intra în demo."
+    },
+    {
+      "id": "control-room",
+      "type": "command-center",
+      "theme": "dark",
+      "intensity": "high",
+      "kicker": "Demo reveal",
+      "title": "Acum intrăm în camera de control.",
+      "lead": "Agentul Spion de Piață este deja pe poziții: vede sursele, extrage semnale și pregătește harta.",
+      "center": {
+        "status": "ready",
+        "title": "Camera de control",
+        "text": "Surse, semnale, limite și decizie umană într-un singur sistem."
+      },
+      "sources": [
+        {
+          "label": "Surse",
+          "title": "2-3 linkuri reale",
+          "text": "Terenul pe care îl scanăm.",
+          "details": [
+            {
+              "key": "Input",
+              "value": "public",
+              "tone": "teal"
+            },
+            {
+              "key": "Calitate",
+              "value": "relevant",
+              "tone": "brass"
+            },
+            {
+              "key": "Status",
+              "value": "aprobat",
+              "tone": "teal"
+            }
+          ],
+          "badges": [
+            "monitorizat"
+          ]
+        },
+        {
+          "label": "Competitori",
+          "title": "Ce fac alții",
+          "text": "Mesaje, promisiuni, hook-uri.",
+          "details": [
+            {
+              "key": "Hook",
+              "value": "captat",
+              "tone": "coral"
+            },
+            {
+              "key": "Ofertă",
+              "value": "vizibilă",
+              "tone": "teal"
+            },
+            {
+              "key": "Unghi",
+              "value": "extras",
+              "tone": "brass"
+            }
+          ],
+          "badges": [
+            "scan"
+          ]
+        },
+        {
+          "label": "Semnale",
+          "title": "Ce merită scos",
+          "text": "Dureri, obiecții, goluri.",
+          "details": [
+            {
+              "key": "Durere",
+              "value": "prioritară",
+              "tone": "brass"
+            },
+            {
+              "key": "Obiecție",
+              "value": "clară",
+              "tone": "coral"
+            },
+            {
+              "key": "Gol",
+              "value": "posibil",
+              "tone": "teal"
+            }
+          ],
+          "badges": [
+            "Prioritate"
+          ]
+        },
+        {
+          "label": "Output",
+          "title": "Hartă pentru Petru",
+          "text": "Direcție și următorul pas.",
+          "details": [
+            {
+              "key": "Decizie",
+              "value": "postare",
+              "tone": "teal"
+            },
+            {
+              "key": "Test",
+              "value": "hook",
+              "tone": "coral"
+            },
+            {
+              "key": "Evită",
+              "value": "generic",
+              "tone": "brass"
+            }
+          ],
+          "badges": [
+            "Folosibil"
+          ]
+        },
+        {
+          "label": "OK uman",
+          "title": "Petru decide",
+          "text": "Ce folosește, ce taie, ce verifică.",
+          "details": [
+            {
+              "key": "Brand",
+              "value": "potrivit",
+              "tone": "teal"
+            },
+            {
+              "key": "Adevăr",
+              "value": "verificat",
+              "tone": "brass"
+            },
+            {
+              "key": "Publicare",
+              "value": "manuală",
+              "tone": "coral"
+            }
+          ],
+          "badges": [
+            "Control"
+          ]
+        }
+      ],
+      "metrics": [
+        {
+          "icon": "◉",
+          "value": "LIVE",
+          "label": "agent pregătit"
+        },
+        {
+          "icon": "≈",
+          "value": "5",
+          "label": "instrucțiuni clare"
+        },
+        {
+          "icon": "↗",
+          "value": "1",
+          "label": "hartă de decizie"
+        },
+        {
+          "icon": "✓",
+          "value": "OK",
+          "label": "omul decide"
+        }
+      ],
+      "punchline": "Hai să-l punem pe piața lui Petru.",
+      "notes": "Până acum am vorbit despre costul de a rămâne lent. Acum vreau să vedeți alternativa.\n\nAsta este camera de control a Agentului Spion de Piață. Nu ne uităm la un prompt. Ne uităm la un sistem de observare. Agentul primește surse, urmărește semnale și pregătește o hartă pe care un om o poate folosi.\n\nGândiți-vă la asta așa: în loc să stai tu seara, obosit, să te uiți manual la competitori, comentarii, reclame și postări, agentul îți pune totul într-un format pe care îl poți judeca.\n\nAici începe diferența dintre omul care folosește AI ocazional și omul AI-enhanced. Unul caută idei. Celălalt are un sistem care îi aduce semnale.\n\nTranziție: hai să-l punem pe piața lui Petru."
+    },
+    {
+      "id": "five-clear-instructions",
+      "type": "process-map",
+      "kicker": "Anatomie",
+      "title": "În spatele magiei sunt 5 instrucțiuni clare.",
+      "lead": "Misiune, surse, semnale, limite, decizie umană.",
+      "steps": [
+        {
+          "label": "01",
+          "title": "Misiune",
+          "text": "Ce urmărește agentul."
+        },
+        {
+          "label": "02",
+          "title": "Surse",
+          "text": "Unde se uită."
+        },
+        {
+          "label": "03",
+          "title": "Semnale",
+          "text": "Ce trebuie să scoată."
+        },
+        {
+          "label": "04",
+          "title": "Limite",
+          "text": "Ce nu are voie să facă."
+        },
+        {
+          "label": "05",
+          "title": "Decizie umană",
+          "text": "Unde intră omul cu judecata.",
+          "highlight": true
+        }
+      ],
+      "notes": "Asta vreau să rămână cu voi. Agentul pare magic când îl vezi rulând, dar în spate nu este haos. Este o structură.\n\nMisiunea îi spune ce urmărește. Sursele îi spun unde se uită. Semnalele îi spun ce trebuie să scoată. Limitele îl opresc să inventeze sau să promită aiurea. Decizia umană îl ține conectat la realitate.\n\nAsta înseamnă sistem AI controlabil. Nu doar ‘scrie-mi ceva’. Nu doar răspuns frumos. Ci un mecanism pe care îl putem înțelege, verifica și apoi îmbunătăți.\n\nTranziție: acum îl rulăm pe un caz concret: piața lui Petru."
+    },
+    {
+      "id": "scan-petru-market",
+      "type": "section",
+      "theme": "dark",
+      "kicker": "Rulare",
+      "title": "Acum îl punem să scaneze piața lui Petru.",
+      "lead": "Nișa: fit dads. Obiectiv: să găsim direcții de conținut și unghiuri comerciale.",
+      "bullets": [
+        "fit dads",
+        "dureri",
+        "obiecții",
+        "hook-uri",
+        "scripturi"
+      ],
+      "notes": "Acum îl rulăm pe cazul Petru. Petru este fitness trainer, iar nișa lui este fit dads: tați ocupați care vor să slăbească, să aibă energie, să se simtă din nou în control, fără să trăiască în sală.\n\nCe vrem de la agent? Nu vrem doar un rezumat. Vrem să vedem ce doare, ce se repetă, ce promit alții, ce obiecții apar și unde ar putea intra Petru diferit.\n\nAici începe partea în care vedeți de ce research-ul este prima piesă. Pentru că înainte de content, newsletter sau ads, trebuie să înțelegi terenul.\n\nÎn live, aici poți deschide agentul pregătit și poți arăta sursele. Nu explica defensiv de ce e pregătit. Prezintă-l ca pe camera de control pe care am construit-o pentru demonstrație."
+    },
+    {
+      "id": "not-sounds-good",
+      "type": "compare",
+      "kicker": "Evaluare",
+      "title": "Întrebarea nu este: sună bine?",
+      "lead": "Întrebarea este: poate Petru folosi asta mâine?",
+      "items": [
+        {
+          "label": "Specific",
+          "title": "Vorbește cu fit dads?",
+          "text": "Sau rămâne generic pentru toți oamenii care vor fitness?"
+        },
+        {
+          "label": "Relevant",
+          "title": "Lovește dureri reale?",
+          "text": "Timp, energie, familie, rușine, consecvență."
+        },
+        {
+          "label": "Verificabil",
+          "title": "Respectă limitele?",
+          "text": "Fără promisiuni agresive și fără sfaturi medicale."
+        },
+        {
+          "label": "Acțiune",
+          "title": "Dă următorul pas?",
+          "text": "Ce testează Petru mâine?"
+        }
+      ],
+      "notes": "Când AI-ul produce output, tentația este să zici: wow, ce frumos sună. Dar asta nu e suficient.\n\nNoi vom judeca outputul altfel: este specific? Este relevant pentru fit dads? Găsește dureri reale? Scoate obiecții utile? Produce hook-uri care au tensiune? Respectă limitele? Îi dă lui Petru un următor pas clar?\n\nDacă răspunsul nu trece testul acesta, nu e strategie. E doar text frumos. Și text frumos avem deja peste tot.\n\nÎn demo, comentează outputul ca owner, nu ca fan AI. Spune ce ai folosi, ce ai tăia, ce ai cere să fie refăcut și ce trebuie verificat."
+    },
+    {
+      "id": "research-to-decision",
+      "type": "signal-list",
+      "theme": "alt",
+      "kicker": "Decizie",
+      "title": "Un agent bun nu îți dă doar informații. Îți dă următorul pas.",
+      "lead": "Ce postează Petru? Ce testează? Ce evită? Ce verifică?",
+      "items": [
+        {
+          "label": "Postează",
+          "title": "3 hook-uri",
+          "text": "Idei care merită puse în fața pieței."
+        },
+        {
+          "label": "Testează",
+          "title": "2 obiecții",
+          "text": "Subiecte pentru newsletter sau video."
+        },
+        {
+          "label": "Evită",
+          "title": "Unghi generic",
+          "text": "Ce spune toată lumea și nu mai diferențiază."
+        },
+        {
+          "label": "Verifică",
+          "title": "Promisiuni și brand",
+          "text": "Petru decide ce rămâne adevărat și potrivit."
+        }
+      ],
+      "notes": "La finalul rundei, nu vreau să rămânem cu un document lung pe care nimeni nu îl folosește. Vreau să ajungem la decizii.\n\nPetru trebuie să poată spune: acestea sunt 3 hook-uri pe care le testez, acestea sunt 2 obiecții pe care le ating în newsletter, acesta este un unghi pe care îl evit pentru că e prea generic, acesta este mesajul pe care îl duc mai departe în ads.\n\nAsta e diferența dintre research și sistem. Sistemul nu doar te informează. Te împinge spre acțiune.\n\nTranziție: acum să numim ce a câștigat Petru, pentru că valoarea nu este textul generat. Valoarea este direcția."
+    },
+    {
+      "id": "petru-got-direction",
+      "type": "signal-list",
+      "kicker": "Valoare",
+      "title": "Petru nu a primit “idei”. A primit direcție.",
+      "lead": "Avatar, dureri, obiecții, hook-uri, scripturi și următorul pas.",
+      "items": [
+        {
+          "label": "Avatar",
+          "title": "Public mai clar",
+          "text": "Știe cu cine vorbește."
+        },
+        {
+          "label": "Dureri",
+          "title": "Mesaje mai tăioase",
+          "text": "Conținutul pleacă din probleme reale."
+        },
+        {
+          "label": "Obiecții",
+          "title": "Newsletter mai util",
+          "text": "Răspunde blocajelor înainte de vânzare."
+        },
+        {
+          "label": "Hook-uri",
+          "title": "Testare rapidă",
+          "text": "Are unghiuri pe care le poate pune în piață."
+        },
+        {
+          "label": "Scripturi",
+          "title": "Execuție concretă",
+          "text": "Nu rămâne la research abstract."
+        },
+        {
+          "label": "Pas",
+          "title": "Ce face mâine",
+          "text": "Decizie, nu doar document."
+        }
+      ],
+      "notes": "Aici vreau să facem recapitularea valorii. Nu spunem doar ‘uite ce a generat AI-ul’. Spunem: ce a câștigat Petru?\n\nA câștigat claritate despre public. A câștigat dureri pe care le poate folosi în conținut. A câștigat obiecții pe care le poate adresa în newsletter. A câștigat hook-uri pe care le poate testa. A câștigat idei de scripturi. Și, cel mai important, a câștigat un următor pas.\n\nAsta este diferența dintre output și valoare. Outputul este text. Valoarea este că Petru știe ce să facă mâine.\n\nTranziție: și dacă Petru făcea asta manual, aceeași claritate l-ar fi costat ore."
+    },
+    {
+      "id": "manual-costs-hours",
+      "type": "signal-list",
+      "theme": "dark",
+      "kicker": "Recap cost",
+      "title": "Manual, aceeași claritate l-ar costa ore.",
+      "lead": "Research, comparații, notițe, interpretare, idei, verificare.",
+      "items": [
+        {
+          "label": "Research",
+          "title": "Adună informații",
+          "text": "Profiluri, pagini, reclame, comentarii."
+        },
+        {
+          "label": "Comparații",
+          "title": "Caută patternuri",
+          "text": "Ce se repetă și ce lipsește."
+        },
+        {
+          "label": "Interpretare",
+          "title": "Transformă în direcție",
+          "text": "Ce merită spus, testat sau evitat."
+        },
+        {
+          "label": "Verificare",
+          "title": "Păstrează controlul",
+          "text": "Omul taie, aprobă și ajustează."
+        }
+      ],
+      "punchline": "Nu dispare munca. Dispare partea care te ținea lent.",
+      "notes": "Acum să ne întoarcem la calculul de la început. Dacă Petru făcea asta manual, trebuia să stea pe profiluri, să noteze mesaje, să compare promisiuni, să urmărească obiecții, să se uite la comentarii, să încerce hook-uri, să extragă patternuri.\n\nNu spun că AI-ul elimină complet munca. Dar mută greul. În loc ca Petru să piardă energie pe adunat și organizat informații, el intră mai sus în proces: judecă, selectează, adaptează, decide.\n\nAsta înseamnă economie reală: timp, bani, energie și viteză.\n\nPunchline: nu dispare munca. Dispare partea care te ținea lent."
+    },
+    {
+      "id": "demo-becomes-system",
+      "type": "process-map",
+      "kicker": "Ce urmează",
+      "title": "Asta nu rămâne un demo. Devine sistem.",
+      "lead": "Azi: hartă. Mâine: skill. Apoi: agent specializat. Apoi: orchestrator.",
+      "steps": [
+        {
+          "label": "Azi",
+          "title": "Hartă",
+          "text": "Misiune, surse, semnale, limite, OK uman.",
+          "highlight": true
+        },
+        {
+          "label": "Ziua 2",
+          "title": "Skill",
+          "text": "O rețetă reutilizabilă pentru AI."
+        },
+        {
+          "label": "Ziua 2-3",
+          "title": "Agent",
+          "text": "Rol specializat care rulează logica."
+        },
+        {
+          "label": "Ziua 3",
+          "title": "Unelte",
+          "text": "Browser, MCP și surse controlate."
+        },
+        {
+          "label": "Ziua 4",
+          "title": "Orchestrator",
+          "text": "Mai mulți agenți coordonați pe cazuri reale."
+        }
+      ],
+      "notes": "Ce ați văzut azi este prima versiune. Important este că nu rămâne doar un output izolat. În zilele următoare, această logică devine din ce în ce mai puternică.\n\nMâine, o transformăm într-un skill: o rețetă reutilizabilă. Apoi într-un agent specializat: nu doar un prompt, ci o piesă care știe rolul ei. Apoi intrăm în zona în care agentul poate lucra cu unelte, browser, surse și orchestrare.\n\nAsta este promisiunea celor 4 zile. Nu doar să vedeți AI. Să înțelegeți cum se construiește un sistem.\n\nTranziție: și Petru este doar sandbox-ul nostru, nu limita metodei."
+    },
+    {
+      "id": "petru-is-sandbox",
+      "type": "signal-list",
+      "theme": "alt",
+      "kicker": "Generalizare",
+      "title": "Petru este sandbox-ul. Nu limita.",
+      "lead": "Aceeași logică merge pe orice business care pierde timp în procese repetitive.",
+      "items": [
+        {
+          "label": "Cabinet",
+          "title": "Întrebări și programări",
+          "text": "Pregătește răspunsuri, conținut educațional, remindere."
+        },
+        {
+          "label": "Agenție",
+          "title": "Research pentru clienți",
+          "text": "Nișe, oferte, competitori, poziționare."
+        },
+        {
+          "label": "E-commerce",
+          "title": "Produse și campanii",
+          "text": "Promoții, obiecții, pagini, mesaje."
+        },
+        {
+          "label": "Consultant",
+          "title": "Ofertă și conținut",
+          "text": "Claritate pentru piață și pentru vânzare."
+        }
+      ],
+      "notes": "Vreau să fie foarte clar: nu facem workshop pentru fitness traineri. Petru este doar cazul nostru de lucru, pentru că e simplu de înțeles și vizual.\n\nDar logica merge în orice business. Dacă ai cabinet, agentul poate pregăti research pentru întrebări frecvente, conținut educațional, follow-up sau programări. Dacă ai agenție, poate analiza nișa clientului. Dacă ai e-commerce, poate observa competitori, poziționări, promoții, obiecții. Dacă ești consultant, poate pregăti research pentru ofertă și conținut.\n\nÎntrebarea nu este ‘am business ca Petru?’. Întrebarea este: unde pierd eu timp, bani și energie într-un proces care se repetă?\n\nTranziție: și asta ne aduce la întrebarea importantă pentru fiecare dintre voi."
+    },
+    {
+      "id": "where-are-you-slow",
+      "type": "section",
+      "theme": "dark",
+      "kicker": "Întrebarea ta",
+      "title": "Unde ești lent acum?",
+      "lead": "Acolo începe primul tău agent.",
+      "body": "Research, conținut, follow-up, newsletter, ads, raportare, suport, programări.",
+      "question": "Care este procesul pe care, dacă l-ați face de 3 ori mai repede, ați simți imediat diferența?",
+      "notes": "Aici îi mutăm pe oameni din spectator în participant. După ce au văzut cazul Petru, trebuie să înceapă să se uite la businessul lor.\n\nUnde ești lent acum? La research? La conținut? La follow-up? La newsletter? La ads? La raportare? La suport? La programări?\n\nNu trebuie să automatizezi tot businessul. De fapt, ar fi o greșeală. Alegi un proces mic, repetitiv, valoros și suficient de clar încât să-l putem transforma într-un agent.\n\nAcolo începe. Nu cu ‘vreau AI în business’. Ci cu ‘aici pierd timp și bani în fiecare săptămână’.\n\nÎntrebare live: care este procesul pe care, dacă l-ați face de 3 ori mai repede, ați simți imediat diferența?"
+    },
+    {
+      "id": "choose-first-mission",
+      "type": "section",
+      "theme": "alt",
+      "kicker": "Aplicare",
+      "title": "Nu construiești un imperiu AI din prima. Alegi prima misiune.",
+      "lead": "Mică, repetitivă, valoroasă, ușor de verificat.",
+      "body": "Dacă procesul e prea mare, agentul va ghici. Dacă procesul e clar, agentul poate livra ceva folosibil.",
+      "notes": "După ce vezi demo-ul, tentația este să zici: vreau și eu agent pentru tot businessul. Dar asta e prea mare și prea vag.\n\nPrimul agent bun începe cu o misiune mică. Ceva ce faci des. Ceva ce îți consumă timp. Ceva ce are valoare. Și ceva ce poți verifica.\n\nDacă procesul e prea mare, agentul va ghici. Dacă procesul e clar, agentul poate livra ceva folosibil.\n\nAici este important să liniștim publicul: nu trebuie să plece acasă și să automatizeze compania. Trebuie să aleagă primul loc unde pierd bani încet."
+    },
+    {
+      "id": "mission-four-tests",
+      "type": "signal-list",
+      "kicker": "Filtru",
+      "title": "Prima misiune trebuie să treacă 4 teste.",
+      "lead": "Se repetă. Costă timp. Produce bani sau protejează bani. Poate fi verificată.",
+      "items": [
+        {
+          "label": "01",
+          "title": "Se repetă",
+          "text": "Dacă se întâmplă rar, nu e prima alegere."
+        },
+        {
+          "label": "02",
+          "title": "Costă timp",
+          "text": "Dacă nu te consumă, nu este urgent."
+        },
+        {
+          "label": "03",
+          "title": "Produce sau protejează bani",
+          "text": "Lead-uri, vânzări, retenție, calitate, costuri."
+        },
+        {
+          "label": "04",
+          "title": "Poate fi verificată",
+          "text": "Poți spune dacă outputul e bun sau prost."
+        }
+      ],
+      "notes": "Asta este o formulă simplă. Când vă alegeți prima misiune, întrebați-vă:\n\nSe repetă? Dacă se întâmplă o singură dată pe an, nu e prima alegere.\n\nCostă timp? Dacă nu te consumă, nu e urgent.\n\nProduce bani sau protejează bani? Adică ajută la lead-uri, vânzări, retenție, calitate, costuri, decizii.\n\nPoate fi verificată? Dacă nu poți spune dacă outputul e bun sau prost, încă nu e potrivită pentru primul agent.\n\nTranziție: tema de azi este să găsiți exact locul acesta."
+    },
+    {
+      "id": "homework-slow-money",
+      "type": "signal-list",
+      "theme": "alt",
+      "kicker": "Tema Zilei 1",
+      "title": "Tema: găsește locul unde pierzi bani încet.",
+      "lead": "Alege un proces pe care îl vrei transformat în agent.",
+      "items": [
+        {
+          "label": "01",
+          "title": "Ce fac manual?",
+          "text": "Unde consum timp de fiecare dată?"
+        },
+        {
+          "label": "02",
+          "title": "Ce mă consumă?",
+          "text": "Unde pierd energie mentală?"
+        },
+        {
+          "label": "03",
+          "title": "Ce se repetă?",
+          "text": "Ce apare săptămânal sau zilnic?"
+        },
+        {
+          "label": "04",
+          "title": "Ce vreau la final?",
+          "text": "Output clar, nu dorință vagă."
+        },
+        {
+          "label": "05",
+          "title": "Unde dau OK?",
+          "text": "Ce trebuie verificat de om?"
+        }
+      ],
+      "notes": "Tema nu este să veniți mâine cu o idee spectaculoasă. Tema este să veniți cu un proces real.\n\nCe faceți manual? Ce vă consumă? Ce se repetă? Ce v-ar ajuta să primiți la final? Unde trebuie să verificați voi?\n\nCu cât procesul este mai concret, cu atât Ziua 2 devine mai valoroasă. Pentru că mâine luăm procesul și îl transformăm într-o rețetă reutilizabilă.\n\nInsistă aici: nu vreau ‘vreau agent pentru marketing’. Vreau ‘vreau agent care îmi scanează 3 surse și îmi scoate 5 unghiuri de conținut cu obiecții și verificări’. Specificul este prietenul nostru."
+    },
+    {
+      "id": "tomorrow-skill",
+      "type": "section",
+      "theme": "dark",
+      "kicker": "Ziua 2",
+      "title": "Mâine agentul primește memorie de lucru.",
+      "lead": "Transformăm harta într-un Skill: o rețetă pe care AI-ul o poate rula din nou.",
+      "body": "În loc să rescrii de fiecare dată toate instrucțiunile, creezi o logică reutilizabilă, mai consecventă.",
+      "punchline": "Aici începe senzația că nu mai ai doar un chat. Ai o piesă de sistem.",
+      "notes": "Azi am văzut harta și demo-ul. Mâine facem următorul pas: Skill-ul.\n\nPe limba noastră, un Skill este o rețetă reutilizabilă. În loc să rescrii de fiecare dată toate instrucțiunile, creezi o logică pe care AI-ul o poate rula din nou, mai consecvent.\n\nAici începe senzația că nu mai ai doar un chat. Ai o piesă de sistem.\n\nLeagă asta de promisiunea celor 4 zile: azi harta, mâine skill, apoi agent specializat, apoi MCP, browser, orchestrator și aplicare pe cazuri reale."
+    },
+    {
+      "id": "day-one-closing",
+      "type": "closing",
+      "kicker": "Închidere",
+      "title": "Nu trebuie să fii tehnic. Trebuie să fii mai rapid decât ieri.",
+      "lead": "AI-ul nu premiază oamenii care știu cele mai multe tooluri. Îi premiază pe cei care transformă munca repetitivă în sisteme.",
+      "closing": "Azi ați văzut primul avantaj: Agentul Spion de Piață. Mâine îl facem reutilizabil.",
+      "notes": "Vreau să încheiem Ziua 1 cu ideea asta: nu trebuie să deveniți programatori. Nu trebuie să știți toate toolurile. Nu trebuie să construiți totul perfect din prima.\n\nDar trebuie să începeți să gândiți în sisteme. Pentru că piața se mișcă. Competitorii se mișcă. Oamenii AI-enhanced se mișcă.\n\nȘi întrebarea nu este dacă AI-ul va conta. Contează deja. Întrebarea este dacă îl folosești ca pe un chat ocazional sau ca pe un avantaj de business.\n\nAzi ați văzut primul avantaj: Agentul Spion de Piață. Mâine îl facem reutilizabil.\n\nÎnchide cu energie, nu cu oboseală: tema e simplă, dar importantă. Găsiți locul unde pierdeți bani încet. Acolo începe primul agent."
+    }
+  ]
+}

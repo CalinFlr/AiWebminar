@@ -1,0 +1,24 @@
+1
+00:00:00,000 --> 00:00:03,000
+Dacă folosești AI doar pentru texte,
+e ca și cum ai ține un avion pe pistă.
+
+2
+00:00:03,000 --> 00:00:08,000
+ChatGPT îți răspunde.
+Dar businessul tău tot manual rămâne.
+
+3
+00:00:08,000 --> 00:00:15,000
+În workshop îți arăt cum alegi
+primul proces care merită automatizat.
+
+4
+00:00:15,000 --> 00:00:23,000
+Construim un workflow AI controlabil pentru lead-uri,
+research, conținut sau operațiuni.
+
+5
+00:00:23,000 --> 00:00:28,000
+Înscrie-te gratuit și primești
+AI Process Audit Kit plus 30 idei de automatizări.

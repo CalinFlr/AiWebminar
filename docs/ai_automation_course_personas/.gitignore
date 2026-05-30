@@ -1,0 +1,26 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Secrets / API keys
+.env
+*.key
+*.pem
+secrets/*
+api_keys/*
+
+# Generated files
+*.tmp
+*.log
+.cache/
+
+# Large media assets
+*.mp4
+*.mov
+*.mkv
+*.wav
+*.mp3
+
+# Local exports
+exports/
+rendered/

@@ -1,0 +1,285 @@
+{
+  "title": "AI Automation Zero to Hero",
+  "subtitle": "Ziua 1 - Harta Agentului",
+  "slides": [
+    {
+      "id": "day-1-hero",
+      "type": "hero",
+      "kicker": "Ziua 1",
+      "title": "Pleci cu harta primului tau agent AI",
+      "lead": "Nu mai folosim AI-ul ca pe un chat norocos. Ii dam o misiune, limite clare si un rezultat pe care il poti folosi in business.",
+      "meta": [
+        "90 min + Q&A",
+        "Sandbox live: Petru",
+        "Final: harta aplicabila pe orice business"
+      ],
+      "preview": {
+        "title": "Primul agent AI",
+        "status": "in constructie",
+        "rows": [
+          {
+            "label": "Misiune",
+            "title": "Ce treaba ii dam?",
+            "text": "Alegem un lucru repetitiv care merita scos din haos.",
+            "progress": 44,
+            "color": "brass"
+          },
+          {
+            "label": "Control",
+            "title": "Unde ramane omul?",
+            "text": "Agentul propune, ownerul aproba ce conteaza.",
+            "progress": 68,
+            "color": "teal"
+          },
+          {
+            "label": "Castig",
+            "title": "Ce devine mai usor?",
+            "text": "Timp salvat, bani mai putin pierduti si calitate mai constanta.",
+            "progress": 86,
+            "color": "coral"
+          }
+        ]
+      },
+      "notes": "Deschide cu promisiune mare: azi nu completam un formular, desenam harta primului agent AI."
+    },
+    {
+      "id": "path-to-agent",
+      "type": "process-map",
+      "kicker": "Traseul celor 4 zile",
+      "title": "Nu sarim direct la agent. Il construim ca pe un sistem.",
+      "lead": "Azi gasim misiunea si harta. Apoi harta devine skill, agent specializat si sistem coordonat.",
+      "steps": [
+        {
+          "label": "01",
+          "title": "Misiune",
+          "text": "Alegem treaba repetitiva care consuma timp sau pierde oportunitati."
+        },
+        {
+          "label": "02",
+          "title": "Harta",
+          "text": "Stabilim ce primeste, ce livreaza, ce limite are si unde apasa omul OK.",
+          "highlight": true
+        },
+        {
+          "label": "03",
+          "title": "Skill",
+          "text": "Transformam harta intr-o reteta reutilizabila."
+        },
+        {
+          "label": "04",
+          "title": "Agent",
+          "text": "Ii dam AI-ului un rol specializat si criterii clare."
+        },
+        {
+          "label": "05",
+          "title": "Sistem",
+          "text": "Mai multi agenti lucreaza coordonat, cu verificari."
+        }
+      ],
+      "notes": "Ziua 1 este primul pas wow: oamenii vad cum o idee vaga incepe sa devina agent."
+    },
+    {
+      "id": "not-a-random-prompt",
+      "type": "compare",
+      "kicker": "Schimbarea de mentalitate",
+      "title": "Un prompt bun te ajuta o data. O harta buna iti construieste agentul.",
+      "lead": "Magia apare cand AI-ul nu mai ghiceste ce vrei, ci lucreaza dupa o misiune clara.",
+      "items": [
+        {
+          "label": "Chat norocos",
+          "title": "Intrebi si speri",
+          "text": "Raspunsul poate fi bun, dar e greu de repetat si controlat."
+        },
+        {
+          "label": "Agent",
+          "title": "Lucreaza dupa harta",
+          "text": "Are context, limite, rezultat dorit si punct de aprobare."
+        },
+        {
+          "label": "Business",
+          "title": "Nu vrea magie o data",
+          "text": "Vrea calitate repetata, follow-up mai bun si mai putina munca manuala."
+        },
+        {
+          "label": "Owner",
+          "title": "Ramane la buton",
+          "text": "AI-ul pregateste munca, omul valideaza deciziile importante."
+        }
+      ],
+      "notes": "Aici poti spune: promitem magia, dar o facem folosibila in business."
+    },
+    {
+      "id": "petru-agent-map",
+      "type": "agent-map",
+      "kicker": "Sandbox: Petru",
+      "title": "Petru nu are nevoie de inca un prompt. Are nevoie de o mini-echipa AI.",
+      "lead": "Dar mini-echipa incepe cu prima misiune buna: research pentru nisa fit dads.",
+      "root": {
+        "title": "Petru",
+        "text": "fitness trainer pe nisa fit dads"
+      },
+      "agents": [
+        {
+          "tag": "Start",
+          "title": "Research scripturi",
+          "text": "Gaseste avatar, probleme, obiectii, hook-uri si directie.",
+          "highlight": true
+        },
+        {
+          "tag": "Content",
+          "title": "Postare continut",
+          "text": "Pregateste publicarea dupa video sau captions aprobate."
+        },
+        {
+          "tag": "Relatie",
+          "title": "Newsletter",
+          "text": "Transforma temele saptamanii in emailuri utile."
+        },
+        {
+          "tag": "Ads",
+          "title": "Research ads",
+          "text": "Cauta unghiuri, hook-uri si exemple pentru reclame."
+        },
+        {
+          "tag": "Control",
+          "title": "Supraveghere ads",
+          "text": "Urmarirea metricilor si semnalarea schimbarilor."
+        }
+      ],
+      "notes": "Harta mare creeaza dorinta. Apoi cobori imediat la prima piesa construibila."
+    },
+    {
+      "id": "first-mission",
+      "type": "section",
+      "theme": "dark",
+      "kicker": "Prima misiune",
+      "title": "Agentul de research ii spune lui Petru ce merita sa faca pe nisa fit dads.",
+      "lead": "Nu ii cerem doar 10 caption-uri. Ii cerem directie: oameni, probleme, dorinte, obiectii, hook-uri si primele scripturi.",
+      "notes": "Asta ridica nivelul de la content generic la strategie folosibila."
+    },
+    {
+      "id": "agent-map-template",
+      "type": "brief-table",
+      "kicker": "Livrabilul zilei",
+      "title": "Harta Primului Agent AI",
+      "lead": "Daca poti completa harta, ai deja inceputul unui agent. Daca nu, inca ai doar o dorinta vaga.",
+      "rows": [
+        {
+          "key": "Misiune",
+          "question": "Ce treaba ii dam agentului?"
+        },
+        {
+          "key": "Pornire",
+          "question": "Cu ce informatii incepe?"
+        },
+        {
+          "key": "Azi",
+          "question": "Cum faci acum manual?"
+        },
+        {
+          "key": "Livrare",
+          "question": "Ce trebuie sa scoata la final?"
+        },
+        {
+          "key": "Limite",
+          "question": "Ce nu are voie sa faca?"
+        },
+        {
+          "key": "OK final",
+          "question": "Unde verifici tu inainte sa fie folosit?"
+        },
+        {
+          "key": "Castig",
+          "question": "Ce economisesti: timp, bani, oameni sau calitate?"
+        }
+      ],
+      "notes": "Acesta este fostul Workflow Brief, dar tradus intr-un obiect mai dorit si mai usor de vandut live."
+    },
+    {
+      "id": "petru-map",
+      "type": "brief-table",
+      "kicker": "Harta lui Petru",
+      "title": "Primul agent nu publica nimic singur. Pregateste directia.",
+      "lead": "Petru ramane la buton, dar nu mai porneste de la zero de fiecare data cand vrea continut.",
+      "rows": [
+        {
+          "key": "Misiune",
+          "question": "Research si directie pentru fit dads."
+        },
+        {
+          "key": "Pornire",
+          "question": "Nisa, obiectiv, canale, limite de comunicare."
+        },
+        {
+          "key": "Livrare",
+          "question": "Avatar, probleme, obiectii, hook-uri si 3 scripturi."
+        },
+        {
+          "key": "Limite",
+          "question": "Fara promisiuni agresive, fara limbaj medical."
+        },
+        {
+          "key": "OK final",
+          "question": "Petru aproba directia inainte sa devina continut."
+        },
+        {
+          "key": "Castig",
+          "question": "Content mai relevant, baza pentru newsletter si ads."
+        }
+      ],
+      "notes": "Aici se vede clar ca agentul pare wow, dar ramane controlabil."
+    },
+    {
+      "id": "any-business",
+      "type": "compare",
+      "kicker": "Generalizare",
+      "title": "Petru este doar sandbox-ul. Harta merge pe orice business.",
+      "lead": "Nu conteaza domeniul. Conteaza ce se repeta, ce primeste agentul, ce livreaza si unde apasa omul OK.",
+      "items": [
+        {
+          "label": "Petru",
+          "title": "Continut",
+          "text": "Research, hook-uri, scripturi, directie pentru nisa."
+        },
+        {
+          "label": "Cabinet",
+          "title": "Programari",
+          "text": "Intrebari repetitive, remindere si raspunsuri aprobate."
+        },
+        {
+          "label": "Consultant",
+          "title": "Follow-up",
+          "text": "Sumar dupa call, riscuri, oportunitati si pas urmator."
+        },
+        {
+          "label": "Echipa",
+          "title": "Operatiuni",
+          "text": "Checklist-uri, rapoarte, QA si transfer de context."
+        }
+      ],
+      "benefits": [
+        {
+          "value": "Timp",
+          "title": "Ore salvate",
+          "text": "Mai putina munca repetata manual."
+        },
+        {
+          "value": "Bani",
+          "title": "Oportunitati prinse",
+          "text": "Mai putine lead-uri si follow-up-uri pierdute."
+        },
+        {
+          "value": "Oameni",
+          "title": "Angajari amanate",
+          "text": "Automatizezi bucati inainte sa maresti echipa."
+        },
+        {
+          "value": "Calitate",
+          "title": "Rezultat constant",
+          "text": "Aceeasi logica buna, aplicata de fiecare data."
+        }
+      ],
+      "notes": "Inchide testul cu ideea economica: timp, bani, oameni, calitate."
+    }
+  ]
+}

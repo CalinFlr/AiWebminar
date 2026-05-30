@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Capture first frame - Reclama AI SF</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #080b10;
+      --panel: #111722;
+      --line: rgba(255, 255, 255, 0.14);
+      --text: #eef4ff;
+      --muted: #9eabbd;
+      --accent: #48d7ff;
+      --good: #7dffb2;
+      --warn: #ffd166;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #132133 0, var(--bg) 46%);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    main {
+      width: min(1180px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 28px 0;
+      display: grid;
+      grid-template-columns: minmax(320px, 1fr) 340px;
+      gap: 22px;
+      align-items: start;
+    }
+
+    h1,
+    h2,
+    p {
+      margin: 0;
+    }
+
+    .stage,
+    .side {
+      border: 1px solid var(--line);
+      background: rgba(17, 23, 34, 0.78);
+      box-shadow: 0 18px 60px rgba(0, 0, 0, 0.32);
+    }
+
+    .stage {
+      min-height: calc(100vh - 56px);
+      padding: 20px;
+      display: grid;
+      gap: 16px;
+      align-content: start;
+    }
+
+    .intro {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: end;
+    }
+
+    .intro h1 {
+      font-size: clamp(24px, 3vw, 40px);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+
+    .intro p {
+      margin-top: 8px;
+      color: var(--muted);
+      max-width: 680px;
+      line-height: 1.5;
+    }
+
+    .camera-wrap {
+      position: relative;
+      width: min(100%, 540px);
+      aspect-ratio: 9 / 16;
+      margin: 0 auto;
+      border: 1px solid rgba(72, 215, 255, 0.45);
+      background: #02050a;
+      overflow: hidden;
+    }
+
+    video,
+    canvas {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    video {
+      transform: scaleX(-1);
+    }
+
+    canvas {
+      display: none;
+    }
+
+    .guide {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(rgba(255,255,255,.1), rgba(255,255,255,.1)) 0 23% / 100% 1px no-repeat,
+        linear-gradient(rgba(255,255,255,.08), rgba(255,255,255,.08)) 0 48% / 100% 1px no-repeat,
+        linear-gradient(rgba(255,255,255,.08), rgba(255,255,255,.08)) 0 76% / 100% 1px no-repeat,
+        linear-gradient(90deg, rgba(255,255,255,.09), rgba(255,255,255,.09)) 50% 0 / 1px 100% no-repeat;
+    }
+
+    .face-zone {
+      position: absolute;
+      left: 22%;
+      right: 22%;
+      top: 13%;
+      height: 27%;
+      border: 1px dashed rgba(125, 255, 178, 0.72);
+      border-radius: 999px;
+      pointer-events: none;
+    }
+
+    .label {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      bottom: 14px;
+      padding: 10px 12px;
+      background: rgba(4, 7, 12, 0.74);
+      border: 1px solid rgba(255,255,255,.12);
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    button,
+    a.download {
+      appearance: none;
+      border: 1px solid rgba(255,255,255,.14);
+      background: #1d2838;
+      color: var(--text);
+      padding: 11px 14px;
+      font: inherit;
+      font-weight: 750;
+      cursor: pointer;
+      text-decoration: none;
+      min-height: 44px;
+    }
+
+    button.primary {
+      background: linear-gradient(135deg, #28b8ff, #7dffb2);
+      color: #061018;
+      border: 0;
+    }
+
+    button:disabled,
+    a.download[aria-disabled="true"] {
+      opacity: 0.48;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .status {
+      min-height: 24px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .side {
+      padding: 18px;
+      position: sticky;
+      top: 18px;
+    }
+
+    .side h2 {
+      font-size: 18px;
+      margin-bottom: 12px;
+    }
+
+    .checklist {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      color: var(--muted);
+      line-height: 1.4;
+      font-size: 14px;
+    }
+
+    .checklist li {
+      padding-left: 18px;
+      position: relative;
+    }
+
+    .checklist li::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      position: absolute;
+      left: 0;
+      top: 7px;
+    }
+
+    .path {
+      margin-top: 16px;
+      padding: 12px;
+      background: rgba(0,0,0,.24);
+      border: 1px solid rgba(255,255,255,.1);
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12px;
+      line-height: 1.45;
+      word-break: break-word;
+    }
+
+    @media (max-width: 860px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+
+      .side {
+        position: static;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="stage">
+      <div class="intro">
+        <div>
+          <h1>Primul cadru: frontal serios</h1>
+          <p>Fa o poza verticala pentru reference image. Tine fata in zona verde, umerii relaxati si privirea direct in camera.</p>
+        </div>
+      </div>
+
+      <div class="camera-wrap">
+        <video id="video" autoplay playsinline muted></video>
+        <canvas id="canvas" width="1080" height="1920"></canvas>
+        <div class="guide"></div>
+        <div class="face-zone"></div>
+        <div class="label">Cadru bust/piept in sus. Expresie calma, serioasa, confidenta.</div>
+      </div>
+
+      <div class="controls">
+        <button id="startBtn" class="primary" type="button">Porneste camera</button>
+        <button id="captureBtn" type="button" disabled>Captureaza poza</button>
+        <a id="downloadLink" class="download" download="01_frontal_serios.jpg" aria-disabled="true">Descarca 01_frontal_serios.jpg</a>
+        <button id="retryBtn" type="button" disabled>Refa poza</button>
+      </div>
+
+      <p id="status" class="status">Apasa "Porneste camera". Browserul iti va cere permisiune pentru camera.</p>
+    </section>
+
+    <aside class="side">
+      <h2>Checklist rapid</h2>
+      <ul class="checklist">
+        <li>Lumina din fata, nu din spate.</li>
+        <li>Telefon/laptop la nivelul ochilor.</li>
+        <li>Fata in zona verde, nu prea aproape.</li>
+        <li>Haine simple, fara logo mare.</li>
+        <li>Expresie calma si serioasa, nu poza de buletin.</li>
+        <li>Dupa download, muta poza in folderul photos.</li>
+      </ul>
+      <div class="path">/Users/floreacalin/Developer/AiWebminar/docs/ai_automation_course_personas/04_marketing/assets/reclama_ai_sf_v1/photos/</div>
+    </aside>
+  </main>
+
+  <script>
+    const video = document.querySelector("#video");
+    const canvas = document.querySelector("#canvas");
+    const startBtn = document.querySelector("#startBtn");
+    const captureBtn = document.querySelector("#captureBtn");
+    const retryBtn = document.querySelector("#retryBtn");
+    const downloadLink = document.querySelector("#downloadLink");
+    const statusEl = document.querySelector("#status");
+
+    let stream;
+    let objectUrl;
+
+    function setStatus(message) {
+      statusEl.textContent = message;
+    }
+
+    async function startCamera() {
+      if (!navigator.mediaDevices?.getUserMedia) {
+        setStatus("Browserul nu poate accesa camera. Deschide pagina in Chrome sau Safari actualizat.");
+        return;
+      }
+
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            width: { ideal: 1920 },
+            height: { ideal: 1080 },
+            facingMode: "user"
+          },
+          audio: false
+        });
+        video.srcObject = stream;
+        video.style.display = "block";
+        canvas.style.display = "none";
+        captureBtn.disabled = false;
+        retryBtn.disabled = true;
+        startBtn.disabled = true;
+        setStatus("Pozitioneaza-te in cadru, apoi apasa Captureaza poza.");
+      } catch (error) {
+        setStatus(`Camera nu a pornit: ${error.message}`);
+      }
+    }
+
+    function capturePhoto() {
+      const ctx = canvas.getContext("2d");
+      const sourceWidth = video.videoWidth;
+      const sourceHeight = video.videoHeight;
+      const targetRatio = 9 / 16;
+      const sourceRatio = sourceWidth / sourceHeight;
+      let sx = 0;
+      let sy = 0;
+      let sw = sourceWidth;
+      let sh = sourceHeight;
+
+      if (sourceRatio > targetRatio) {
+        sw = sourceHeight * targetRatio;
+        sx = (sourceWidth - sw) / 2;
+      } else {
+        sh = sourceWidth / targetRatio;
+        sy = (sourceHeight - sh) / 2;
+      }
+
+      ctx.save();
+      ctx.translate(canvas.width, 0);
+      ctx.scale(-1, 1);
+      ctx.drawImage(video, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height);
+      ctx.restore();
+
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          setStatus("Nu am putut crea imaginea. Incearca din nou.");
+          return;
+        }
+
+        if (objectUrl) URL.revokeObjectURL(objectUrl);
+        objectUrl = URL.createObjectURL(blob);
+        downloadLink.href = objectUrl;
+        downloadLink.setAttribute("aria-disabled", "false");
+        retryBtn.disabled = false;
+        video.style.display = "none";
+        canvas.style.display = "block";
+        setStatus("Poza e capturata. Daca arata bine, descarc-o si pune-o in folderul photos.");
+      }, "image/jpeg", 0.94);
+    }
+
+    function retryPhoto() {
+      video.style.display = "block";
+      canvas.style.display = "none";
+      downloadLink.removeAttribute("href");
+      downloadLink.setAttribute("aria-disabled", "true");
+      retryBtn.disabled = true;
+      setStatus("Reincadreaza-te si captureaza din nou.");
+    }
+
+    startBtn.addEventListener("click", startCamera);
+    captureBtn.addEventListener("click", capturePhoto);
+    retryBtn.addEventListener("click", retryPhoto);
+  </script>
+</body>
+</html>

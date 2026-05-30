@@ -1,0 +1,22 @@
+.codex/
+.DS_Store
+*.log
+node_modules/
+.env
+.env.*
+.dev.vars
+.dev.vars.local
+.clasp.json
+.local/
+.wrangler/
+dist/
+email-previews/
+test-results/
+playwright-report/
+
+# App-local generated files
+apps/landing/.local/
+apps/landing/.wrangler/
+apps/landing/dist/
+apps/landing/email-previews/
+apps/landing/test-results/
