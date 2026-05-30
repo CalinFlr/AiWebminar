@@ -16,6 +16,10 @@ function isBlockedStaticPath(pathname) {
 
 export async function onRequest({ request, next }) {
   const { pathname } = new URL(request.url);
+  if (/^\/favicon\.ico$/i.test(pathname)) {
+    return Response.redirect(new URL("/favicon.svg", request.url), 302);
+  }
+
   if (isBlockedStaticPath(pathname)) {
     return new Response("Not found", {
       status: 404,
