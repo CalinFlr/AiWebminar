@@ -32,7 +32,8 @@ const contentTypes = {
   ".json": "application/json; charset=utf-8",
   ".jpeg": "image/jpeg",
   ".jpg": "image/jpeg",
-  ".png": "image/png"
+  ".png": "image/png",
+  ".svg": "image/svg+xml"
 };
 
 const server = createServer(async (request, response) => {
@@ -123,6 +124,7 @@ function resolveStaticFile(pathname) {
     ["/bonus.html", "bonus.html"],
     ["/privacy.html", "privacy.html"],
     ["/thank-you.html", "thank-you.html"],
+    ["/favicon.svg", "favicon.svg"],
     ["/mentor.jpeg", "mentor.jpeg"]
   ]);
 
