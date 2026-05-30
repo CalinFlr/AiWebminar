@@ -7,6 +7,7 @@ const staticFiles = [
   "privacy.html",
   "404.html",
   "mentor.jpeg",
+  "favicon.svg",
   "_headers"
 ];
 

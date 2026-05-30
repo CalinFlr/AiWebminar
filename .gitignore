@@ -1,4 +1,5 @@
 .codex/
+.playwright-cli/
 .DS_Store
 *.log
 node_modules/
