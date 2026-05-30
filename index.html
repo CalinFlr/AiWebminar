@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Agenti AI 24/7 | Workshop AI Automation Zero to Hero</title>
-  <meta name="description" content="Workshop live pentru oameni non-tehnici: construieste primii tai agenti AI 24/7 pentru afacerea ta, jobul tau sau clientii tai.">
+  <title>Workflow-uri AI pentru Business | Workshop AI Automation Zero to Hero</title>
+  <meta name="description" content="Workshop live pentru owneri: treci de la ChatGPT folosit ocazional la primul workflow sau agent AI controlabil pentru businessul tau.">
   <style>
     :root {
       --ink: #171715;
@@ -193,10 +193,12 @@
       align-items: center;
     }
 
+    .hero-grid > * {
+      min-width: 0;
+    }
+
     .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
+      display: inline-block;
       margin-bottom: 18px;
       padding: 7px 10px;
       border: 1px solid rgba(255, 255, 255, 0.18);
@@ -210,9 +212,12 @@
     .eyebrow-dot {
       width: 8px;
       height: 8px;
+      display: inline-block;
+      margin-right: 10px;
       border-radius: 99px;
       background: var(--coral);
       box-shadow: 0 0 0 4px rgba(217, 111, 85, 0.18);
+      vertical-align: 0.05em;
     }
 
     h1,
@@ -228,6 +233,7 @@
       font-size: 4rem;
       line-height: 0.98;
       letter-spacing: 0;
+      overflow-wrap: break-word;
     }
 
     h2 {
@@ -458,6 +464,167 @@
     .contrast-item p {
       margin-bottom: 0;
       color: var(--muted);
+    }
+
+    .cost-grid,
+    .proof-grid,
+    .case-grid,
+    .bonus-grid,
+    .difference-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .cost-card,
+    .proof-card,
+    .case-card,
+    .bonus-card,
+    .difference-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 22px;
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    .cost-value {
+      margin-bottom: 12px;
+      color: var(--coral);
+      font-size: 2.55rem;
+      line-height: 1;
+      font-weight: 900;
+    }
+
+    .cost-card p,
+    .proof-card p,
+    .case-card p,
+    .bonus-card p,
+    .difference-card p {
+      color: var(--muted);
+    }
+
+    .estimate-note {
+      margin-top: 18px;
+      border-left: 4px solid var(--brass);
+      padding: 14px 0 14px 18px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .difference-card {
+      background: rgba(23, 23, 21, 0.04);
+    }
+
+    .difference-card.highlight,
+    .proof-card.highlight,
+    .bonus-card.highlight {
+      border-color: rgba(217, 111, 85, 0.48);
+      background: rgba(217, 111, 85, 0.1);
+    }
+
+    .case-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .case-card {
+      display: grid;
+      gap: 16px;
+      background: rgba(255, 255, 255, 0.58);
+      box-shadow: var(--shadow);
+    }
+
+    .case-label {
+      width: fit-content;
+      border-radius: 999px;
+      padding: 5px 9px;
+      color: var(--white);
+      background: var(--teal);
+      font-size: 0.74rem;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .case-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .case-metric {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.58);
+    }
+
+    .case-metric strong {
+      display: block;
+      color: var(--ink);
+      font-size: 1.12rem;
+      line-height: 1.05;
+    }
+
+    .case-metric span {
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .bonus-section {
+      color: var(--white);
+      background: var(--ink);
+    }
+
+    .bonus-section .section-kicker {
+      color: #91d3ce;
+    }
+
+    .bonus-section .section-heading p,
+    .bonus-section .bonus-card p,
+    .bonus-section .bonus-card li {
+      color: rgba(255, 255, 255, 0.72);
+    }
+
+    .bonus-section .bonus-card {
+      border-color: rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .bonus-section .bonus-card.highlight {
+      border-color: rgba(217, 111, 85, 0.5);
+      background: rgba(217, 111, 85, 0.16);
+    }
+
+    .bonus-section .bonus-card h3 {
+      color: var(--white);
+    }
+
+    .proof-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .proof-stat {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.52);
+    }
+
+    .proof-stat strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--teal-dark);
+      font-size: 1.35rem;
+      line-height: 1.05;
+      font-weight: 900;
+    }
+
+    .proof-stat span {
+      color: var(--muted);
+      font-size: 0.9rem;
     }
 
     .persona-shell {
@@ -1307,7 +1474,12 @@
       .path-grid,
       .outcome-grid,
       .mentor-personas,
-      .curriculum {
+      .curriculum,
+      .cost-grid,
+      .proof-grid,
+      .bonus-grid,
+      .difference-grid,
+      .proof-strip {
         grid-template-columns: repeat(2, 1fr);
       }
 
@@ -1346,8 +1518,16 @@
         padding-top: 96px;
       }
 
+      .eyebrow {
+        max-width: 100%;
+        align-items: flex-start;
+        line-height: 1.25;
+        white-space: normal;
+      }
+
       h1 {
-        font-size: 2.35rem;
+        font-size: 2.12rem;
+        line-height: 1.04;
       }
 
       h2 {
@@ -1401,6 +1581,13 @@
       .outcome-grid,
       .mentor-personas,
       .curriculum,
+      .cost-grid,
+      .proof-grid,
+      .case-grid,
+      .case-metrics,
+      .bonus-grid,
+      .difference-grid,
+      .proof-strip,
       .offer-compare,
       .plan-selector,
       .pricing-grid,
@@ -1455,7 +1642,7 @@
       }
 
       h1 {
-        font-size: 2.08rem;
+        font-size: 1.88rem;
       }
 
       .eyebrow {
@@ -1473,11 +1660,13 @@
       </a>
       <nav class="nav-links" aria-label="Navigatie principala">
         <a href="#trasee">Trasee</a>
+        <a href="#scenarii">Scenarii</a>
+        <a href="#bonus">Bonus</a>
         <a href="#program">Program</a>
         <a href="#mentor">Mentor</a>
         <a href="#inscriere">Inscriere</a>
       </nav>
-      <a class="btn btn-primary" href="#inscriere" data-plan="vip">Ia loc prioritar</a>
+      <a class="btn btn-primary" href="#inscriere" data-plan="vip">Vreau VIP</a>
     </div>
   </header>
 
@@ -1487,47 +1676,47 @@
       <div class="hero-scrim" aria-hidden="true"></div>
       <div class="container hero-grid">
         <div>
-          <div class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span> Workshop live: AI Automation Zero to Hero</div>
-          <h1 id="hero-title">Construieste primii tai agenti AI 24/7 pentru business, job sau clienti</h1>
-          <p class="lead">In 3 sesiuni live inveti sa treci de la ChatGPT folosit ocazional la agenti si workflow-uri AI care pot prelua taskuri repetitive, pot analiza informatie si pot pregati rezultate pentru tine. Fara programare. Fara teorie goala.</p>
+          <div class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span> Workshop live pentru owneri: AI Automation Zero to Hero</div>
+          <h1 id="hero-title">Treci de la ChatGPT la primul workflow AI care scoate munca manuala din business</h1>
+          <p class="lead">In 3 sesiuni live vezi cum alegi procesele care merita automatizate si cum construiesti un agent AI controlabil pentru lead-uri, follow-up, research, continut sau operatiuni. Fara programare. Fara promisiuni de autopilot magic.</p>
           <div class="hero-actions">
-            <a class="btn btn-primary" href="#inscriere" data-plan="vip">Ia loc prioritar la workshop &rarr;</a>
-            <a class="btn btn-secondary" href="#program">Vezi ce construiesti</a>
+            <a class="btn btn-primary" href="#inscriere" data-plan="vip">Vreau VIP + Audit Kit &rarr;</a>
+            <a class="btn btn-secondary" href="#inscriere" data-plan="free">Particip gratuit</a>
           </div>
           <div class="hero-meta" aria-label="Detalii workshop">
-            <span>3 sesiuni live + optional Implementation Lab</span>
-            <span>Agenti pentru business, job si clienti</span>
-            <span>Creat pentru nivel incepator si intermediar</span>
+            <span>3 sesiuni live + VIP Implementation Lab</span>
+            <span>Bonus: AI Process Audit Kit + 30 idei</span>
+            <span>Locuri VIP limitate pentru hot seats si feedback</span>
           </div>
         </div>
 
-        <aside class="hero-panel" aria-label="Preview agent AI">
+        <aside class="hero-panel" aria-label="Preview workflow AI">
           <div class="system-preview">
             <div class="preview-top">
-              <strong>Agent AI 24/7</strong>
+              <strong>Workflow AI controlabil</strong>
               <span class="status-pill">ruleaza</span>
             </div>
             <div class="preview-row">
               <div class="preview-label">Input</div>
               <div class="preview-work">
-                <strong>Task repetitiv</strong>
-                <span>Emailuri, lead-uri, documente, notite sau cereri care iti consuma ore saptamanal.</span>
+                <strong>Proces care pierde bani</strong>
+                <span>Lead-uri, mesaje, intrebari, documente sau research pe care le refaci manual saptamanal.</span>
                 <div class="preview-progress"><i style="width: 42%"></i></div>
               </div>
             </div>
             <div class="preview-row">
               <div class="preview-label">Agent</div>
               <div class="preview-work">
-                <strong>Analiza + decizie + actiune</strong>
-                <span>Extrage informatii, aplica reguli, propune urmatorul pas si pregateste outputul.</span>
+                <strong>Reguli + verificare + actiune</strong>
+                <span>Extrage informatii, aplica criterii, marcheaza riscuri si pregateste urmatorul pas pentru om.</span>
                 <div class="preview-progress"><i style="width: 68%; background: var(--teal)"></i></div>
               </div>
             </div>
             <div class="preview-row">
               <div class="preview-label">Output</div>
               <div class="preview-work">
-                <strong>Mini-sistem reutilizabil</strong>
-                <span>Un raspuns, raport, plan sau workflow pe care il poti folosi din nou.</span>
+                <strong>Sistem reutilizabil</strong>
+                <span>Follow-up, raport, plan, calendar sau checklist pe care il poti rula din nou.</span>
                 <div class="preview-progress"><i style="width: 86%; background: var(--coral)"></i></div>
               </div>
             </div>
@@ -1540,33 +1729,87 @@
       <div class="container problem-grid">
         <div class="problem-statement">
           <span class="section-kicker">Problema reala</span>
-          <h2 id="problem-title">Ai AI, dar tot tu faci munca.</h2>
-          <p>Multi oameni au testat ChatGPT, Claude sau tool-uri no-code. Au primit texte mai bune, idei mai rapide si raspunsuri utile. Dar in practica raman blocati in acelasi mod de lucru: deschid un chat, explica iar contextul, copiaza, verifica, repara si repeta.</p>
-          <p>Diferenta apare cand AI-ul nu mai este doar un chat, ci devine un sistem: primeste un obiectiv, urmeaza pasi, verifica reguli si pregateste un output pe care il poti folosi.</p>
-          <p>In workshop vezi inclusiv cum poate arata un agent care foloseste browserul: navigheaza pagini, colecteaza date publice si transforma research-ul intr-un raport actionabil.</p>
+          <h2 id="problem-title">ChatGPT iti raspunde. Businessul tau tot manual ramane.</h2>
+          <p>Multi owneri au incercat ChatGPT, Claude sau tool-uri no-code. Au texte mai bune si idei mai rapide, dar lead-urile tot se pierd, follow-up-ul tot se amana, rapoartele tot se fac manual, iar echipa tot intreaba aceleasi lucruri.</p>
+          <p>Diferenta apare cand AI-ul nu mai este un chat separat, ci devine un proces: primeste input, urmeaza reguli, verifica riscuri si pregateste un output pe care il poti folosi in business.</p>
+          <p>In workshop vezi cum poate arata un agent care foloseste browserul: analizeaza informatii publice, compara concurenta si transforma research-ul intr-un plan actionabil, fara sa-l lasi sa decida singur lucruri sensibile.</p>
         </div>
         <div class="contrast-list">
           <div class="contrast-item">
             <span class="contrast-number">01</span>
             <div>
-              <h3>De la raspunsuri la agenti care executa pasi</h3>
-              <p>Nu doar "scrie-mi un text", ci "cauta, compara, extrage, structureaza si pregateste urmatoarea actiune".</p>
+              <h3>De la raspunsuri la procese care muta munca mai departe</h3>
+              <p>Nu doar "scrie-mi un text", ci "verifica lead-ul, extrage datele, propune follow-up si pregateste mesajul".</p>
             </div>
           </div>
           <div class="contrast-item">
             <span class="contrast-number">02</span>
             <div>
-              <h3>De la inspiratie la procese repetabile</h3>
-              <p>Un prompt bun te ajuta o data. Un workflow bun poate fi folosit din nou pentru lead-uri, rapoarte, documente, research sau operatiuni.</p>
+              <h3>De la inspiratie la workflow-uri masurabile</h3>
+              <p>Un prompt bun te ajuta o data. Un workflow bun poate economisi ore in fiecare saptamana si poate reduce lead-urile uitate.</p>
             </div>
           </div>
           <div class="contrast-item">
             <span class="contrast-number">03</span>
             <div>
               <h3>De la demo generic la cazul tau real</h3>
-              <p>Ownerii cauta timp si control. Profesionistii cauta impact la job. Consultantii cauta un demo vandabil pentru clienti.</p>
+              <p>De aceea VIP-ul are hot seats si roadmap: alegem ce merita automatizat in businessul tau, nu intr-un exemplu frumos de pe internet.</p>
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="cost-title">
+      <div class="container">
+        <div class="section-heading">
+          <span class="section-kicker">Costul invizibil</span>
+          <h2 id="cost-title">Daca folosesti AI doar pentru texte, platesti in continuare cu ore, lead-uri si atentie.</h2>
+          <p>Acestea sunt scenarii de calcul, nu promisiuni garantate. Ideea este simpla: inainte sa mai adaugi un tool sau un om in echipa, merita sa vezi ce proces poate fi mutat intr-un workflow AI controlabil.</p>
+        </div>
+
+        <div class="cost-grid">
+          <article class="cost-card">
+            <div class="cost-value">5-10h</div>
+            <h3>pe saptamana in taskuri repetitive</h3>
+            <p>Emailuri, follow-up, research, centralizari, documente, raspunsuri repetitive si verificari facute manual.</p>
+          </article>
+          <article class="cost-card">
+            <div class="cost-value">1-3</div>
+            <h3>lead-uri pierdute pot schimba luna</h3>
+            <p>Pentru servicii locale sau B2B, un follow-up intarziat poate costa mai mult decat accesul VIP la workshop.</p>
+          </article>
+          <article class="cost-card">
+            <div class="cost-value">x3</div>
+            <h3>haos cand businessul creste</h3>
+            <p>Daca procesul nu e mapat, orice volum nou inseamna mai multe mesaje, mai multe erori si mai multa dependenta de tine.</p>
+          </article>
+        </div>
+        <p class="estimate-note">Calcul orientativ: daca un owner sau membru din echipa economiseste 6 ore pe saptamana, la o valoare interna de 25-50 EUR/ora, miza lunara poate trece rapid de 600-1.200 EUR. Workshopul te ajuta sa gasesti primul proces unde matematica asta are sens.</p>
+      </div>
+    </section>
+
+    <section class="section section-alt" aria-labelledby="difference-title">
+      <div class="container">
+        <div class="section-heading">
+          <span class="section-kicker">Diferenta noastra</span>
+          <h2 id="difference-title">Nu construim mitul ca AI-ul iti conduce businessul singur. Construim sisteme mici care pot fi verificate.</h2>
+          <p>AI-ul devine util cand are rol, context, reguli, limite si criterii de calitate. Asta este diferenta dintre un demo spectaculos si un workflow pe care il poti folosi fara sa-ti fie frica.</p>
+        </div>
+
+        <div class="difference-grid">
+          <article class="difference-card">
+            <h3>Hype obisnuit</h3>
+            <p>"Pune agenti AI pe autopilot si lasa-i sa lucreze 24/7." Suna bine, dar pentru un business real ridica intrebari despre control, date, calitate si reputatie.</p>
+          </article>
+          <article class="difference-card highlight">
+            <h3>Abordarea din workshop</h3>
+            <p>Alegi un proces cu miza clara, il mapezi, definesti outputul, pui reguli si pastrezi omul in punctele unde decizia conteaza.</p>
+          </article>
+          <article class="difference-card">
+            <h3>Rezultatul urmarit</h3>
+            <p>Primul workflow AI care reduce munca manuala si poate fi extins: lead intake, follow-up, research concurenta, continut sau raportare.</p>
+          </article>
         </div>
       </div>
     </section>
@@ -1575,8 +1818,8 @@
       <div class="container">
         <div class="section-heading">
           <span class="section-kicker">Alege traseul tau</span>
-          <h2 id="persona-title">Nu inveti AI generic. Iti construiesti agenti pentru miza ta reala.</h2>
-          <p>Pentru un owner inseamna timp castigat in business. Pentru un profesionist inseamna avantaj la job. Pentru un consultant inseamna inceputul unui serviciu vandabil.</p>
+          <h2 id="persona-title">Pagina este gandita pentru owneri, dar metoda functioneaza si pentru job sau servicii AI.</h2>
+          <p>Focusul workshopului este businessul real: procese, timp, lead-uri, follow-up si control. Daca esti profesionist sau consultant, aplici aceeasi metoda pe rolul tau sau pe clientii tai.</p>
         </div>
 
         <div class="persona-shell">
@@ -1589,7 +1832,7 @@
           <div class="persona-content is-active" data-panel="owner" aria-hidden="false">
             <div class="persona-copy">
               <h3>Pentru owneri si soloprenori</h3>
-              <p>AI-ul nu trebuie sa fie inca un tool pe care il verifici tu. Trebuie sa preia bucati repetitive din business: lead-uri, follow-up, rapoarte, documente si cereri.</p>
+              <p>AI-ul nu trebuie sa fie inca un tool pe care il verifici tu. Trebuie sa scoata frictiune din business: lead-uri, follow-up, rapoarte, documente, cereri si intrebari repetitive.</p>
               <ul class="mini-list">
                 <li>Alegi procesele unde un agent AI poate economisi timp rapid.</li>
                 <li>Construiesti un workflow reutilizabil, cu reguli si verificare umana.</li>
@@ -1637,102 +1880,141 @@
       </div>
     </section>
 
+    <section class="section section-alt" id="scenarii" aria-labelledby="cases-title">
+      <div class="container">
+        <div class="section-heading">
+          <span class="section-kicker">Scenarii demonstrative</span>
+          <h2 id="cases-title">Vezi cum arata AI-ul cand il legi de un business concret, nu de un prompt generic.</h2>
+          <p>Aceste scenarii sunt modele de lucru si estimari orientative. Nu sunt testimoniale si nu garanteaza rezultate, dar arata tipul de gandire pe care il folosim in workshop.</p>
+        </div>
+
+        <div class="case-grid">
+          <article class="case-card">
+            <span class="case-label">Scenariu demonstrativ</span>
+            <div>
+              <h3>Fitness trainer local: din continut haotic in sistem de lead-uri si follow-up</h3>
+              <p>Agentul analizeaza profiluri publice, extrage teme de continut, propune calendar, pregateste mesaje pentru lead-uri si marcheaza intrebarile care cer raspuns uman.</p>
+            </div>
+            <div class="case-metrics">
+              <div class="case-metric">
+                <strong>6-8h</strong>
+                <span>research si continut economisit lunar</span>
+              </div>
+              <div class="case-metric">
+                <strong>24h</strong>
+                <span>follow-up maxim pentru lead-uri calde</span>
+              </div>
+              <div class="case-metric">
+                <strong>1 sistem</strong>
+                <span>calendar + mesaje + raport saptamanal</span>
+              </div>
+            </div>
+            <p>ROI potential: daca un singur client nou acopera 100-300 EUR/luna, un sistem de follow-up mai disciplinat poate plati rapid timpul investit.</p>
+          </article>
+
+          <article class="case-card">
+            <span class="case-label">Scenariu demonstrativ</span>
+            <div>
+              <h3>Cabinet sau clinica: intrebari repetitive, programari si reputatie fara date sensibile</h3>
+              <p>Workflow-ul lucreaza doar cu informatii publice si reguli aprobate: raspunsuri generale, reminder intern, intrebari frecvente, review-uri si triere catre om.</p>
+            </div>
+            <div class="case-metrics">
+              <div class="case-metric">
+                <strong>30-50%</strong>
+                <span>din intrebarile repetitive pot fi pregatite</span>
+              </div>
+              <div class="case-metric">
+                <strong>0</strong>
+                <span>date medicale sensibile in demo</span>
+              </div>
+              <div class="case-metric">
+                <strong>7 zile</strong>
+                <span>roadmap pentru primul workflow</span>
+              </div>
+            </div>
+            <p>ROI potential: miza nu este doar timpul, ci raspunsul mai rapid, reputatia si mai putine blocaje in agenda echipei.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
     <section class="section section-dark" id="program" aria-labelledby="program-title">
       <div class="container">
         <div class="section-heading">
           <span class="section-kicker">Programul workshopului</span>
-          <h2 id="program-title">In 3 zile treci de la ChatGPT la prima ta echipa de agenti AI.</h2>
-          <p>Incepem cu primul agent, ii dam apoi browser si workflow, iar in ziua finala vezi cum lucreaza o echipa multi-agent: research, strategie, continut, verificare si plan de actiune.</p>
+          <h2 id="program-title">In 3 zile treci de la ChatGPT folosit ocazional la un workflow AI controlabil pentru business.</h2>
+          <p>Ritmul este gandit pentru non-tehnici: pregatim Claude Desktop, alegem procesul corect, construim skills ca retete reutilizabile, apoi vezi cum agentii specializati pot fi ghidati de un orchestrator.</p>
         </div>
 
         <div class="curriculum">
           <article class="day-card">
-            <span class="day-label">Ziua 1</span>
-            <h3>Primul agent AI live</h3>
-            <p>Luam un business real si construim un agent care intelege contextul, publicul, oferta si outputul dorit.</p>
+            <span class="day-label">Ziua 1 - 90 min + Q&amp;A</span>
+            <h3>Setup + Business OS in Claude</h3>
+            <p>Instalam sau pregatim workspace-ul, alegem procesul corect si vedem cum Claude devine spatiu de lucru pentru business, nu doar chat.</p>
             <ul>
-              <li>Claude Desktop ca workspace de agent</li>
-              <li>Rol, obiectiv, context, reguli, output</li>
-              <li>Primul rezultat: idei, oportunitati si procese de automatizat</li>
+              <li>Setup Claude Desktop + fallback in browser</li>
+              <li>AI Process Audit: timp, bani, frecventa si risc</li>
+              <li>Livrabil: Workflow Brief v1 pentru procesul tau</li>
             </ul>
           </article>
 
           <article class="day-card">
-            <span class="day-label">Ziua 2</span>
-            <h3>Agent cu browser si workflow</h3>
-            <p>Ii dam agentului acces la research: cauta, compara, extrage informatii si produce un output reutilizabil.</p>
+            <span class="day-label">Ziua 2 - 90 min + Q&amp;A</span>
+            <h3>Skills + agent specializat</h3>
+            <p>Transformam procesul ales intr-o reteta reutilizabila pentru AI, apoi construim un agent specializat pentru research, follow-up, continut sau raspunsuri repetitive.</p>
             <ul>
-              <li>Browser agent pentru research public</li>
-              <li>Input -> analiza -> verificare -> output</li>
-              <li>Cum alegi ce merita dus mai departe intr-un sistem real</li>
+              <li>Skills explicate pe limba non-tehnica: instructiuni, exemple si criterii</li>
+              <li>Dual track: fitness sandbox + cabinet local anonim, fara date sensibile</li>
+              <li>Livrabil: Skill Card + Agent Role Card + checklist de verificare</li>
             </ul>
           </article>
 
           <article class="day-card">
-            <span class="day-label">Ziua 3</span>
-            <h3>Echipa multi-agent in actiune</h3>
-            <p>Nu mai ai un singur agent. Ai researcher, strategist, copywriter, QA si project manager care lucreaza impreuna.</p>
+            <span class="day-label">Ziua 3 - 105 min + buffer</span>
+            <h3>Agenti specializati + orchestrator</h3>
+            <p>Vezi diferenta dintre un agent solo si un sistem coordonat: researcher, strategist, copywriter, QA si orchestrator pe acelasi proces.</p>
             <ul>
-              <li>Agenti specializati pe roluri</li>
-              <li>Strategie, continut, verificare si plan</li>
-              <li>Demo cu output cap-coada pentru un business real</li>
+              <li>Orchestratorul imparte taskul, cere outputuri si verifica progresul</li>
+              <li>Demo final: fitness cap-coada + proof anonim de cabinet local</li>
+              <li>Livrabil: AI Operating Card + roadmap pe 7 zile</li>
             </ul>
           </article>
 
           <article class="day-card featured">
-            <span class="day-label">VIP</span>
+            <span class="day-label">Ziua 4 VIP - 90 min</span>
             <h3>Implementation Lab</h3>
-            <p>Alegi un proces din business, job sau portofoliu si il transformam intr-un plan concret de agent/workflow AI.</p>
+            <p>Nu mai urmaresti doar demo-uri. Lucram pe cazuri reale din onboarding si alegem ce workflow sau agent merita construit primul.</p>
             <ul>
-              <li>Alegem primul agent care merita construit</li>
-              <li>Primesti feedback pe cazul tau</li>
-              <li>Pleci cu roadmap de implementare pe 7 zile</li>
+              <li>Hot seats, feedback si selectie de cazuri</li>
+              <li>Replay-uri, workbook si roadmap pentru procesul tau</li>
+              <li>Recomandare de traseu: cohorta beta, sprint sau consultanta</li>
             </ul>
           </article>
         </div>
       </div>
     </section>
 
-    <section class="section section-alt" id="ce-primesti" aria-labelledby="toolkit-title">
-      <div class="container toolkit">
-        <div class="toolkit-visual" aria-hidden="true">
-          <div class="tool-card">
-            <strong>Free: 3 sesiuni live</strong>
-            <span>Demo-uri, harta de agenti si mini-checklist pentru primul proces.</span>
-          </div>
-          <div class="tool-card">
-            <strong>VIP: Implementation Lab</strong>
-            <span>Hot seats, feedback si roadmap pe cazul tau real.</span>
-          </div>
-          <div class="tool-card">
-            <strong>VIP kit extins</strong>
-            <span>Agent brief, browser workflow, roluri multi-agent si QA checklist.</span>
-          </div>
+    <section class="section bonus-section" id="bonus" aria-labelledby="bonus-title">
+      <div class="container">
+        <div class="section-heading">
+          <span class="section-kicker">Bonus de inscriere</span>
+          <h2 id="bonus-title">Primesti AI Process Audit Kit + 30 idei de automatizari pentru business.</h2>
+          <p>Bonusul te ajuta sa nu intri in workshop cu intrebarea "ce as putea automatiza?", ci cu o lista concreta de procese, scoruri si idei pe care le putem discuta.</p>
         </div>
-        <div class="toolkit-copy">
-          <span class="section-kicker">Ce primesti</span>
-          <h2 id="toolkit-title">Free-ul iti arata ce e posibil. VIP-ul te ajuta sa aplici pe cazul tau.</h2>
-          <p>Varianta gratuita este intrarea in experienta: vezi demo-urile, intelegi mecanismul si pleci cu o harta simpla. VIP-ul este pentru cei care vor materiale complete, feedback si un plan clar de implementare.</p>
-          <div class="offer-compare" aria-label="Comparatie intre acces gratuit si VIP">
-            <div class="offer-tier">
-              <span>Free</span>
-              <h3>Workshop live</h3>
-              <ul>
-                <li>Acces live la cele 3 sesiuni principale.</li>
-                <li>Demo-uri cu agenti AI, browser si multi-agent.</li>
-                <li>Mini-checklist pentru alegerea primului proces.</li>
-              </ul>
-            </div>
-            <div class="offer-tier vip">
-              <span>VIP</span>
-              <h3>Implementation Lab</h3>
-              <ul>
-                <li>Sesiune extra pe cazuri reale si hot seats.</li>
-                <li>Replay-uri cu timestamp-uri si materiale extinse.</li>
-                <li>Roadmap de implementare pe 7 zile pentru cazul tau.</li>
-              </ul>
-            </div>
-          </div>
+
+        <div class="bonus-grid">
+          <article class="bonus-card">
+            <h3>Audit rapid de procese</h3>
+            <p>Un cadru simplu pentru a nota unde se pierde timp: lead-uri, follow-up, continut, suport, documente, rapoarte si operatiuni.</p>
+          </article>
+          <article class="bonus-card">
+            <h3>30 idei de automatizari AI</h3>
+            <p>Lista structurata pe tipuri de business: servicii locale, consultanta, agentii, educatie, e-commerce si echipe mici.</p>
+          </article>
+          <article class="bonus-card highlight">
+            <h3>VIP Agent Workbook</h3>
+            <p>Pentru VIP: AI Process Audit, Workflow Brief, Skill Card, Agent Role Card, Orchestrator Map, AI Operating Card si roadmap pe 7 zile.</p>
+          </article>
         </div>
       </div>
     </section>
@@ -1741,22 +2023,66 @@
       <div class="container">
         <div class="section-heading">
           <span class="section-kicker">Ce se schimba dupa workshop</span>
-          <h2 id="outcome-title">Nu mai vezi AI-ul ca pe un chat. Il vezi ca pe o echipa de lucru.</h2>
+          <h2 id="outcome-title">Nu mai vezi AI-ul ca pe un chat izolat. Il vezi ca pe un sistem de lucru pe care il poti controla.</h2>
         </div>
 
         <div class="outcome-grid">
           <article class="outcome-card">
-            <h3><span class="icon-box">01</span> Primul agent gandit corect</h3>
-            <p>Intelegi cum transformi o nevoie reala intr-un agent cu rol, context, reguli si output clar.</p>
+            <h3><span class="icon-box">01</span> Un proces ales corect</h3>
+            <p>Intelegi ce merita automatizat prima data si ce trebuie lasat cu verificare umana.</p>
           </article>
           <article class="outcome-card">
-            <h3><span class="icon-box">02</span> Un workflow pe care il poti adapta</h3>
-            <p>Pleci cu logica unui sistem reutilizabil: input, research, analiza, verificare si rezultat.</p>
+            <h3><span class="icon-box">02</span> Skills si agenti pe intelesul tau</h3>
+            <p>Pleci cu logica unei retete reutilizabile: instructiuni, exemple, criterii, output si verificare.</p>
           </article>
           <article class="outcome-card">
-            <h3><span class="icon-box">03</span> O harta pentru business, job sau clienti</h3>
-            <p>Stii ce merita construit prima data: economie de timp in business, avantaj la job sau demo vandabil pentru servicii AI.</p>
+            <h3><span class="icon-box">03</span> O harta pentru urmatorul nivel</h3>
+            <p>Vezi cum treci de la agent solo la orchestrator si stii ce merita dus in VIP, cohorta beta sau sprint.</p>
           </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt" aria-labelledby="proof-title">
+      <div class="container">
+        <div class="section-heading">
+          <span class="section-kicker">Proof stack</span>
+          <h2 id="proof-title">Autoritatea nu vine din promisiuni mari, ci din cum gandesti sistemul.</h2>
+          <p>Workshopul combina experienta de sisteme enterprise cu practica actuala de agenti AI, browser automation si workflow-uri aplicate pe cazuri reale de business.</p>
+        </div>
+
+        <div class="proof-grid">
+          <article class="proof-card highlight">
+            <h3>15+ ani in sisteme enterprise</h3>
+            <p>Aplicatii, integrari si procese unde stabilitatea, acuratetea si controlul conteaza mai mult decat demo-ul frumos.</p>
+          </article>
+          <article class="proof-card">
+            <h3>AI builder practic</h3>
+            <p>Workflow-uri in Claude Desktop, skills reutilizabile si agenti care produc output verificabil, nu doar texte generate.</p>
+          </article>
+          <article class="proof-card">
+            <h3>Metoda pentru non-tehnici</h3>
+            <p>Traducem agentii AI in procese simple: input, reguli, verificare, output, limite si urmatorul pas.</p>
+          </article>
+        </div>
+
+        <div class="proof-strip" aria-label="Repere de credibilitate">
+          <div class="proof-stat">
+            <strong>Enterprise</strong>
+            <span>gandire de sisteme care nu au voie sa cada</span>
+          </div>
+          <div class="proof-stat">
+            <strong>Control</strong>
+            <span>human-in-the-loop pentru decizii sensibile</span>
+          </div>
+          <div class="proof-stat">
+            <strong>ROI</strong>
+            <span>alegem procese cu timp si bani masurabili</span>
+          </div>
+          <div class="proof-stat">
+            <strong>Demo</strong>
+            <span>fitness sandbox si cabinet local anonim fara date sensibile</span>
+          </div>
         </div>
       </div>
     </section>
@@ -1765,10 +2091,10 @@
       <div class="container mentor-grid">
         <div class="mentor-copy">
           <span class="section-kicker">Cine te ghideaza</span>
-          <h2 id="mentor-title">Diferenta dintre un prompt simpatic si un sistem AI util? 15 ani de experienta in sisteme care nu au voie sa cada.</h2>
-          <p class="mentor-lead">Sunt Calin Florea, engineer cu 15+ ani in IT si sisteme enterprise. Am lucrat cu aplicatii, integrari si procese unde viteza, stabilitatea si acuratetea conteaza.</p>
-          <p>Acum folosesc aceeasi gandire pentru agenti AI, automatizari si workflow-uri care reduc munca repetitiva, nu doar produc raspunsuri frumoase. Am construit agenti AI autonomi pentru coding care pot analiza context, planifica pasi si implementa functionalitati cap-coada, reducand munca de zile la ore.</p>
-          <p>In paralel, imi aliniez practica de AI cu standardele Microsoft pentru cloud, agenti si automatizare. In workshop traduc zona asta pentru owneri, profesionisti si consultanti: clar, practic si aplicat pe nevoia ta.</p>
+          <h2 id="mentor-title">Diferenta dintre un prompt simpatic si un sistem AI util? Experienta in sisteme reale + practica de AI builder.</h2>
+          <p class="mentor-lead">Sunt Calin Florea, engineer cu 15+ ani in IT si sisteme enterprise. Am lucrat cu aplicatii, integrari si procese unde viteza, stabilitatea, acuratetea si controlul conteaza.</p>
+          <p>Acum folosesc aceeasi gandire pentru agenti AI, automatizari si workflow-uri care reduc munca repetitiva, nu doar produc raspunsuri frumoase. Am construit agenti AI pentru coding si tool-uri interne care pot analiza context, planifica pasi si produce output verificabil.</p>
+          <p>In workshop traduc zona asta pentru owneri: cum alegi ce merita automatizat, cum setezi reguli, cum pastrezi verificarea umana si cum transformi AI-ul din jucarie in proces operational.</p>
 
           <div class="mentor-personas">
             <div class="mentor-persona">
@@ -1791,7 +2117,7 @@
             <img class="mentor-photo" src="mentor.jpeg" alt="Calin Florea">
             <figcaption class="mentor-caption">
               <div class="mentor-name">Calin Florea</div>
-              <div class="mentor-role">15+ ani in IT si sisteme enterprise</div>
+              <div class="mentor-role">15+ ani enterprise + AI builder practic</div>
             </figcaption>
           </figure>
           <div class="impact-stack">
@@ -1812,8 +2138,8 @@
             <div class="impact-card">
               <div class="impact-value">Agent &rarr; echipa</div>
               <div>
-                <strong>Orchestrare multi-agent</strong>
-                <span>Researcher, strategist, copywriter, QA si PM lucrand pe acelasi caz real, nu prompturi separate aruncate in chat.</span>
+                <strong>Orchestrare de agenti</strong>
+                <span>Researcher, strategist, copywriter, QA si orchestrator lucrand pe acelasi caz real, nu prompturi separate aruncate in chat.</span>
               </div>
             </div>
           </div>
@@ -1825,8 +2151,8 @@
       <div class="container">
         <div class="section-heading" style="margin-left: auto; margin-right: auto; text-align: center;">
           <span class="section-kicker">Participare</span>
-          <h2 id="pricing-title">Poti intra gratuit. Dar daca vrei sa aplici pe cazul tau, VIP-ul e alegerea evidenta.</h2>
-          <p>Vezi demo-urile live in varianta gratuita. Cu VIP primesti replay-uri, materiale extinse si sesiunea in care lucram pe procese reale.</p>
+          <h2 id="pricing-title">Poti intra gratuit. Dar daca vrei feedback, replay-uri si roadmap pe cazul tau, intra VIP.</h2>
+          <p>Varianta gratuita iti arata mecanismul. VIP-ul este pentru ownerii care vor sa-si puna procesul pe masa si sa plece cu urmatorii pasi clarificati.</p>
         </div>
 
         <div class="pricing-grid">
@@ -1835,8 +2161,8 @@
             <div class="price">0 <span>RON</span></div>
             <ul class="mini-list">
               <li>Acces live la cele 3 sesiuni principale.</li>
-              <li>Demo-uri live cu agenti AI, browser si multi-agent.</li>
-              <li>Mini-checklist pentru alegerea primului proces.</li>
+              <li>Demo-uri live cu Claude Desktop, skills, agent specializat si orchestrator.</li>
+              <li>AI Process Audit Kit + lista de 30 idei de automatizari.</li>
               <li>Formular de segmentare pentru exemple relevante.</li>
             </ul>
             <a class="btn btn-dark" href="#inscriere" data-plan="free">Particip gratuit</a>
@@ -1850,9 +2176,9 @@
             <ul class="mini-list">
               <li>Tot ce este inclus in workshopul live.</li>
               <li>Replay-uri cu timestamp-uri, ca sa poti reveni la demo-uri.</li>
-              <li>Implementation Lab cu hot seats pe cazuri reale.</li>
-              <li>VIP Agent Workbook: brief, workflow, roluri multi-agent si QA.</li>
-              <li>Roadmap de implementare pe 7 zile pentru cazul tau.</li>
+              <li>Implementation Lab cu locuri limitate pentru hot seats si feedback.</li>
+              <li>VIP Agent Workbook: Workflow Brief, Skill Card, Agent Role Card, Orchestrator Map si QA.</li>
+              <li>Roadmap de implementare pe 7 zile pentru procesul tau.</li>
               <li>Prioritate la intrebari in sesiunile live.</li>
             </ul>
             <a class="btn btn-primary" href="#inscriere" data-plan="vip">Vreau acces VIP</a>
@@ -1865,16 +2191,16 @@
       <div class="container form-band">
         <div>
           <span class="section-kicker">Inscriere segmentata</span>
-          <h2 id="signup-title">Ia loc prioritar si spune-ne pe ce traseu intri.</h2>
-          <p>Primul pas ramane scurt: nume, email, telefon si traseu. Dupa inscriere trimitem onboarding-ul rapid ca sa alegem exemplele potrivite pentru tine.</p>
+          <h2 id="signup-title">Ia loc prioritar si primeste bonusul de audit pentru primul proces AI.</h2>
+          <p>Primul pas ramane scurt: nume, email, telefon si traseu. Dupa inscriere primesti pagina de bonus si onboarding-ul rapid pentru exemple mai relevante.</p>
           <div class="signup-steps" aria-label="Pasi inscriere">
             <div class="signup-step">
-              <strong>1. Iei loc prioritar</strong>
-              <span>Alegi gratuit sau VIP si primesti linkul pe email plus reminder pe WhatsApp.</span>
+              <strong>1. Primesti bonusul</strong>
+              <span>AI Process Audit Kit + 30 idei de automatizari pentru owneri si echipe mici.</span>
             </div>
             <div class="signup-step">
-              <strong>2. Raspunzi la onboarding</strong>
-              <span>Doua-trei intrebari scurte despre ce vrei sa automatizezi.</span>
+              <strong>2. Alegi gratuit sau VIP</strong>
+              <span>VIP include replay-uri, workbook, hot seats si roadmap pe cazul tau.</span>
             </div>
           </div>
         </div>
@@ -1905,7 +2231,7 @@
                 <input type="radio" name="persona" value="business" checked required>
                 <span class="plan-choice-body">
                   <strong>Am o afacere</strong>
-                  <small>Vreau agenti AI pentru procese, marketing, lead-uri sau operatiuni.</small>
+                  <small>Vreau workflow-uri AI pentru procese, marketing, lead-uri sau operatiuni.</small>
                 </span>
               </label>
               <label class="plan-choice">
@@ -1939,7 +2265,7 @@
                 <input type="radio" name="access" value="free">
                 <span class="plan-choice-body">
                   <strong>Workshop gratuit</strong>
-                  <small>3 sesiuni live, demo-uri si mini-checklist pentru primul proces.</small>
+                  <small>3 sesiuni live, demo-uri, AI Process Audit Kit si 30 idei de automatizari.</small>
                 </span>
               </label>
               <label class="plan-choice">
@@ -1947,7 +2273,7 @@
                 <span class="plan-choice-body">
                   <strong>VIP Implementation Lab - 100 RON / aprox. 20 EUR</strong>
                   <em>Recomandat</em>
-                  <small>Replay-uri, workbook, hot seats si roadmap pe cazul tau.</small>
+                  <small>Replay-uri, VIP Agent Workbook, locuri limitate pentru hot seats si roadmap pe cazul tau.</small>
                 </span>
               </label>
             </div>
@@ -2004,17 +2330,17 @@
       <div class="container">
         <div class="section-heading">
           <span class="section-kicker">Intrebari frecvente</span>
-          <h2 id="faq-title">Intrebarile care apar inainte sa intri in lumea agentilor AI.</h2>
+          <h2 id="faq-title">Intrebarile care apar inainte sa pui AI-ul in businessul tau.</h2>
         </div>
 
         <div class="faq-grid">
           <article class="faq-item">
             <h3>Trebuie sa stiu programare?</h3>
-            <p>Nu. Workshopul este construit pentru oameni non-tehnici. Cand apar Claude Desktop, browser agent, MCP sau multi-agent, le explicam prin demo-uri si cazuri concrete.</p>
+            <p>Nu. Workshopul este construit pentru owneri si oameni non-tehnici. Cand apar Claude Desktop, skills, agenti specializati sau orchestrator, le explicam prin procese concrete de business.</p>
           </article>
           <article class="faq-item">
             <h3>Daca folosesc AI doar ocazional?</h3>
-            <p>Este suficient. Pornim de la diferenta dintre chat, workflow si agent, apoi urcam spre agent cu browser si echipa multi-agent.</p>
+            <p>Este suficient. Pornim de la diferenta dintre chat si workflow, apoi urcam spre skills, agent specializat si orchestrator, in ritm ghidat.</p>
           </article>
           <article class="faq-item">
             <h3>Daca nu am business?</h3>
@@ -2026,7 +2352,11 @@
           </article>
           <article class="faq-item">
             <h3>De ce sa aleg VIP daca pot intra gratuit?</h3>
-            <p>Gratuit vezi sesiunile live si demo-urile. VIP adauga replay-uri, workbook, Implementation Lab, hot seats si roadmap pe cazul tau.</p>
+            <p>Gratuit vezi sesiunile live, demo-urile si primesti bonusul de audit. VIP adauga replay-uri, workbook, Implementation Lab, hot seats si roadmap pe cazul tau.</p>
+          </article>
+          <article class="faq-item">
+            <h3>Sunt studiile de caz rezultate garantate?</h3>
+            <p>Nu. Sunt scenarii demonstrative si estimari orientative, folosite ca sa vezi logica de ROI. Nu promitem venituri garantate si nu inventam testimoniale.</p>
           </article>
           <article class="faq-item">
             <h3>Trebuie sa am deja o idee de agent AI?</h3>
@@ -2038,7 +2368,7 @@
           </article>
           <article class="faq-item">
             <h3>Este ca workshopurile cu promisiuni de autopilot?</h3>
-            <p>Nu vindem ideea ca automatizezi tot peste noapte. Vezi agenti AI spectaculosi, dar ii construim cu reguli, verificare si aplicare realista.</p>
+            <p>Nu vindem ideea ca automatizezi tot peste noapte. Vezi ce e posibil, dar construim cu reguli, verificare, limite si aplicare realista.</p>
           </article>
         </div>
       </div>
@@ -2360,7 +2690,7 @@
 
       setNextStep({
         title: "Locul prioritar gratuit este salvat.",
-        text: "Vei primi linkul si reminderul pe email si WhatsApp. Daca vrei replay-uri, workbook si lab pe cazul tau, poti face upgrade la VIP.",
+        text: "Vei primi linkul, reminderul si bonusul AI Process Audit Kit. Daca vrei replay-uri, workbook si lab pe cazul tau, poti face upgrade la VIP.",
         actions: `
           <button class="btn btn-primary" type="button" data-upgrade-vip>Fa upgrade la VIP - 100 RON</button>
           <button class="btn btn-secondary" type="button" data-open-onboarding>Completeaza onboardingul</button>
@@ -2370,11 +2700,11 @@
 
     const showVipNextStep = (payload, checkoutUrl) => {
       if (checkoutUrl) {
-        setNextStep({
-          title: "Te trimitem catre plata VIP.",
-          text: "Am salvat datele tale. Dupa plata de 100 RON, aproximativ 20 EUR, revii la onboardingul pentru cazul tau.",
-          actions: `<a class="btn btn-primary" href="${checkoutUrl}">Continua la plata VIP - 100 RON</a>`
-        });
+      setNextStep({
+        title: "Te trimitem catre plata VIP.",
+        text: "Am salvat datele tale. Dupa plata de 100 RON, aproximativ 20 EUR, revii la bonus si onboardingul pentru cazul tau.",
+        actions: `<a class="btn btn-primary" href="${checkoutUrl}">Continua la plata VIP - 100 RON</a>`
+      });
         window.setTimeout(() => {
           window.location.href = checkoutUrl;
         }, 250);
@@ -2383,7 +2713,7 @@
 
       setNextStep({
         title: "Cererea VIP este salvata.",
-        text: "Plata VIP se activeaza dupa ce conectam Stripe pe SRL. Pana atunci, avem datele tale si te putem contacta manual pentru confirmare.",
+        text: "Plata VIP se activeaza dupa ce conectam Stripe pe SRL. Pana atunci, avem datele tale, bonusul ramane disponibil si te putem contacta manual pentru confirmare.",
         actions: `
           <button class="btn btn-primary" type="button" data-open-onboarding>Completeaza onboardingul VIP</button>
           <button class="btn btn-secondary" type="button" data-switch-free>Schimba pe gratuit</button>
@@ -2594,7 +2924,12 @@
     };
 
     initConsentMode();
-    updatePlanCopy();
+    const initialPlan = getQueryParams().plan;
+    if (initialPlan === "free" || initialPlan === "vip") {
+      setSelectedPlan(initialPlan);
+    } else {
+      updatePlanCopy();
+    }
     loadPublicConfig().then(() => {
       renderTurnstileWidgets();
       initCookieBanner();
@@ -2658,7 +2993,7 @@
       });
 
       nodes.forEach((node, index) => {
-        if (width < 720) {
+        if (width < 720 || node.x < 0.56) {
           return;
         }
 

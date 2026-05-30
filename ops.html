@@ -95,19 +95,103 @@
       font-size: 0.82rem;
     }
 
-    .layout {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 320px;
-      gap: 18px;
-      align-items: start;
-    }
-
     .panel {
       border: 1px solid var(--line);
       border-radius: 8px;
       padding: 20px;
       background: rgba(255, 255, 255, 0.68);
       box-shadow: var(--shadow);
+    }
+
+    .section-stack {
+      display: grid;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .with-help {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .help-dot {
+      position: relative;
+      width: 20px;
+      height: 20px;
+      min-width: 20px;
+      flex: 0 0 20px;
+      box-sizing: border-box;
+      display: inline-block;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.82);
+      font-size: 0;
+      font-weight: 900;
+      line-height: 1;
+      cursor: help;
+      vertical-align: middle;
+    }
+
+    .help-mark {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      color: var(--muted);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1;
+      transform: translate(-50%, -50%);
+    }
+
+    .help-dot[data-tooltip]::before,
+    .help-dot[data-tooltip]::after {
+      position: absolute;
+      left: 50%;
+      pointer-events: none;
+      opacity: 0;
+      transform: translate(-50%, 6px);
+      transition: opacity 120ms ease, transform 120ms ease;
+      z-index: 20;
+    }
+
+    .help-dot[data-tooltip]::before {
+      content: "";
+      top: calc(100% + 6px);
+      border: 7px solid transparent;
+      border-bottom-color: var(--ink);
+    }
+
+    .help-dot[data-tooltip]::after {
+      content: attr(data-tooltip);
+      top: calc(100% + 19px);
+      width: max-content;
+      max-width: min(320px, calc(100vw - 48px));
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: var(--white);
+      background: var(--ink);
+      box-shadow: var(--shadow);
+      font-size: 0.84rem;
+      font-weight: 800;
+      line-height: 1.35;
+      white-space: normal;
+      text-align: left;
+    }
+
+    .help-dot[data-tooltip]:hover::before,
+    .help-dot[data-tooltip]:hover::after,
+    .help-dot[data-tooltip]:focus::before,
+    .help-dot[data-tooltip]:focus::after {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    .help-dot:focus-visible {
+      outline: 2px solid var(--teal);
+      outline-offset: 2px;
     }
 
     .token-row {
@@ -135,6 +219,117 @@
       resize: vertical;
     }
 
+    select.native-select-hidden {
+      position: absolute;
+      width: 1px;
+      min-height: 1px;
+      height: 1px;
+      margin: 0;
+      padding: 0;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .ops-select {
+      position: relative;
+      width: 100%;
+    }
+
+    .ops-select-button {
+      position: relative;
+      width: 100%;
+      min-height: 44px;
+      display: block;
+      border-color: var(--line);
+      padding: 0 38px 0 12px;
+      color: var(--ink);
+      background: var(--white);
+      font-weight: 800;
+      line-height: 42px;
+      overflow: hidden;
+      text-align: left;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .ops-select-button .ops-select-label {
+      overflow: hidden;
+      display: block;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .ops-select-button::after {
+      content: "";
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      width: 8px;
+      height: 8px;
+      border-right: 2px solid var(--muted);
+      border-bottom: 2px solid var(--muted);
+      transform: translateY(-65%) rotate(45deg);
+    }
+
+    .ops-select-button:disabled {
+      cursor: not-allowed;
+      opacity: 0.58;
+    }
+
+    .ops-select-menu {
+      position: absolute;
+      z-index: 70;
+      top: calc(100% + 5px);
+      left: 0;
+      right: 0;
+      display: none;
+      max-height: 260px;
+      overflow-y: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 6px;
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .ops-select.is-open .ops-select-menu {
+      display: grid;
+      gap: 4px;
+    }
+
+    .ops-select-option {
+      border-radius: 6px;
+      padding: 9px 10px;
+      color: var(--ink);
+      font-weight: 800;
+      line-height: 1.25;
+      cursor: pointer;
+    }
+
+    .ops-select-option span,
+    .ops-select-option small {
+      display: block;
+    }
+
+    .ops-select-option small {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .ops-select-option:hover,
+    .ops-select-option.is-selected {
+      color: var(--white);
+      background: var(--teal);
+    }
+
+    .ops-select-option:hover small,
+    .ops-select-option.is-selected small {
+      color: rgba(255, 255, 255, 0.82);
+    }
+
     button,
     .btn {
       min-height: 44px;
@@ -160,14 +355,48 @@
     }
 
     .export-grid,
-    .status-grid {
+    .status-grid,
+    .summary-grid,
+    .warning-list {
       display: grid;
       gap: 10px;
     }
 
     .export-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       margin-top: 14px;
+    }
+
+    .status-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .summary-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-top: 14px;
+    }
+
+    .summary-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.74);
+    }
+
+    .summary-card strong {
+      display: block;
+      font-size: 1.6rem;
+      line-height: 1.1;
+    }
+
+    .summary-card span,
+    .summary-card small {
+      display: block;
+      color: var(--muted);
+    }
+
+    .summary-card .with-help {
+      display: inline-flex;
     }
 
     .status-item {
@@ -175,14 +404,16 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      border-bottom: 1px solid var(--line);
-      padding: 10px 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.62);
       color: var(--muted);
       font-size: 0.95rem;
     }
 
-    .status-item:last-child {
-      border-bottom: 0;
+    .status-item[title] {
+      cursor: help;
     }
 
     .pill {
@@ -199,6 +430,10 @@
       background: var(--green);
     }
 
+    .pill.is-warning {
+      background: var(--coral);
+    }
+
     .note {
       min-height: 24px;
       margin: 12px 0 0;
@@ -207,15 +442,55 @@
     }
 
     .whatsapp-toolbar,
+    .sms-toolbar,
     .message-grid {
       display: grid;
       gap: 10px;
     }
 
     .whatsapp-toolbar {
-      grid-template-columns: minmax(0, 1fr) auto auto;
-      align-items: end;
+      grid-template-columns: minmax(180px, 1.4fr) minmax(180px, 1.3fr) minmax(120px, 0.8fr) minmax(140px, 0.9fr);
+      align-items: start;
       margin-top: 14px;
+    }
+
+    .sms-toolbar {
+      grid-template-columns: minmax(150px, 1fr) minmax(150px, 1fr) auto auto;
+      align-items: start;
+      margin-top: 14px;
+    }
+
+    #loadWhatsappQueue {
+      grid-column: 1;
+    }
+
+    #copyGroupMessage {
+      grid-column: 2;
+    }
+
+    .select-explainer {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .select-explainer div {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px 10px;
+      background: rgba(255, 255, 255, 0.62);
+      color: var(--muted);
+      font-size: 0.86rem;
+      line-height: 1.35;
+    }
+
+    .select-explainer strong {
+      display: block;
+      margin-bottom: 2px;
+      color: var(--ink);
+      font-size: 0.78rem;
+      text-transform: uppercase;
     }
 
     .message-grid {
@@ -229,22 +504,85 @@
       margin-top: 14px;
     }
 
+    .active-reminder-card,
     .reminder-card {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) auto auto auto;
       gap: 10px;
-      align-items: center;
       border: 1px solid var(--line);
       border-radius: 8px;
       padding: 12px;
       background: rgba(255, 255, 255, 0.74);
     }
 
+    .active-reminder-card {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: start;
+      border-color: rgba(47, 125, 122, 0.45);
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .reminder-card {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+    }
+
+    .active-reminder-card .message-preview {
+      grid-column: 1 / -1;
+      margin: 0;
+    }
+
+    .recipient-label {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .recipient-name {
+      margin-top: 2px;
+      font-size: 1.18rem;
+      line-height: 1.2;
+    }
+
+    .recipient-phone {
+      width: fit-content;
+      margin-top: 6px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 3px 8px;
+      color: var(--ink);
+      background: var(--white);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 0.86rem;
+      font-weight: 900;
+    }
+
+    .recipient-meta {
+      margin-top: 6px;
+    }
+
+    .queue-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    .queue-heading {
+      margin: 16px 0 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 900;
+    }
+
     .reminder-card strong,
+    .active-reminder-card strong,
+    .active-reminder-card small,
     .reminder-card small {
       display: block;
     }
 
+    .active-reminder-card small,
     .reminder-card small {
       color: var(--muted);
     }
@@ -269,6 +607,12 @@
       grid-template-columns: 160px minmax(0, 1fr);
       gap: 10px;
       align-items: end;
+    }
+
+    .placeholder-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
     }
 
     .field-label {
@@ -319,15 +663,19 @@
 
     @media (max-width: 780px) {
       .topbar,
-      .layout,
       .token-row,
       .export-grid,
-      .whatsapp-toolbar,
-      .message-grid,
-      .live-row,
-      .reminder-card {
-        grid-template-columns: 1fr;
-      }
+      .status-grid,
+	      .summary-grid,
+	      .whatsapp-toolbar,
+	      .sms-toolbar,
+	      .message-grid,
+	      .live-row,
+	      .placeholder-grid,
+	      .active-reminder-card,
+	      .reminder-card {
+	        grid-template-columns: 1fr;
+	      }
 
       .topbar {
         align-items: flex-start;
@@ -348,70 +696,45 @@
     </div>
 
     <section class="panel" aria-labelledby="title">
-      <h1 id="title">Ops dashboard</h1>
-      <p>Exporturi CSV, status de configurare si WhatsApp console pentru funnel. Local, tokenul poate sta server-side in <code>.dev.vars.local</code>, fara sa fie afisat in browser.</p>
+      <h1 id="title" class="with-help">Cockpit webinar <span class="help-dot" tabindex="0" data-tooltip="Rezumat operational pentru inscrieri, plati, onboarding si follow-up."><span class="help-mark" aria-hidden="true">?</span></span></h1>
+      <p id="opsHealth">Se incarca statusul local si remote...</p>
+      <div class="summary-grid" id="summaryGrid" aria-label="Rezumat operational">
+        <p>Se incarca...</p>
+      </div>
     </section>
 
-    <div class="layout" style="margin-top: 18px;">
-      <section class="panel" aria-labelledby="exports-title">
-        <h2 id="exports-title">Export CSV</h2>
-        <div class="token-row">
-          <input id="adminToken" type="password" autocomplete="off" placeholder="ADMIN_EXPORT_TOKEN">
-          <button type="button" id="toggleToken">Arata</button>
-        </div>
-        <div class="export-grid" id="exportGrid">
-          <button type="button" data-export="leads">Leads</button>
-          <button type="button" data-export="onboarding">Onboarding</button>
-          <button type="button" data-export="payments">Payments</button>
-          <button type="button" data-export="reminders">Reminders</button>
-        </div>
-        <p class="note" id="exportNote" aria-live="polite"></p>
-      </section>
-
-      <aside class="panel" aria-labelledby="status-title">
-        <h2 id="status-title">Status live</h2>
-        <div class="status-grid" id="statusGrid">
-          <p>Se incarca...</p>
-        </div>
-      </aside>
-    </div>
+    <section class="panel" style="margin-top: 18px;" aria-labelledby="warnings-title">
+      <h2 id="warnings-title" class="with-help">Warnings <span class="help-dot" tabindex="0" data-tooltip="Lista problemelor reale detectate din config/local status/summary. Nu include secrete sau URL-uri sensibile."><span class="help-mark" aria-hidden="true">?</span></span></h2>
+      <div class="warning-list" id="opsWarnings">
+        <p>Se incarca...</p>
+      </div>
+    </section>
 
     <section class="panel" style="margin-top: 18px;" aria-labelledby="whatsapp-title">
-      <h2 id="whatsapp-title">WhatsApp console</h2>
-      <p>Control local pentru grupurile Free/VIP prin WhatsApp Desktop. Mesajele aprobate pot fi puse in preview sau trimise direct.</p>
+      <h2 id="whatsapp-title" class="with-help">WhatsApp console <span class="help-dot" tabindex="0" data-tooltip="Zona pentru mesaje de grup prin WhatsApp Web. Preview pune draft, Send trimite direct."><span class="help-mark" aria-hidden="true">?</span></span></h2>
+      <p>Control local pentru grupurile Free/VIP prin WhatsApp Web. Mesajele aprobate pot fi puse in preview sau trimise direct.</p>
 
       <div class="live-cockpit" aria-label="WhatsApp live cockpit">
         <div class="live-row">
           <label class="field-label" for="webinarWhatsappTarget">
-            Grup
-            <select id="webinarWhatsappTarget">
-              <option value="free">Free</option>
-              <option value="vip">VIP</option>
-              <option value="both">Both</option>
-            </select>
+            <span class="with-help">Grup <span class="help-dot" tabindex="0" data-tooltip="Alege grupul tinta. Both trimite intai in Free si apoi in VIP."><span class="help-mark" aria-hidden="true">?</span></span></span>
+            <select id="webinarWhatsappTarget"></select>
           </label>
 
           <label class="field-label" for="webinarWhatsappTemplate">
-            Mesaj aprobat
-            <select id="webinarWhatsappTemplate">
-              <option value="tMinus10">T-10 minute</option>
-              <option value="liveNow">Suntem live</option>
-              <option value="practice">Partea practica</option>
-              <option value="qa">Q&A</option>
-              <option value="offer">Oferta / pas urmator</option>
-              <option value="final">Final + replay</option>
-              <option value="delay">Intarziere tehnica</option>
-              <option value="custom">Custom</option>
-            </select>
+            <span class="with-help">Mesaj aprobat <span class="help-dot" tabindex="0" data-tooltip="Template verificat pentru momentul din webinar. Textul poate fi editat inainte de trimitere."><span class="help-mark" aria-hidden="true">?</span></span></span>
+            <select id="webinarWhatsappTemplate"></select>
           </label>
         </div>
 
-        <textarea id="webinarWhatsappMessage" aria-label="Mesaj grup WhatsApp"></textarea>
+        <div class="placeholder-grid" id="placeholderGrid" aria-label="Setari placeholder WhatsApp"></div>
+
+        <textarea id="webinarWhatsappMessage" aria-label="Mesaj grup WhatsApp" title="Textul final care va fi pus ca draft sau trimis. Placeholderii se rezolva din campurile de mai sus."></textarea>
 
         <div class="live-actions">
-          <button type="button" id="webinarWhatsappPreview" class="btn-secondary">Preview</button>
-          <button type="button" id="webinarWhatsappSend" class="btn-danger">Send</button>
-          <button type="button" id="webinarWhatsappCopy" class="btn-secondary">Copiaza</button>
+          <button type="button" id="webinarWhatsappPreview" class="btn-secondary" title="Deschide grupul in WhatsApp Web si lasa mesajul ca draft, fara sa trimita.">Preview</button>
+          <button type="button" id="webinarWhatsappSend" class="btn-danger" title="Trimite mesajul direct in WhatsApp Web. Pentru Both merge secvential: Free, apoi VIP.">Send</button>
+          <button type="button" id="webinarWhatsappCopy" class="btn-secondary" title="Copiaza mesajul final cu placeholderii completati.">Copiaza</button>
         </div>
 
         <p class="note" id="webinarWhatsappNote" aria-live="polite"></p>
@@ -420,41 +743,97 @@
 
       <div class="divider"></div>
 
-      <h3>WhatsApp 1-la-1</h3>
-      <p>Zona de mai jos ramane pentru mesaje individuale prin <code>wa.me</code>, pe baza queue-ului de remindere.</p>
+      <h3 class="with-help">WhatsApp 1-la-1 <span class="help-dot" tabindex="0" data-tooltip="Queue asistat pentru mesaje individuale. Send next trimite direct prin WhatsApp Web, cate un contact pe rand."><span class="help-mark" aria-hidden="true">?</span></span></h3>
+      <p>Flow cu contact activ: verifici mesajul, apoi <code>Send next</code> trimite direct prin WhatsApp Web si marcheaza taskul ca trimis.</p>
 
       <div class="whatsapp-toolbar">
-        <select id="whatsappTemplate" aria-label="Template WhatsApp">
-          <option value="dayBefore">Reminder cu o zi inainte</option>
-          <option value="sameDay">Reminder in ziua workshopului</option>
-          <option value="vipNudge">Nudge VIP</option>
-          <option value="custom">Mesaj custom</option>
+        <select id="whatsappQueueMode" aria-label="Mod queue WhatsApp">
+          <option value="reminders" data-help="Foloseste taskurile reale din reminders. Send next trimite mesajul si marcheaza taskul ca trimis.">Remindere webinar</option>
+          <option value="onboarding" data-help="Gaseste inscrierile fara onboarding completat. La Send next creeaza/reutilizeaza reminderul, apoi trimite mesajul.">Invita onboarding</option>
         </select>
-        <button type="button" id="loadWhatsappQueue">Incarca queue</button>
-        <button type="button" id="copyGroupMessage" class="btn-secondary">Copiaza mesaj grup</button>
+        <select id="whatsappTemplate" aria-label="Template WhatsApp" title="Template-ul folosit pentru mesajele individuale din queue."></select>
+        <select id="whatsappAccessFilter" aria-label="Filtru acces" title="Filtreaza queue-ul dupa tipul de acces al leadului.">
+          <option value="all" data-help="Include toate persoanele eligibile, indiferent daca sunt Free sau VIP.">Toate</option>
+          <option value="free" data-help="Arata doar persoanele cu access=free. Bun pentru comunicare generala.">Free</option>
+          <option value="vip" data-help="Arata doar persoanele cu access=vip. Bun pentru comunicare aplicata sau prioritara.">VIP</option>
+        </select>
+        <select id="whatsappStatusFilter" aria-label="Filtru status" title="Filtreaza dupa statusul operational al reminderului.">
+          <option value="all" data-help="Arata toate taskurile WhatsApp, inclusiv cele deja trimise. Folosit mai mult pentru audit/verificare.">Orice status</option>
+          <option value="de_trimis" data-help="Arata doar taskurile inca netrimise. Acesta este filtrul normal pentru operare.">De trimis</option>
+          <option value="trimis" data-help="Arata taskurile marcate ca trimise. Util pentru verificari, nu pentru trimitere curenta.">Trimis</option>
+        </select>
+        <button type="button" id="loadWhatsappQueue" title="Incarca reminderele reale din exportul reminders si le filtreaza pentru WhatsApp.">Incarca queue</button>
+	        <button type="button" id="copyGroupMessage" class="btn-secondary" title="Copiaza preview-ul template-ului 1-la-1, util pentru verificare rapida.">Copiaza preview</button>
       </div>
+      <div class="select-explainer" id="whatsappSelectExplainer" aria-live="polite"></div>
 
       <div class="message-grid">
-        <textarea id="customWhatsappMessage" placeholder="Mesaj custom. Poti folosi {name}, {access}, {persona}."></textarea>
-        <div class="message-preview" id="groupMessagePreview"></div>
+        <textarea id="customWhatsappMessage" placeholder="Mesaj custom. Poti folosi {name}, {access}, {persona}." title="Mesaj custom pentru 1-la-1. Se aplica doar daca alegi template-ul custom."></textarea>
+        <div class="message-preview" id="groupMessagePreview" title="Preview pentru mesajul 1-la-1, cu exemple de placeholderi completati."></div>
       </div>
 
       <p class="note" id="whatsappNote" aria-live="polite"></p>
       <div class="reminder-list" id="whatsappQueue"></div>
     </section>
 
-    <section class="panel" style="margin-top: 18px;" aria-labelledby="next-title">
-      <h2 id="next-title">Urmatoarele setari</h2>
-      <p>Stripe: seteaza Payment Link URL, Payment Link ID, Secret Key si Webhook Secret. WhatsApp Cloud API poate fi adaugat ulterior pentru mesaje 1-la-1 cu template-uri aprobate. Privacy: completeaza datele firmei inainte de ads.</p>
-      <p>Export rapid: endpointul <code>/api/export?type=leads</code> accepta tokenul prin header <code>Authorization: Bearer</code>.</p>
+    <section class="panel" style="margin-top: 18px;" aria-labelledby="sms-title">
+      <h2 id="sms-title" class="with-help">SMS Gateway <span class="help-dot" tabindex="0" data-tooltip="Queue local pentru taskurile reminders cu channel=sms. Trimite prin telefonul Android configurat in .dev.vars.local sau .env.local."><span class="help-mark" aria-hidden="true">?</span></span></h2>
+      <p>Control local pentru remindere SMS. <code>Send SMS</code> trimite prin gateway-ul Android si marcheaza taskul ca trimis numai dupa raspunsul local.</p>
+
+      <div class="sms-toolbar">
+        <select id="smsAccessFilter" aria-label="Filtru acces SMS" title="Filtreaza queue-ul SMS dupa tipul de acces al leadului.">
+          <option value="all" data-help="Include toate persoanele eligibile, indiferent daca sunt Free sau VIP.">Toate</option>
+          <option value="free" data-help="Arata doar persoanele cu access=free.">Free</option>
+          <option value="vip" data-help="Arata doar persoanele cu access=vip.">VIP</option>
+        </select>
+        <select id="smsStatusFilter" aria-label="Filtru status SMS" title="Filtreaza dupa statusul operational al reminderului SMS.">
+          <option value="all" data-help="Arata toate taskurile SMS, inclusiv cele deja trimise.">Orice status</option>
+          <option value="de_trimis" data-help="Arata doar taskurile SMS inca netrimise.">De trimis</option>
+          <option value="trimis" data-help="Arata taskurile SMS marcate ca trimise.">Trimis</option>
+        </select>
+        <button type="button" id="loadSmsQueue" title="Incarca reminderele reale din exportul reminders si le filtreaza pentru SMS.">Incarca SMS</button>
+        <button type="button" id="checkSmsGateway" class="btn-secondary" title="Verifica daca gateway-ul SMS local raspunde pe reteaua locala.">Verifica gateway</button>
+      </div>
+
+      <p class="note" id="smsNote" aria-live="polite"></p>
+      <div class="reminder-list" id="smsQueue"></div>
     </section>
+
+    <div class="section-stack">
+      <section class="panel" aria-labelledby="exports-title">
+        <h2 id="exports-title" class="with-help">Export CSV <span class="help-dot" tabindex="0" data-tooltip="Descarca date reale din sistem. Pentru date personale este nevoie de ADMIN_EXPORT_TOKEN."><span class="help-mark" aria-hidden="true">?</span></span></h2>
+        <div class="token-row">
+          <input id="adminToken" type="password" autocomplete="off" placeholder="ADMIN_EXPORT_TOKEN" title="Tokenul admin pentru exporturi si agregate. Daca este setat local in server, campul ramane dezactivat.">
+          <button type="button" id="toggleToken" title="Arata sau ascunde tokenul introdus manual.">Arata</button>
+        </div>
+        <div class="export-grid" id="exportGrid">
+          <p>Se incarca...</p>
+        </div>
+        <p class="note" id="exportNote" aria-live="polite"></p>
+      </section>
+
+      <section class="panel" aria-labelledby="status-title">
+        <h2 id="status-title" class="with-help">Status live <span class="help-dot" tabindex="0" data-tooltip="Verificari non-sensibile despre configuratia publica, serverul local si driverul WhatsApp."><span class="help-mark" aria-hidden="true">?</span></span></h2>
+        <div class="status-grid" id="statusGrid">
+          <p>Se incarca...</p>
+        </div>
+      </section>
+    </div>
   </main>
 
   <script>
+    const settingsEndpoint = "/ops-settings.json";
     const configEndpoint = "/api/config";
     const exportEndpoint = "/api/export";
+    const summaryEndpoint = "/api/ops-summary";
     const localStatusEndpoint = "/api/local-ops-status";
-    const whatsappDesktopEndpoint = "/api/whatsapp-desktop";
+    const whatsappWebEndpoint = "/api/whatsapp-web";
+    const whatsappOneToOneEndpoint = "/api/whatsapp-1to1";
+    const smsGatewayEndpoint = "/api/sms-gateway";
+    const opsRemindersEndpoint = "/api/ops-reminders";
+
+    const opsHealth = document.querySelector("#opsHealth");
+    const summaryGrid = document.querySelector("#summaryGrid");
     const tokenInput = document.querySelector("#adminToken");
     const toggleToken = document.querySelector("#toggleToken");
     const exportGrid = document.querySelector("#exportGrid");
@@ -462,71 +841,660 @@
     const statusGrid = document.querySelector("#statusGrid");
     const webinarWhatsappTarget = document.querySelector("#webinarWhatsappTarget");
     const webinarWhatsappTemplate = document.querySelector("#webinarWhatsappTemplate");
+    const placeholderGrid = document.querySelector("#placeholderGrid");
     const webinarWhatsappMessage = document.querySelector("#webinarWhatsappMessage");
     const webinarWhatsappPreview = document.querySelector("#webinarWhatsappPreview");
     const webinarWhatsappSend = document.querySelector("#webinarWhatsappSend");
     const webinarWhatsappCopy = document.querySelector("#webinarWhatsappCopy");
     const webinarWhatsappNote = document.querySelector("#webinarWhatsappNote");
     const webinarWhatsappLog = document.querySelector("#webinarWhatsappLog");
+    const whatsappQueueMode = document.querySelector("#whatsappQueueMode");
     const whatsappTemplate = document.querySelector("#whatsappTemplate");
+    const whatsappAccessFilter = document.querySelector("#whatsappAccessFilter");
+    const whatsappStatusFilter = document.querySelector("#whatsappStatusFilter");
     const customWhatsappMessage = document.querySelector("#customWhatsappMessage");
     const loadWhatsappQueue = document.querySelector("#loadWhatsappQueue");
     const copyGroupMessage = document.querySelector("#copyGroupMessage");
+    const whatsappSelectExplainer = document.querySelector("#whatsappSelectExplainer");
     const groupMessagePreview = document.querySelector("#groupMessagePreview");
     const whatsappNote = document.querySelector("#whatsappNote");
     const whatsappQueue = document.querySelector("#whatsappQueue");
+    const smsAccessFilter = document.querySelector("#smsAccessFilter");
+    const smsStatusFilter = document.querySelector("#smsStatusFilter");
+    const loadSmsQueue = document.querySelector("#loadSmsQueue");
+    const checkSmsGateway = document.querySelector("#checkSmsGateway");
+    const smsNote = document.querySelector("#smsNote");
+    const smsQueue = document.querySelector("#smsQueue");
+    const opsWarnings = document.querySelector("#opsWarnings");
+
     let serverSideTokenConfigured = false;
+    let opsSettings = { exports: [], whatsapp: { targets: [], placeholders: [], groupTemplates: [], oneToOneTemplates: [] } };
+    let appConfig = {};
+    let localOpsStatus = {};
+    let opsSummary = null;
+    let whatsappRows = [];
+    let whatsappLeads = [];
+    let whatsappOnboardingRows = [];
+    let smsRows = [];
+    let activeWhatsappItems = [];
+    let activeSmsItems = [];
+    let whatsappQueueBusy = false;
+    let smsQueueBusy = false;
+    let whatsappCooldownUntil = 0;
+    let smsCooldownUntil = 0;
+    let whatsappCooldownTimer = 0;
+    let smsCooldownTimer = 0;
+    const skippedWhatsappItems = new Set();
+    const skippedSmsItems = new Set();
+    const webinarPlaceholderStorageKey = "aiwebminar.webinarPlaceholders";
 
-    const statusItems = [
-      ["Ops provider", "opsProvider", "cloudflare_d1"],
-      ["D1", "d1Configured", true],
-      ["Stripe link", "stripePaymentLinkConfigured", true],
-      ["Stripe server", "stripeServerConfigured", true],
-      ["VIP gate", "vipGateConfigured", true],
-      ["AI WEBMINAR FREE", "whatsappFreeGroupConfigured", true],
-      ["AI WEBMINAR PRO", "whatsappVipGroupConfigured", true],
-      ["GA4", "ga4MeasurementId", "present"],
-      ["Meta Pixel", "metaPixelId", "present"]
-    ];
+    const escapeHtml = (value) => String(value || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
 
-    const isOk = (value, expected) => {
-      if (expected === "present") return Boolean(value);
-      return value === expected;
+    const escapeAttr = (value) => escapeHtml(value).replace(/'/g, "&#39;");
+
+    const renderHelp = (text) => text
+      ? `<span class="help-dot" tabindex="0" data-tooltip="${escapeAttr(text)}" aria-label="${escapeAttr(text)}"><span class="help-mark" aria-hidden="true">?</span></span>`
+      : "";
+
+    const statusHelp = {
+      "Ops provider": "Unde se salveaza evenimentele operationale. Daca este none, inscrierile/platile nu ajung in backendul ops.",
+      D1: "Baza de date Cloudflare D1. Exporturile si agregatele reale depind de ea.",
+      "Ops webhook": "Webhookul principal care primeste evenimente operationale, de exemplu inscrieri sau onboarding.",
+      "Google webhook": "Conexiunea catre Google/Apps Script pentru operatiuni sau backup in spreadsheet.",
+      "Make fallback": "Ruta de fallback prin Make, folosita daca fluxul principal nu este disponibil.",
+      "Stripe link": "Linkul public de plata Stripe pentru oferta/VIP.",
+      "Stripe server": "Configuratia server-side Stripe, folosita pentru webhookuri si confirmari de plata.",
+      "VIP gate": "Regula/configuratia care decide daca cineva are acces VIP.",
+      "Free group config": "Configuratia publica pentru grupul Free. Statusul spune doar daca exista, nu afiseaza linkul.",
+      "VIP group config": "Configuratia publica pentru grupul VIP. Statusul spune doar daca exista, nu afiseaza linkul.",
+      "Workshop status": "Starea curenta a webinarului, de exemplu tbd, scheduled sau live.",
+      "Workshop live link": "Daca linkul live este configurat. Linkul nu este afisat aici ca sa nu expunem URL-uri sensibile.",
+      Turnstile: "Protectia anti-bot Cloudflare Turnstile pentru formulare.",
+      GA4: "Google Analytics 4 pentru tracking.",
+      "Meta Pixel": "Meta Pixel pentru tracking/retargeting.",
+      "Ops settings": "Fisierul versionat ops-settings.json, de unde vin template-urile si targeturile WhatsApp.",
+      "WhatsApp Web script": "Driverul local CDP care controleaza WhatsApp Web.",
+      "SMS Gateway": "Conexiunea locala catre aplicatia Android SMS Gateway. Statusul arata doar daca URL-ul si auth-ul sunt setate.",
+      "Chrome profile env": "Profilul Chrome folosit pentru WhatsApp Web. Default inseamna profil local neversionat in .local.",
+      "CDP port env": "Portul Chrome DevTools Protocol. Auto inseamna ca serverul alege portul implicit."
     };
 
-    const renderStatus = (config) => {
-      statusGrid.innerHTML = statusItems.map(([label, key, expected]) => {
-        const value = config[key];
-        const ok = isOk(value, expected);
-        const display = typeof value === "boolean" ? (value ? "setat" : "lipsa") : (value || "lipsa");
-        return `
-          <div class="status-item">
-            <span>${label}</span>
-            <span class="pill ${ok ? "is-ok" : ""}">${display}</span>
-          </div>
-        `;
-      }).join("");
+    const summaryHelp = {
+      "Inscrieri": "Total persoane intrate in funnel prin formularul de inscriere. Nu afiseaza nume, emailuri sau telefoane.",
+      "Onboarding completat": "Total persoane care au completat formularul de onboarding.",
+      "Onboarding de invitat": "Inscrieri care nu au completat onboardingul. Le poti trimite reminder, dar nu sunt blocate.",
+      "Plati": "Total inregistrari de plata primite prin Stripe/webhook.",
+      "VIP confirmat": "Total sesiuni Stripe platite si transformate in acces VIP. Este separat de logul brut de evenimente Stripe.",
+      "Taskuri reminder": "Total taskuri generate in queue, nu persoane. Acelasi lead poate avea SMS si WhatsApp.",
+      "WhatsApp 1-la-1 de trimis": "Subset din taskuri: doar channel=whatsapp si status=de_trimis.",
+      "SMS de trimis": "Subset din taskuri: doar channel=sms si status=de_trimis.",
+      Workshop: "Statusul webinarului si daca exista link live configurat."
     };
 
-    const loadStatus = async () => {
-      try {
-        await loadLocalOpsStatus();
-        const response = await fetch(configEndpoint, { headers: { accept: "application/json" } });
-        const config = await response.json();
-        renderStatus(config);
-      } catch (error) {
-        statusGrid.innerHTML = "<p>Nu am putut incarca statusul.</p>";
+    const formatNumber = (value) => Number(value || 0).toLocaleString("ro-RO");
+
+    const formatDate = (value) => {
+      if (!value) return "lipsa";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "invalid";
+      return date.toLocaleString("ro-RO", {
+        day: "2-digit",
+        month: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    };
+
+    const fetchJson = async (url, options = {}) => {
+      const response = await fetch(url, {
+        ...options,
+        headers: {
+          accept: "application/json",
+          ...(options.headers || {})
+        }
+      });
+      const text = await response.text();
+      let payload = {};
+      if (text.trim()) {
+        try {
+          payload = JSON.parse(text);
+        } catch (_) {
+          payload = {
+            ok: false,
+            error: "invalid_json_response",
+            message: text.slice(0, 160)
+          };
+        }
       }
+      if (!response.ok || payload.ok === false) {
+        const error = new Error(payload.message || payload.error || response.statusText || `http_${response.status}`);
+        error.payload = payload;
+        error.status = response.status;
+        throw error;
+      }
+      return payload;
+    };
+
+    const authHeaders = (accept = "text/csv") => {
+      const headers = { accept };
+      const token = tokenInput.value.trim();
+      if (token) {
+        headers.authorization = `Bearer ${token}`;
+      }
+      return headers;
+    };
+
+    const requireTokenOrServerToken = () => {
+      if (serverSideTokenConfigured || tokenInput.value.trim()) return;
+      tokenInput.focus();
+      throw new Error("Introdu ADMIN_EXPORT_TOKEN sau seteaza-l local in .dev.vars.local.");
+    };
+
+    const loadOpsSettings = async () => {
+      opsSettings = await fetchJson(settingsEndpoint);
+    };
+
+    const renderExportButtons = () => {
+      const exports = Array.isArray(opsSettings.exports) ? opsSettings.exports : [];
+      exportGrid.innerHTML = exports.length
+        ? exports.map((item) => `<button type="button" data-export="${escapeAttr(item.type)}" title="${escapeAttr(item.help || `Export CSV pentru ${item.label || item.type}.`)}">${escapeHtml(item.label || item.type)}</button>`).join("")
+        : "<p>Nu exista exporturi configurate.</p>";
+    };
+
+    const renderSelect = (select, items) => {
+      select.innerHTML = items.map((item) => `
+        <option value="${escapeAttr(item.id)}" data-help="${escapeAttr(item.help || "")}" title="${escapeAttr(item.help || "")}">
+          ${escapeHtml(item.label || item.id)}
+        </option>
+      `).join("");
+    };
+
+    const customSelects = new Map();
+
+    const closeCustomSelects = (exceptSelect = null) => {
+      customSelects.forEach(({ wrapper, button }, select) => {
+        if (select === exceptSelect) return;
+        wrapper.classList.remove("is-open");
+        button.setAttribute("aria-expanded", "false");
+      });
+    };
+
+    const syncCustomSelect = (select) => {
+      const state = customSelects.get(select);
+      if (!state) return;
+      const options = Array.from(select.options);
+      const selected = select.selectedOptions[0] || options[0] || null;
+      const selectedLabel = selected ? selected.textContent.trim() : "Alege";
+      const selectedHelp = selected?.dataset.help || selected?.title || "";
+      state.button.innerHTML = `<span class="ops-select-label">${escapeHtml(selectedLabel)}</span>`;
+      state.button.title = selectedHelp || selectedLabel;
+      state.button.setAttribute("aria-label", selectedHelp ? `${selectedLabel}. ${selectedHelp}` : selectedLabel);
+      state.button.disabled = select.disabled;
+      state.menu.innerHTML = "";
+
+      options.forEach((option) => {
+        const item = document.createElement("div");
+        const help = option.dataset.help || option.title || "";
+        item.className = `ops-select-option${option.selected ? " is-selected" : ""}`;
+        item.dataset.value = option.value;
+        item.setAttribute("role", "option");
+        item.setAttribute("aria-selected", option.selected ? "true" : "false");
+        if (help) item.title = help;
+        item.innerHTML = `
+          <span>${escapeHtml(option.textContent.trim())}</span>
+          ${help ? `<small>${escapeHtml(help)}</small>` : ""}
+        `;
+        state.menu.appendChild(item);
+      });
+    };
+
+    const selectRelativeOption = (select, step) => {
+      const options = Array.from(select.options);
+      if (!options.length) return;
+      const currentIndex = Math.max(0, options.findIndex((option) => option.value === select.value));
+      const nextIndex = Math.min(options.length - 1, Math.max(0, currentIndex + step));
+      select.value = options[nextIndex].value;
+      select.dispatchEvent(new Event("change", { bubbles: true }));
+      syncCustomSelect(select);
+    };
+
+    const enhanceSelect = (select) => {
+      if (customSelects.has(select)) {
+        syncCustomSelect(select);
+        return;
+      }
+
+      const wrapper = document.createElement("div");
+      const button = document.createElement("button");
+      const menu = document.createElement("div");
+      const menuId = `${select.id || "ops-select"}-menu`;
+
+      wrapper.className = "ops-select";
+      button.type = "button";
+      button.className = "ops-select-button";
+      button.setAttribute("aria-haspopup", "listbox");
+      button.setAttribute("aria-expanded", "false");
+      button.setAttribute("aria-controls", menuId);
+      button.setAttribute("aria-label", select.getAttribute("aria-label") || select.id || "Alege optiunea");
+      menu.id = menuId;
+      menu.className = "ops-select-menu";
+      menu.setAttribute("role", "listbox");
+
+      select.classList.add("native-select-hidden");
+      select.tabIndex = -1;
+      select.setAttribute("aria-hidden", "true");
+      select.insertAdjacentElement("afterend", wrapper);
+      wrapper.append(button, menu);
+      customSelects.set(select, { wrapper, button, menu });
+
+      button.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        if (select.disabled) return;
+        const isOpen = wrapper.classList.contains("is-open");
+        closeCustomSelects(select);
+        wrapper.classList.toggle("is-open", !isOpen);
+        button.setAttribute("aria-expanded", String(!isOpen));
+      });
+
+      button.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          closeCustomSelects();
+          button.focus();
+          return;
+        }
+        if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+          event.preventDefault();
+          selectRelativeOption(select, event.key === "ArrowDown" ? 1 : -1);
+        }
+      });
+
+      menu.addEventListener("click", (event) => {
+        const option = event.target.closest(".ops-select-option");
+        if (!option) return;
+        select.value = option.dataset.value || "";
+        select.dispatchEvent(new Event("change", { bubbles: true }));
+        closeCustomSelects();
+        syncCustomSelect(select);
+        button.focus();
+      });
+
+      select.addEventListener("change", () => syncCustomSelect(select));
+      syncCustomSelect(select);
+    };
+
+    const enhanceWhatsappSelects = () => {
+      [webinarWhatsappTarget, webinarWhatsappTemplate, whatsappQueueMode, whatsappTemplate, whatsappAccessFilter, whatsappStatusFilter, smsAccessFilter, smsStatusFilter]
+        .forEach(enhanceSelect);
+    };
+
+    document.addEventListener("click", () => closeCustomSelects());
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeCustomSelects();
+    });
+
+    const renderWhatsappControls = () => {
+      const whatsapp = opsSettings.whatsapp || {};
+      renderSelect(webinarWhatsappTarget, whatsapp.targets || []);
+      renderSelect(webinarWhatsappTemplate, whatsapp.groupTemplates || []);
+      renderSelect(whatsappTemplate, whatsapp.oneToOneTemplates || []);
+      enhanceWhatsappSelects();
+
+      placeholderGrid.innerHTML = (whatsapp.placeholders || []).map((item) => `
+        <label class="field-label" for="placeholder-${escapeAttr(item.key)}">
+          <span class="with-help">${escapeHtml(item.label || item.key)} ${renderHelp(item.help)}</span>
+          <input id="placeholder-${escapeAttr(item.key)}" data-placeholder-key="${escapeAttr(item.key)}" data-placeholder-default="${escapeAttr(item.default || "")}" type="${escapeAttr(item.type || "text")}" autocomplete="off" placeholder="{${escapeAttr(item.key)}}" title="${escapeAttr(item.help || `Valoarea pentru {${item.key}}.`)}">
+        </label>
+      `).join("");
+    };
+
+    const placeholderInputs = () => Array.from(document.querySelectorAll("[data-placeholder-key]"));
+
+    const loadWebinarPlaceholders = () => {
+      try {
+        const values = JSON.parse(localStorage.getItem(webinarPlaceholderStorageKey) || "{}");
+        return values && typeof values === "object" ? values : {};
+      } catch (_) {
+        return {};
+      }
+    };
+
+    const saveWebinarPlaceholders = () => {
+      const values = Object.fromEntries(placeholderInputs().map((input) => [input.dataset.placeholderKey, input.value.trim()]));
+      try {
+        localStorage.setItem(webinarPlaceholderStorageKey, JSON.stringify(values));
+      } catch (_) {
+        // Ops ramane functional si daca browserul blocheaza localStorage.
+      }
+      return values;
+    };
+
+    const currentWebinarPlaceholders = () => Object.fromEntries(
+      placeholderInputs().map((input) => [input.dataset.placeholderKey, input.value.trim()])
+    );
+
+    const hydrateWebinarPlaceholders = () => {
+      const saved = loadWebinarPlaceholders();
+      placeholderInputs().forEach((input) => {
+        input.value = Object.hasOwn(saved, input.dataset.placeholderKey)
+          ? saved[input.dataset.placeholderKey]
+          : input.dataset.placeholderDefault || "";
+      });
+    };
+
+    const applyWebinarPlaceholders = (message) => {
+      const values = currentWebinarPlaceholders();
+      return Object.entries(values).reduce((text, [key, value]) => {
+        if (!value) return text;
+        return text.replaceAll(`{${key}}`, value);
+      }, message || "");
+    };
+
+    const applyTemplate = (template, row = {}) => String(template || "")
+      .replaceAll("{name}", row.name || "Salut")
+      .replaceAll("{first_name}", firstName(row.name))
+      .replaceAll("{access}", row.access || "")
+      .replaceAll("{persona}", row.persona || "")
+      .replaceAll("{onboarding_link}", row.onboarding_link || "");
+
+    const firstName = (name) => String(name || "").trim().split(/\s+/)[0] || "Salut";
+
+    const formatPhoneForDisplay = (phone) => {
+      const digits = normalizeWhatsAppNumber(phone);
+      if (!digits) return String(phone || "");
+      if (digits.startsWith("40") && digits.length === 11) {
+        return `+40 ${digits.slice(2, 5)} ${digits.slice(5, 8)} ${digits.slice(8)}`;
+      }
+      return `+${digits}`;
+    };
+
+    const whatsappRowKey = (row = {}) => {
+      const id = String(row.id || "").trim();
+      if (id) return `id:${id}`;
+      return `lead:${String(row.lead_id || "").trim() || normalizeWhatsAppNumber(row.phone)}`;
+    };
+
+    const smsRowKey = (row = {}) => {
+      const id = String(row.id || "").trim();
+      if (id) return `id:${id}`;
+      return `lead:${String(row.lead_id || "").trim() || normalizeWhatsAppNumber(row.phone)}`;
+    };
+
+    const oneToOneTemplate = () => {
+      const templates = opsSettings.whatsapp?.oneToOneTemplates || [];
+      return templates.find((item) => item.id === whatsappTemplate.value) || templates[0] || { message: "" };
+    };
+
+    const selectedConfigItem = (items, id) => (items || []).find((item) => item.id === id) || null;
+
+    const selectedOptionHelp = (select) => {
+      const option = select.selectedOptions[0];
+      return {
+        label: option?.textContent.trim() || "",
+        help: option?.dataset.help || option?.title || ""
+      };
+    };
+
+    const renderWhatsappSelectExplainer = () => {
+      const rows = [
+        ["Queue", selectedOptionHelp(whatsappQueueMode)],
+        ["Template", selectedOptionHelp(whatsappTemplate)],
+        ["Access", selectedOptionHelp(whatsappAccessFilter)],
+        ["Status", selectedOptionHelp(whatsappStatusFilter)]
+      ];
+      whatsappSelectExplainer.innerHTML = rows.map(([label, item]) => `
+        <div>
+          <strong>${escapeHtml(label)}: ${escapeHtml(item.label || "-")}</strong>
+          ${escapeHtml(item.help || "Fara descriere configurata.")}
+        </div>
+      `).join("");
+    };
+
+    const updateControlHints = () => {
+      const whatsapp = opsSettings.whatsapp || {};
+      const target = selectedConfigItem(whatsapp.targets, webinarWhatsappTarget.value);
+      const groupTemplate = selectedConfigItem(whatsapp.groupTemplates, webinarWhatsappTemplate.value);
+      const directTemplate = selectedConfigItem(whatsapp.oneToOneTemplates, whatsappTemplate.value);
+
+      webinarWhatsappTarget.title = target?.help || "Alege grupul tinta pentru mesajul de webinar.";
+      webinarWhatsappTemplate.title = groupTemplate?.help || "Alege template-ul aprobat pentru grup.";
+      whatsappTemplate.title = directTemplate?.help || "Alege template-ul pentru mesajele individuale.";
+      renderWhatsappSelectExplainer();
+    };
+
+    const selectedTemplateText = (row = {}) => {
+      const template = whatsappTemplate.value === "custom"
+        ? customWhatsappMessage.value
+        : oneToOneTemplate().message;
+      return applyTemplate(template, row);
+    };
+
+    const onboardingBaseUrl = () => {
+      const publicUrl = String(appConfig.publicSiteUrl || "").replace(/\/+$/, "");
+      if (publicUrl) return publicUrl;
+      if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+        return "https://aiwebminar.pages.dev";
+      }
+      return window.location.origin;
+    };
+
+    const onboardingLinkFor = (row = {}) => {
+      const url = new URL("thank-you.html", `${onboardingBaseUrl()}/`);
+      url.searchParams.set("access", String(row.access || "free").toLowerCase() === "vip" ? "vip" : "free");
+      if (row.lead_id) url.searchParams.set("lead_id", row.lead_id);
+      url.searchParams.set("mode", "onboarding");
+      url.hash = "onboarding";
+      return url.toString();
+    };
+
+    const missingOnboardingRows = () => {
+      const onboardingLeadIds = new Set(whatsappOnboardingRows.map((row) => String(row.lead_id || "").trim()).filter(Boolean));
+      const onboardingInviteByLead = new Map(whatsappRows
+        .filter((row) => String(row.channel || "").toLowerCase() === "whatsapp")
+        .filter((row) => String(row.notes || "").toLowerCase() === "onboarding_invite")
+        .map((row) => [String(row.lead_id || "").trim(), row])
+        .filter(([leadId]) => leadId));
+      return whatsappLeads
+        .filter((row) => {
+          const leadId = String(row.lead_id || "").trim();
+          const existingInvite = onboardingInviteByLead.get(leadId);
+          return leadId && !onboardingLeadIds.has(leadId) && String(existingInvite?.status || "").toLowerCase() !== "trimis";
+        })
+        .map((row) => {
+          const existingInvite = onboardingInviteByLead.get(String(row.lead_id || "").trim());
+          return {
+            ...row,
+            id: existingInvite?.id || "",
+            channel: "whatsapp",
+            message: existingInvite?.message || "",
+            action_url: existingInvite?.action_url || onboardingLinkFor(row),
+            status: existingInvite?.status || "de_trimis",
+            notes: "onboarding_invite",
+            onboarding_link: existingInvite?.action_url || onboardingLinkFor(row)
+          };
+        });
+    };
+
+    const setQueueModeDefaults = () => {
+      const onboardingMode = whatsappQueueMode.value === "onboarding";
+      whatsappStatusFilter.disabled = onboardingMode;
+      if (onboardingMode) {
+        whatsappStatusFilter.value = "all";
+        if ([...whatsappTemplate.options].some((option) => option.value === "onboardingInvite")) {
+          whatsappTemplate.value = "onboardingInvite";
+        }
+        loadWhatsappQueue.textContent = "Incarca onboarding";
+      } else {
+        if (whatsappStatusFilter.value === "all") {
+          whatsappStatusFilter.value = "de_trimis";
+        }
+        loadWhatsappQueue.textContent = "Incarca queue";
+      }
+      syncCustomSelect(whatsappStatusFilter);
+      syncCustomSelect(whatsappTemplate);
+      updateControlHints();
+      refreshGroupPreview();
+    };
+
+    const refreshGroupPreview = () => {
+      groupMessagePreview.textContent = selectedTemplateText({
+        name: "Petre Sala",
+        access: "free",
+        persona: "business"
+      });
+    };
+
+    const selectedWebinarTemplate = () => {
+      const templates = opsSettings.whatsapp?.groupTemplates || [];
+      const template = templates.find((item) => item.id === webinarWhatsappTemplate.value) || templates[0] || { messages: {} };
+      const messages = template.messages || {};
+      return applyWebinarPlaceholders(messages[webinarWhatsappTarget.value] || messages.free || "");
+    };
+
+    const resolvedWebinarMessage = () => applyWebinarPlaceholders(webinarWhatsappMessage.value.trim()).trim();
+
+    const refreshWebinarMessage = () => {
+      updateControlHints();
+      if (webinarWhatsappTemplate.value === "custom" && webinarWhatsappMessage.value.trim()) {
+        updateWebinarButtons();
+        return;
+      }
+      webinarWhatsappMessage.value = selectedWebinarTemplate();
+      updateWebinarButtons();
+    };
+
+    const hasUnresolvedPlaceholders = (message) => /\{[a-z_]+\}/i.test(message);
+
+    const updateWebinarButtons = () => {
+      const target = webinarWhatsappTarget.value;
+      webinarWhatsappPreview.disabled = target === "both";
+      if (target === "both") {
+        webinarWhatsappPreview.title = "Preview pentru Both este dezactivat ca sa nu ramana drafturi in doua grupuri.";
+      } else {
+        webinarWhatsappPreview.title = "Deschide grupul in WhatsApp Web si lasa mesajul ca draft, fara sa trimita.";
+      }
+    };
+
+    const setWebinarBusy = (busy) => {
+      webinarWhatsappTarget.disabled = busy;
+      webinarWhatsappTemplate.disabled = busy;
+      webinarWhatsappMessage.disabled = busy;
+      webinarWhatsappPreview.disabled = busy || webinarWhatsappTarget.value === "both";
+      webinarWhatsappSend.disabled = busy;
+      webinarWhatsappCopy.disabled = busy;
+      syncCustomSelect(webinarWhatsappTarget);
+      syncCustomSelect(webinarWhatsappTemplate);
+    };
+
+    const appendWebinarLog = ({ target, mode, message }) => {
+      const item = document.createElement("div");
+      item.className = "send-log-item";
+      item.textContent = `${new Date().toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit" })} · ${mode} · ${target.toUpperCase()} · ${message.slice(0, 90)}`;
+      webinarWhatsappLog.prepend(item);
+    };
+
+    const booleanDisplay = (value) => value ? "ok" : "lipsa";
+
+    const statusRow = ({ label, ok, display, help }) => `
+      <div class="status-item">
+        <span class="with-help">${escapeHtml(label)} ${renderHelp(help || statusHelp[label])}</span>
+        <span class="pill ${ok ? "is-ok" : "is-warning"}">${escapeHtml(display)}</span>
+      </div>
+    `;
+
+    const renderStatus = () => {
+      const rows = [
+        { label: "Ops provider", ok: appConfig.opsProvider && appConfig.opsProvider !== "none", display: appConfig.opsProvider || "none" },
+        { label: "D1", ok: appConfig.d1Configured, display: booleanDisplay(appConfig.d1Configured) },
+        { label: "Ops webhook", ok: appConfig.opsWebhookConfigured, display: booleanDisplay(appConfig.opsWebhookConfigured) },
+        { label: "Google webhook", ok: appConfig.googleOpsConfigured, display: booleanDisplay(appConfig.googleOpsConfigured) },
+        { label: "Make fallback", ok: appConfig.makeFallbackConfigured, display: booleanDisplay(appConfig.makeFallbackConfigured) },
+        { label: "Stripe link", ok: appConfig.stripePaymentLinkConfigured, display: booleanDisplay(appConfig.stripePaymentLinkConfigured) },
+        { label: "Stripe server", ok: appConfig.stripeServerConfigured, display: booleanDisplay(appConfig.stripeServerConfigured) },
+        { label: "VIP gate", ok: appConfig.vipGateConfigured, display: booleanDisplay(appConfig.vipGateConfigured) },
+        { label: "Free group config", ok: appConfig.whatsappFreeGroupConfigured, display: booleanDisplay(appConfig.whatsappFreeGroupConfigured) },
+        { label: "VIP group config", ok: appConfig.whatsappVipGroupConfigured, display: booleanDisplay(appConfig.whatsappVipGroupConfigured) },
+        { label: "Workshop status", ok: appConfig.workshopStatus && appConfig.workshopStatus !== "tbd", display: appConfig.workshopStatus || "tbd" },
+        { label: "Workshop live link", ok: appConfig.workshopLiveUrlConfigured, display: booleanDisplay(appConfig.workshopLiveUrlConfigured) },
+        { label: "Turnstile", ok: appConfig.turnstileConfigured, display: booleanDisplay(appConfig.turnstileConfigured) },
+        { label: "GA4", ok: appConfig.ga4Configured, display: booleanDisplay(appConfig.ga4Configured) },
+        { label: "Meta Pixel", ok: appConfig.metaPixelConfigured, display: booleanDisplay(appConfig.metaPixelConfigured) },
+        { label: "Ops settings", ok: localOpsStatus.opsSettingsAvailable, display: booleanDisplay(localOpsStatus.opsSettingsAvailable) },
+        { label: "WhatsApp Web script", ok: localOpsStatus.whatsappWebScriptAvailable, display: booleanDisplay(localOpsStatus.whatsappWebScriptAvailable) },
+        { label: "SMS Gateway", ok: localOpsStatus.smsGatewayConfigured, display: localOpsStatus.smsGatewayConfigured ? "configurat" : "lipsa" },
+        { label: "Chrome profile env", ok: true, display: localOpsStatus.whatsappWebProfileConfigured ? "custom" : "default" },
+        { label: "CDP port env", ok: true, display: localOpsStatus.whatsappWebCdpPortConfigured ? "setat" : "auto" }
+      ];
+      statusGrid.innerHTML = rows.map(statusRow).join("");
+    };
+
+    const renderOpsHealth = () => {
+      const token = serverSideTokenConfigured ? "token local ok" : "token manual necesar";
+      const settings = localOpsStatus.opsSettingsAvailable ? "settings ok" : "settings lipsa";
+      const whatsapp = localOpsStatus.whatsappWebAvailable ? "WhatsApp Web ok" : "WhatsApp Web lipsa";
+      const sms = localOpsStatus.smsGatewayConfigured ? "SMS Gateway ok" : "SMS Gateway lipsa";
+      opsHealth.textContent = `Local ops activ: ${token}, ${settings}, ${whatsapp}, ${sms}. Statusurile expun doar configurari si agregate.`;
+    };
+
+    const renderSummary = () => {
+      if (!opsSummary) {
+        summaryGrid.innerHTML = "<p>Rezumatul necesita token admin.</p>";
+        return;
+      }
+      const counts = opsSummary.counts || {};
+      const latest = opsSummary.latest || {};
+      const cards = [
+        ["Inscrieri", counts.leads, `Ultima: ${formatDate(latest.leadReceivedAt)}`],
+        ["Onboarding completat", counts.onboarding, ""],
+        ["Onboarding de invitat", counts.missingOnboarding, `${formatNumber(counts.freeMissingOnboarding)} free / ${formatNumber(counts.vipMissingOnboarding)} VIP`],
+        ["Plati", counts.payments, `Ultima plata: ${formatDate(latest.paymentReceivedAt)}`],
+        ["VIP confirmat", counts.vipFulfillments, `Ultimul acces: ${formatDate(latest.vipFulfilledAt)}`],
+        ["Taskuri reminder", counts.reminders, `Ultimul: ${formatDate(latest.reminderCreatedAt)}`],
+        ["WhatsApp 1-la-1 de trimis", counts.pendingWhatsappReminders, "channel=whatsapp, status=de_trimis"],
+        ["SMS de trimis", counts.pendingSmsReminders, "channel=sms, status=de_trimis"],
+        ["Workshop", appConfig.workshopStatus || "tbd", appConfig.workshopLiveUrlConfigured ? "live link ok" : "live link lipsa"]
+      ];
+      summaryGrid.innerHTML = cards.map(([label, value, detail]) => `
+        <div class="summary-card">
+          <span class="with-help">${escapeHtml(label)} ${renderHelp(summaryHelp[label])}</span>
+          <strong>${typeof value === "number" ? formatNumber(value) : escapeHtml(value)}</strong>
+          <small>${escapeHtml(detail)}</small>
+        </div>
+      `).join("");
+    };
+
+    const addWarning = (warnings, condition, text) => {
+      if (condition) warnings.push(text);
+    };
+
+    const renderWarnings = () => {
+      const warnings = [];
+      addWarning(warnings, !appConfig.d1Configured, "D1 nu este configurat; exporturile si agregatele nu vor functiona.");
+      addWarning(warnings, !appConfig.opsWebhookConfigured, "Nu exista niciun provider ops activ.");
+      addWarning(warnings, !appConfig.stripePaymentLinkConfigured, "Stripe Payment Link nu este complet configurat.");
+      addWarning(warnings, !appConfig.stripeServerConfigured, "Stripe server/webhook nu este complet configurat.");
+      addWarning(warnings, !appConfig.workshopLiveUrlConfigured, "Workshop live link lipseste.");
+      addWarning(warnings, !appConfig.turnstileConfigured, "Turnstile nu este complet configurat.");
+      addWarning(warnings, !localOpsStatus.opsSettingsAvailable, "Fisierul ops-settings.json nu este disponibil local.");
+      addWarning(warnings, !localOpsStatus.whatsappWebScriptAvailable, "Driverul WhatsApp Web lipseste local.");
+      addWarning(warnings, !localOpsStatus.smsGatewayConfigured, "SMS Gateway nu este configurat local.");
+      addWarning(warnings, !opsSummary, "Rezumatul agregat nu a fost incarcat.");
+
+      opsWarnings.innerHTML = warnings.length
+        ? warnings.map((warning) => `<div class="status-item"><span class="with-help">${escapeHtml(warning)} ${renderHelp("Warning real generat din statusuri. Nu este text static.")}</span><span class="pill is-warning">warning</span></div>`).join("")
+        : `<div class="status-item"><span class="with-help">Nu am warnings active. ${renderHelp("Configuratia verificata arata bine in acest moment.")}</span><span class="pill is-ok">ok</span></div>`;
     };
 
     const loadLocalOpsStatus = async () => {
       try {
-        const response = await fetch(localStatusEndpoint, { headers: { accept: "application/json" } });
-        if (!response.ok) return;
-        const status = await response.json();
-        serverSideTokenConfigured = Boolean(status.adminExportTokenConfigured);
-        if (status.whatsappDesktopAvailable === false) {
-          webinarWhatsappNote.textContent = "Controlul WhatsApp Desktop este disponibil doar pe Mac in aceasta versiune.";
+        localOpsStatus = await fetchJson(localStatusEndpoint);
+        serverSideTokenConfigured = Boolean(localOpsStatus.adminExportTokenConfigured);
+        if (localOpsStatus.whatsappWebAvailable === false) {
+          webinarWhatsappNote.textContent = "Controlul WhatsApp Web nu este disponibil pe serverul local.";
           setWebinarBusy(true);
         }
         if (serverSideTokenConfigured) {
@@ -536,15 +1504,32 @@
           toggleToken.textContent = "Setat";
         }
       } catch (_) {
+        localOpsStatus = {};
         serverSideTokenConfigured = false;
       }
     };
 
-    toggleToken.addEventListener("click", () => {
-      const visible = tokenInput.type === "text";
-      tokenInput.type = visible ? "password" : "text";
-      toggleToken.textContent = visible ? "Arata" : "Ascunde";
-    });
+    const loadRemoteConfig = async () => {
+      appConfig = await fetchJson(configEndpoint);
+    };
+
+    const loadOpsSummary = async () => {
+      try {
+        requireTokenOrServerToken();
+        opsSummary = await fetchJson(summaryEndpoint, { headers: authHeaders("application/json") });
+      } catch (_) {
+        opsSummary = null;
+      }
+    };
+
+    const refreshOperationalData = async () => {
+      await loadLocalOpsStatus();
+      await Promise.allSettled([loadRemoteConfig(), loadOpsSummary()]);
+      renderOpsHealth();
+      renderStatus();
+      renderSummary();
+      renderWarnings();
+    };
 
     const filenameFromResponse = (response, fallback) => {
       const disposition = response.headers.get("content-disposition") || "";
@@ -563,30 +1548,11 @@
       URL.revokeObjectURL(objectUrl);
     };
 
-    const authHeaders = () => {
-      const headers = { accept: "text/csv" };
-      const token = tokenInput.value.trim();
-      if (token) {
-        headers.authorization = `Bearer ${token}`;
-      }
-      return headers;
-    };
-
-    const requireTokenOrServerToken = () => {
-      if (serverSideTokenConfigured || tokenInput.value.trim()) return;
-      tokenInput.focus();
-      throw new Error("Introdu ADMIN_EXPORT_TOKEN sau seteaza-l local in .dev.vars.local.");
-    };
-
     const fetchCsv = async (type) => {
       requireTokenOrServerToken();
-
       const url = new URL(exportEndpoint, window.location.href);
       url.searchParams.set("type", type);
-      const response = await fetch(url.toString(), {
-        headers: authHeaders()
-      });
-
+      const response = await fetch(url.toString(), { headers: authHeaders() });
       if (!response.ok) {
         let error = "export_failed";
         try {
@@ -597,7 +1563,6 @@
         }
         throw new Error(error);
       }
-
       return response.text();
     };
 
@@ -654,221 +1619,9 @@
       return digits;
     };
 
-    const messageTemplates = {
-      dayBefore: [
-        "Salut, {name}. Reminder rapid pentru workshopul Agenti AI 24/7.",
-        "",
-        "Maine intram in partea practica: agenti AI, browser automation si workflow-uri care pot prelua taskuri repetitive.",
-        "",
-        "Te rog intra si in grupul WhatsApp potrivit: AI WEBMINAR FREE sau AI WEBMINAR PRO. Acolo pun linkul final si anunturile importante.",
-        "",
-        "Calin"
-      ].join("\n"),
-      sameDay: [
-        "Salut, {name}. Azi e sesiunea Agenti AI 24/7.",
-        "",
-        "Pregateste o idee reala din business/job: lead-uri, research, continut, documente, follow-up sau operatiuni.",
-        "",
-        "Scopul nu e sa pleci cu un prompt frumos, ci cu un workflow pe care il poti replica.",
-        "",
-        "Calin"
-      ].join("\n"),
-      vipNudge: [
-        "Salut, {name}. Daca vrei sa lucram mai aplicat pe cazul tau, AI WEBMINAR PRO este partea unde intram in brief, pasi, verificari si roadmap.",
-        "",
-        "E pentru oameni care vor sa transforme AI-ul din demo in sistem util.",
-        "",
-        "Calin"
-      ].join("\n"),
-      custom: ""
-    };
-
-    const webinarGroupTemplates = {
-      tMinus10: {
-        free: [
-          "Incepem in 10 minute.",
-          "",
-          "Intra acum ca sa prinzi partea practica de la inceput:",
-          "{live_link}"
-        ].join("\n"),
-        vip: [
-          "VIP reminder: incepem in 10 minute.",
-          "",
-          "Recomand sa intri de la inceput, pentru ca voi explica si partea de implementare concreta + urmatorii pasi.",
-          "{live_link}"
-        ].join("\n"),
-        both: [
-          "Incepem in 10 minute.",
-          "",
-          "Intra acum aici:",
-          "{live_link}"
-        ].join("\n")
-      },
-      liveNow: {
-        free: [
-          "Suntem live acum.",
-          "",
-          "Daca vrei sa vezi cum poti folosi AI concret in business/job, intra aici:",
-          "{live_link}"
-        ].join("\n"),
-        vip: [
-          "Suntem live acum.",
-          "",
-          "Pentru VIP: pregateste o intrebare concreta despre cazul tau. La final prioritizam implementarea.",
-          "{live_link}"
-        ].join("\n"),
-        both: [
-          "Suntem live acum.",
-          "",
-          "Intra aici:",
-          "{live_link}"
-        ].join("\n")
-      },
-      practice: {
-        free: [
-          "Am ajuns la partea cea mai practica: cum transformi AI-ul intr-un sistem care lucreaza pentru tine.",
-          "",
-          "Intra acum daca nu esti deja in live."
-        ].join("\n"),
-        vip: [
-          "Pentru VIP: acum intram in zona aplicata. Noteaza unde vrei primul sistem AI: lead-uri, follow-up, suport, vanzari sau operatiuni."
-        ].join("\n"),
-        both: [
-          "Am ajuns la partea practica. Intra acum daca nu esti deja in live."
-        ].join("\n")
-      },
-      qa: {
-        free: [
-          "Pregatim Q&A.",
-          "",
-          "Scrie intrebarea ta aici in grup si aleg cateva exemple utile pentru toata lumea."
-        ].join("\n"),
-        vip: [
-          "VIP Q&A: scrie intrebarea ta concreta despre implementare, funnel sau automatizari. Le prioritizez pe cele aplicate."
-        ].join("\n"),
-        both: [
-          "Pregatim Q&A. Scrie intrebarea ta aici in grup."
-        ].join("\n")
-      },
-      offer: {
-        free: [
-          "Am deschis urmatorul pas pentru cei care vor sa aplice concret ce am lucrat azi.",
-          "",
-          "Detalii aici:",
-          "{offer_link}",
-          "",
-          "Bonusurile sunt disponibile pana la {deadline}."
-        ].join("\n"),
-        vip: [
-          "Pentru VIP: am deschis urmatorul pas aplicat.",
-          "",
-          "Daca vrei sa construim sistemul tau AI cu pasi, verificari si roadmap, vezi detaliile aici:",
-          "{offer_link}",
-          "",
-          "Bonusurile VIP sunt disponibile pana la {deadline}."
-        ].join("\n"),
-        both: [
-          "Am deschis urmatorul pas. Detalii aici:",
-          "{offer_link}",
-          "",
-          "Bonusurile sunt disponibile pana la {deadline}."
-        ].join("\n")
-      },
-      final: {
-        free: [
-          "Multumesc ca ai fost live.",
-          "",
-          "Pun aici replay-ul si urmatorul pas imediat ce sunt gata:",
-          "{replay_link}"
-        ].join("\n"),
-        vip: [
-          "Multumesc ca ai fost live.",
-          "",
-          "Pentru VIP: pastreaza intrebarile si exemplele tale concrete. Pun aici replay-ul si urmatorul pas:",
-          "{replay_link}"
-        ].join("\n"),
-        both: [
-          "Multumesc ca ai fost live. Replay-ul apare aici:",
-          "{replay_link}"
-        ].join("\n")
-      },
-      delay: {
-        free: "Avem o mica intarziere tehnica. Revenim in cateva minute, ramaneti aproape.",
-        vip: "Avem o mica intarziere tehnica. Revenim in cateva minute. Multumesc pentru rabdare.",
-        both: "Avem o mica intarziere tehnica. Revenim in cateva minute."
-      },
-      custom: {
-        free: "",
-        vip: "",
-        both: ""
-      }
-    };
-
-    const applyTemplate = (template, row = {}) => template
-      .replaceAll("{name}", row.name || "Salut")
-      .replaceAll("{access}", row.access || "")
-      .replaceAll("{persona}", row.persona || "");
-
-    const selectedTemplateText = (row = {}) => {
-      const template = whatsappTemplate.value === "custom"
-        ? customWhatsappMessage.value
-        : messageTemplates[whatsappTemplate.value];
-      return applyTemplate(template, row);
-    };
-
-    const refreshGroupPreview = () => {
-      groupMessagePreview.textContent = selectedTemplateText({
-        name: "tuturor",
-        access: "free",
-        persona: "business"
-      });
-    };
-
-    const selectedWebinarTemplate = () => {
-      const template = webinarGroupTemplates[webinarWhatsappTemplate.value] || webinarGroupTemplates.custom;
-      return template[webinarWhatsappTarget.value] || template.free || "";
-    };
-
-    const refreshWebinarMessage = () => {
-      if (webinarWhatsappTemplate.value === "custom" && webinarWhatsappMessage.value.trim()) {
-        updateWebinarButtons();
-        return;
-      }
-      webinarWhatsappMessage.value = selectedWebinarTemplate();
-      updateWebinarButtons();
-    };
-
-    const hasUnresolvedPlaceholders = (message) => /\{[a-z_]+\}/i.test(message);
-
-    const updateWebinarButtons = () => {
-      const target = webinarWhatsappTarget.value;
-      webinarWhatsappPreview.disabled = target === "both";
-      if (target === "both") {
-        webinarWhatsappPreview.title = "Preview pentru Both este dezactivat ca sa nu ramana drafturi in doua grupuri.";
-      } else {
-        webinarWhatsappPreview.removeAttribute("title");
-      }
-    };
-
-    const setWebinarBusy = (busy) => {
-      webinarWhatsappTarget.disabled = busy;
-      webinarWhatsappTemplate.disabled = busy;
-      webinarWhatsappMessage.disabled = busy;
-      webinarWhatsappPreview.disabled = busy || webinarWhatsappTarget.value === "both";
-      webinarWhatsappSend.disabled = busy;
-      webinarWhatsappCopy.disabled = busy;
-    };
-
-    const appendWebinarLog = ({ target, mode, message }) => {
-      const item = document.createElement("div");
-      item.className = "send-log-item";
-      item.textContent = `${new Date().toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit" })} · ${mode} · ${target.toUpperCase()} · ${message.slice(0, 90)}`;
-      webinarWhatsappLog.prepend(item);
-    };
-
     const runWebinarWhatsapp = async (mode) => {
       const target = webinarWhatsappTarget.value;
-      const message = webinarWhatsappMessage.value.trim();
+      const message = resolvedWebinarMessage();
 
       if (!message) {
         webinarWhatsappNote.textContent = "Scrie sau alege un mesaj inainte.";
@@ -877,73 +1630,415 @@
       }
 
       if (mode === "send" && hasUnresolvedPlaceholders(message)) {
-        webinarWhatsappNote.textContent = "Mesajul are placeholderi nerezolvati. Inlocuieste {live_link}, {offer_link}, {deadline} sau {replay_link}.";
+        const keys = (opsSettings.whatsapp?.placeholders || []).map((item) => `{${item.key}}`).join(", ");
+        webinarWhatsappNote.textContent = `Mesajul are placeholderi nerezolvati. Completeaza: ${keys}.`;
         webinarWhatsappMessage.focus();
         return;
       }
 
-      if (mode === "send") {
-        const confirmed = window.confirm(`Trimiti acum mesajul in ${target.toUpperCase()}?`);
-        if (!confirmed) return;
-      }
-
       setWebinarBusy(true);
-      webinarWhatsappNote.textContent = mode === "send" ? "Deschid grupul si trimit mesajul..." : "Deschid grupul si pun mesajul ca draft...";
+      webinarWhatsappNote.textContent = mode === "send" ? "Deschid WhatsApp Web si trimit mesajul..." : "Deschid WhatsApp Web si pun mesajul ca draft...";
 
       try {
-        const response = await fetch(whatsappDesktopEndpoint, {
+        const payload = await fetchJson(whatsappWebEndpoint, {
           method: "POST",
-          headers: {
-            "content-type": "application/json",
-            accept: "application/json"
-          },
+          headers: { "content-type": "application/json" },
           body: JSON.stringify({ target, message, mode })
         });
-        const payload = await response.json();
-        if (!response.ok || !payload.ok) {
-          throw new Error(payload.error || payload.message || "whatsapp_failed");
-        }
-        webinarWhatsappNote.textContent = mode === "send" ? "Mesaj trimis." : "Draft pus in WhatsApp. Verifica textul, apoi apasa Enter in WhatsApp.";
-        appendWebinarLog({ target, mode, message });
+        webinarWhatsappNote.textContent = mode === "send" ? "Mesaj trimis in WhatsApp Web." : "Draft pus in WhatsApp Web. Verifica textul, apoi apasa Enter in WhatsApp Web.";
+        appendWebinarLog({ target: payload.target || target, mode, message });
       } catch (error) {
-        webinarWhatsappNote.textContent = `Nu am putut controla WhatsApp: ${error.message}`;
+        webinarWhatsappNote.textContent = `Nu am putut controla WhatsApp Web: ${error.message}`;
       } finally {
         setWebinarBusy(false);
       }
     };
 
-    const renderWhatsappQueue = (rows) => {
-      const reminders = rows
-        .filter((row) => (row.channel || "").toLowerCase() === "whatsapp")
-        .filter((row) => normalizeWhatsAppNumber(row.phone));
+    const filteredWhatsappRows = () => (whatsappQueueMode.value === "onboarding" ? missingOnboardingRows() : whatsappRows)
+      .filter((row) => whatsappQueueMode.value === "onboarding" || (row.channel || "").toLowerCase() === "whatsapp")
+      .filter((row) => normalizeWhatsAppNumber(row.phone))
+      .filter((row) => whatsappAccessFilter.value === "all" || String(row.access || "").toLowerCase() === whatsappAccessFilter.value)
+      .filter((row) => whatsappQueueMode.value === "onboarding" || whatsappStatusFilter.value === "all" || String(row.status || "").toLowerCase() === whatsappStatusFilter.value)
+      .filter((row) => !skippedWhatsappItems.has(whatsappRowKey(row)));
 
-      if (!reminders.length) {
+    const buildWhatsappQueueItems = () => filteredWhatsappRows().map((row) => ({
+      row,
+      key: whatsappRowKey(row),
+      phone: normalizeWhatsAppNumber(row.phone),
+      message: (selectedTemplateText(row) || row.message || "").trim()
+    })).filter((item) => item.phone && item.message);
+
+    const activeSendLabel = () => {
+      const remainingMs = Math.max(0, whatsappCooldownUntil - Date.now());
+      if (whatsappQueueBusy) return "Se trimite...";
+      if (remainingMs > 0) return `Asteapta ${Math.ceil(remainingMs / 1000)}s`;
+      return "Send next";
+    };
+
+    const updateWhatsappCooldown = () => {
+      const button = whatsappQueue.querySelector("[data-send-next]");
+      if (!button) return;
+      const remainingMs = Math.max(0, whatsappCooldownUntil - Date.now());
+      button.textContent = activeSendLabel();
+      button.disabled = whatsappQueueBusy || remainingMs > 0;
+      if (remainingMs <= 0 && whatsappCooldownTimer) {
+        clearInterval(whatsappCooldownTimer);
+        whatsappCooldownTimer = 0;
+      }
+    };
+
+    const startWhatsappCooldown = (durationMs = 10000) => {
+      whatsappCooldownUntil = Date.now() + durationMs;
+      if (whatsappCooldownTimer) clearInterval(whatsappCooldownTimer);
+      whatsappCooldownTimer = setInterval(updateWhatsappCooldown, 250);
+      updateWhatsappCooldown();
+    };
+
+    const renderWhatsappQueue = ({ preserveNote = false } = {}) => {
+      activeWhatsappItems = buildWhatsappQueueItems();
+      if (!activeWhatsappItems.length) {
         whatsappQueue.innerHTML = "";
-        whatsappNote.textContent = "Nu am gasit remindere WhatsApp cu telefon valid.";
+        whatsappQueue.dataset.messages = "[]";
+        const hasRows = whatsappQueueMode.value === "onboarding" ? whatsappLeads.length : whatsappRows.length;
+        if (!preserveNote) {
+          whatsappNote.textContent = hasRows ? "Nu am gasit contacte pentru filtrele curente." : "Incarca queue-ul WhatsApp.";
+        }
         return;
       }
 
-      whatsappQueue.innerHTML = reminders.map((row, index) => {
-        const phone = normalizeWhatsAppNumber(row.phone);
-        const message = selectedTemplateText(row) || row.message || "";
-        const href = `https://wa.me/${encodeURIComponent(phone)}?text=${encodeURIComponent(message)}`;
-        const desktopHref = `whatsapp://send?phone=${encodeURIComponent(phone)}&text=${encodeURIComponent(message)}`;
-        return `
+      const [active, ...upcoming] = activeWhatsappItems;
+      const activeRow = active.row;
+      const activeName = activeRow.name || "Lead fara nume";
+      whatsappQueue.innerHTML = `
+        <article class="active-reminder-card">
+          <div>
+            <span class="recipient-label">Trimiti catre</span>
+            <strong class="recipient-name">${escapeHtml(activeName)}</strong>
+            <span class="recipient-phone">${escapeHtml(formatPhoneForDisplay(activeRow.phone))}</span>
+            <small class="recipient-meta">${escapeHtml(activeRow.access || "")} · ${escapeHtml(activeRow.status || "")} · ${escapeHtml(activeRow.persona || "")}</small>
+          </div>
+          <div class="queue-actions">
+            <button type="button" data-send-next>${escapeHtml(activeSendLabel())}</button>
+            <button type="button" class="btn-secondary" data-skip-next>Skip</button>
+            <button type="button" class="btn-secondary" data-copy-message="0">Copiaza</button>
+          </div>
+          <div class="message-preview">${escapeHtml(active.message)}</div>
+        </article>
+        ${upcoming.length ? `<p class="queue-heading">Urmeaza</p>${upcoming.slice(0, 8).map((item, index) => `
           <article class="reminder-card">
             <div>
-              <strong>${escapeHtml(row.name || "Lead fara nume")}</strong>
-              <small>${escapeHtml(row.phone || "")} · ${escapeHtml(row.access || "")} · ${escapeHtml(row.persona || "")}</small>
+              <strong>${escapeHtml(item.row.name || "Lead fara nume")}</strong>
+              <small>${escapeHtml(formatPhoneForDisplay(item.row.phone))} · ${escapeHtml(item.row.access || "")} · ${escapeHtml(item.row.status || "")} · ${escapeHtml(item.row.persona || "")}</small>
             </div>
-            <button type="button" class="btn-secondary" data-copy-message="${index}">Copiaza</button>
-            <a class="btn btn-secondary" href="${escapeAttr(desktopHref)}">Desktop</a>
-            <a class="btn" href="${escapeAttr(href)}" target="_blank" rel="noopener">Trimite 1-la-1</a>
+            <button type="button" class="btn-secondary" data-copy-message="${index + 1}">Copiaza</button>
           </article>
-        `;
-      }).join("");
+        `).join("")}` : ""}
+      `;
 
-      whatsappQueue.dataset.messages = JSON.stringify(reminders.map((row) => selectedTemplateText(row) || row.message || ""));
-      whatsappNote.textContent = `Am incarcat ${reminders.length} mesaje WhatsApp.`;
+      whatsappQueue.dataset.messages = JSON.stringify(activeWhatsappItems.map((item) => item.message));
+      updateWhatsappCooldown();
+      if (!preserveNote) {
+        whatsappNote.textContent = whatsappQueueMode.value === "onboarding"
+          ? `Am incarcat ${activeWhatsappItems.length} invitatii de onboarding.`
+          : `Am incarcat ${activeWhatsappItems.length} mesaje WhatsApp filtrate.`;
+      }
     };
+
+    const smsPhone = (phone) => {
+      const digits = normalizeWhatsAppNumber(phone);
+      return digits ? `+${digits}` : "";
+    };
+
+    const filteredSmsRows = () => smsRows
+      .filter((row) => String(row.channel || "").toLowerCase() === "sms")
+      .filter((row) => smsPhone(row.phone))
+      .filter((row) => smsAccessFilter.value === "all" || String(row.access || "").toLowerCase() === smsAccessFilter.value)
+      .filter((row) => smsStatusFilter.value === "all" || String(row.status || "").toLowerCase() === smsStatusFilter.value)
+      .filter((row) => !skippedSmsItems.has(smsRowKey(row)));
+
+    const buildSmsQueueItems = () => filteredSmsRows().map((row) => ({
+      row,
+      key: smsRowKey(row),
+      phone: smsPhone(row.phone),
+      message: String(row.message || "").trim()
+    })).filter((item) => item.phone && item.message);
+
+    const activeSmsLabel = () => {
+      const remainingMs = Math.max(0, smsCooldownUntil - Date.now());
+      if (smsQueueBusy) return "Se trimite...";
+      if (remainingMs > 0) return `Asteapta ${Math.ceil(remainingMs / 1000)}s`;
+      return "Send SMS";
+    };
+
+    const updateSmsCooldown = () => {
+      const button = smsQueue.querySelector("[data-send-sms]");
+      if (!button) return;
+      const remainingMs = Math.max(0, smsCooldownUntil - Date.now());
+      button.textContent = activeSmsLabel();
+      button.disabled = smsQueueBusy || remainingMs > 0;
+      if (remainingMs <= 0 && smsCooldownTimer) {
+        clearInterval(smsCooldownTimer);
+        smsCooldownTimer = 0;
+      }
+    };
+
+    const startSmsCooldown = (durationMs = 15000) => {
+      smsCooldownUntil = Date.now() + durationMs;
+      if (smsCooldownTimer) clearInterval(smsCooldownTimer);
+      smsCooldownTimer = setInterval(updateSmsCooldown, 250);
+      updateSmsCooldown();
+    };
+
+    const renderSmsQueue = ({ preserveNote = false } = {}) => {
+      activeSmsItems = buildSmsQueueItems();
+      if (!activeSmsItems.length) {
+        smsQueue.innerHTML = "";
+        smsQueue.dataset.messages = "[]";
+        if (!preserveNote) {
+          smsNote.textContent = smsRows.length ? "Nu am gasit SMS-uri pentru filtrele curente." : "Incarca queue-ul SMS.";
+        }
+        return;
+      }
+
+      const [active, ...upcoming] = activeSmsItems;
+      const activeRow = active.row;
+      smsQueue.innerHTML = `
+        <article class="active-reminder-card">
+          <div>
+            <span class="recipient-label">Trimiti SMS catre</span>
+            <strong class="recipient-name">${escapeHtml(activeRow.name || "Lead fara nume")}</strong>
+            <span class="recipient-phone">${escapeHtml(formatPhoneForDisplay(activeRow.phone))}</span>
+            <small class="recipient-meta">${escapeHtml(activeRow.access || "")} · ${escapeHtml(activeRow.status || "")} · ${escapeHtml(activeRow.persona || "")}</small>
+          </div>
+          <div class="queue-actions">
+            <button type="button" data-send-sms>${escapeHtml(activeSmsLabel())}</button>
+            <button type="button" class="btn-secondary" data-skip-sms>Skip</button>
+            <button type="button" class="btn-secondary" data-copy-sms="0">Copiaza</button>
+          </div>
+          <div class="message-preview">${escapeHtml(active.message)}</div>
+        </article>
+        ${upcoming.length ? `<p class="queue-heading">Urmeaza</p>${upcoming.slice(0, 8).map((item, index) => `
+          <article class="reminder-card">
+            <div>
+              <strong>${escapeHtml(item.row.name || "Lead fara nume")}</strong>
+              <small>${escapeHtml(formatPhoneForDisplay(item.row.phone))} · ${escapeHtml(item.row.access || "")} · ${escapeHtml(item.row.status || "")} · ${escapeHtml(item.row.persona || "")}</small>
+            </div>
+            <button type="button" class="btn-secondary" data-copy-sms="${index + 1}">Copiaza</button>
+          </article>
+        `).join("")}` : ""}
+      `;
+
+      smsQueue.dataset.messages = JSON.stringify(activeSmsItems.map((item) => item.message));
+      updateSmsCooldown();
+      if (!preserveNote) {
+        smsNote.textContent = `Am incarcat ${activeSmsItems.length} SMS-uri filtrate.`;
+      }
+    };
+
+    const postJson = (url, payload) => fetchJson(url, {
+      method: "POST",
+      headers: {
+        ...authHeaders("application/json"),
+        "content-type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const upsertOnboardingReminder = async (item) => {
+      if (item.row.id) return item.row.id;
+      const payload = await postJson(opsRemindersEndpoint, {
+        action: "create_onboarding_invite",
+        leadId: item.row.lead_id,
+        message: item.message,
+        actionUrl: item.row.onboarding_link || item.row.action_url
+      });
+      item.row.id = payload.id;
+      item.row.status = payload.status || "de_trimis";
+      item.row.notes = "onboarding_invite";
+      whatsappRows.push({
+        id: payload.id,
+        lead_id: item.row.lead_id,
+        name: item.row.name,
+        email: item.row.email,
+        phone: item.row.phone,
+        access: item.row.access,
+        persona: item.row.persona,
+        channel: "whatsapp",
+        message: item.message,
+        action_url: item.row.onboarding_link || item.row.action_url,
+        status: payload.status || "de_trimis",
+        last_sent_at: "",
+        owner: "Calin",
+        notes: "onboarding_invite"
+      });
+      return payload.id;
+    };
+
+    const markReminderSent = (id) => postJson(opsRemindersEndpoint, {
+      action: "mark_sent",
+      id
+    });
+
+    const checkReminderApi = () => postJson(opsRemindersEndpoint, {
+      action: "check"
+    });
+
+    const markSentLocally = (item, payload = {}) => {
+      const id = String(item.row.id || "");
+      const now = payload.lastSentAt || new Date().toISOString();
+      const updateRow = (row) => {
+        if (id && String(row.id || "") === id) {
+          row.status = "trimis";
+          row.last_sent_at = now;
+        }
+      };
+      whatsappRows.forEach(updateRow);
+      item.row.status = "trimis";
+      item.row.last_sent_at = now;
+    };
+
+    const markSmsSentLocally = (item, payload = {}) => {
+      const id = String(item.row.id || "");
+      const now = payload.lastSentAt || new Date().toISOString();
+      const updateRow = (row) => {
+        if (id && String(row.id || "") === id) {
+          row.status = "trimis";
+          row.last_sent_at = now;
+        }
+      };
+      smsRows.forEach(updateRow);
+      item.row.status = "trimis";
+      item.row.last_sent_at = now;
+    };
+
+    const sendActiveWhatsappItem = async () => {
+      const item = activeWhatsappItems[0];
+      if (!item || whatsappQueueBusy) return;
+
+      if (Date.now() < whatsappCooldownUntil) {
+        updateWhatsappCooldown();
+        return;
+      }
+
+      whatsappQueueBusy = true;
+      renderWhatsappQueue({ preserveNote: true });
+      whatsappNote.textContent = `Trimit catre ${item.row.name || item.phone}...`;
+
+      let reminderId = item.row.id || "";
+      try {
+        await checkReminderApi();
+        if (whatsappQueueMode.value === "onboarding") {
+          reminderId = await upsertOnboardingReminder(item);
+        }
+        if (!reminderId) {
+          throw new Error("missing_reminder_id");
+        }
+
+        const sendPayload = await postJson(whatsappOneToOneEndpoint, {
+          phone: item.phone,
+          message: item.message
+        });
+        startWhatsappCooldown(sendPayload.cooldownMs || 10000);
+
+        try {
+          const markPayload = await markReminderSent(reminderId);
+          markSentLocally(item, markPayload);
+          const next = activeWhatsappItems[1]?.row?.name || "nimeni in queue";
+          whatsappNote.textContent = `Trimis catre ${item.row.name || item.phone}. Urmeaza: ${next}.`;
+        } catch (markError) {
+          skippedWhatsappItems.add(item.key);
+          whatsappNote.textContent = `Mesaj trimis catre ${item.row.name || item.phone}, dar statusul nu a fost salvat: ${markError.message}`;
+        }
+
+        renderWhatsappQueue({ preserveNote: true });
+        refreshOperationalData();
+      } catch (error) {
+        const retryAfterMs = Number(error.payload?.retryAfterMs || 0);
+        if (retryAfterMs > 0) {
+          startWhatsappCooldown(retryAfterMs);
+        }
+        whatsappNote.textContent = `Nu am putut trimite 1-la-1: ${error.message}`;
+        renderWhatsappQueue({ preserveNote: true });
+      } finally {
+        whatsappQueueBusy = false;
+        renderWhatsappQueue({ preserveNote: true });
+      }
+    };
+
+    const skipActiveWhatsappItem = () => {
+      const item = activeWhatsappItems[0];
+      if (!item) return;
+      skippedWhatsappItems.add(item.key);
+      whatsappNote.textContent = `Am sarit peste ${item.row.name || item.phone}.`;
+      renderWhatsappQueue();
+    };
+
+    const sendActiveSmsItem = async () => {
+      const item = activeSmsItems[0];
+      if (!item || smsQueueBusy) return;
+
+      if (Date.now() < smsCooldownUntil) {
+        updateSmsCooldown();
+        return;
+      }
+
+      smsQueueBusy = true;
+      renderSmsQueue({ preserveNote: true });
+      smsNote.textContent = `Trimit SMS catre ${item.row.name || item.phone}...`;
+
+      const reminderId = item.row.id || "";
+      try {
+        await checkReminderApi();
+        if (!reminderId) {
+          throw new Error("missing_reminder_id");
+        }
+
+        const sendPayload = await postJson(smsGatewayEndpoint, {
+          reminderId,
+          phone: item.phone,
+          message: item.message
+        });
+        startSmsCooldown(sendPayload.cooldownMs || 15000);
+
+        try {
+          const markPayload = await markReminderSent(reminderId);
+          markSmsSentLocally(item, markPayload);
+          const state = sendPayload.state ? ` Status gateway: ${sendPayload.state}.` : "";
+          const next = activeSmsItems[1]?.row?.name || "nimeni in queue";
+          smsNote.textContent = `SMS trimis catre ${item.row.name || item.phone}.${state} Urmeaza: ${next}.`;
+        } catch (markError) {
+          skippedSmsItems.add(item.key);
+          smsNote.textContent = `SMS trimis catre ${item.row.name || item.phone}, dar statusul nu a fost salvat: ${markError.message}`;
+        }
+
+        renderSmsQueue({ preserveNote: true });
+        refreshOperationalData();
+      } catch (error) {
+        const retryAfterMs = Number(error.payload?.retryAfterMs || 0);
+        if (retryAfterMs > 0) {
+          startSmsCooldown(retryAfterMs);
+        }
+        smsNote.textContent = `Nu am putut trimite SMS: ${error.message}`;
+        renderSmsQueue({ preserveNote: true });
+      } finally {
+        smsQueueBusy = false;
+        renderSmsQueue({ preserveNote: true });
+      }
+    };
+
+    const skipActiveSmsItem = () => {
+      const item = activeSmsItems[0];
+      if (!item) return;
+      skippedSmsItems.add(item.key);
+      smsNote.textContent = `Am sarit peste ${item.row.name || item.phone}.`;
+      renderSmsQueue();
+    };
+
+    toggleToken.addEventListener("click", () => {
+      const visible = tokenInput.type === "text";
+      tokenInput.type = visible ? "password" : "text";
+      toggleToken.textContent = visible ? "Arata" : "Ascunde";
+    });
 
     exportGrid.addEventListener("click", async (event) => {
       const button = event.target.closest("[data-export]");
@@ -953,9 +2048,7 @@
       url.searchParams.set("type", button.dataset.export);
       try {
         requireTokenOrServerToken();
-        const response = await fetch(url.toString(), {
-          headers: authHeaders()
-        });
+        const response = await fetch(url.toString(), { headers: authHeaders() });
         if (!response.ok) {
           let error = "export_failed";
           try {
@@ -968,27 +2061,70 @@
         }
         const blob = await response.blob();
         downloadBlob(blob, filenameFromResponse(response, `aiwebminar-${button.dataset.export}.csv`));
-        exportNote.textContent = "Export generat.";
+        exportNote.textContent = `Export generat: ${button.textContent.trim()}.`;
       } catch (error) {
         exportNote.textContent = `Nu am putut genera exportul: ${error.message}`;
       }
     });
 
-    loadWhatsappQueue.addEventListener("click", async () => {
-      whatsappNote.textContent = "Incarc queue-ul WhatsApp...";
-      try {
-        const csv = await fetchCsv("reminders");
-        renderWhatsappQueue(parseCsv(csv));
+	    loadWhatsappQueue.addEventListener("click", async () => {
+	      whatsappNote.textContent = whatsappQueueMode.value === "onboarding" ? "Incarc leadurile fara onboarding..." : "Incarc queue-ul WhatsApp...";
+	      try {
+	        skippedWhatsappItems.clear();
+	        if (whatsappQueueMode.value === "onboarding") {
+	          const [leadsCsv, onboardingCsv, remindersCsv] = await Promise.all([fetchCsv("leads"), fetchCsv("onboarding"), fetchCsv("reminders")]);
+	          whatsappLeads = parseCsv(leadsCsv);
+	          whatsappOnboardingRows = parseCsv(onboardingCsv);
+	          whatsappRows = parseCsv(remindersCsv);
+	        } else {
+	          const csv = await fetchCsv("reminders");
+	          whatsappRows = parseCsv(csv);
+	        }
+        renderWhatsappQueue();
       } catch (error) {
         whatsappNote.textContent = `Nu am putut incarca queue-ul: ${error.message}`;
       }
     });
 
+    loadSmsQueue.addEventListener("click", async () => {
+      smsNote.textContent = "Incarc queue-ul SMS...";
+      try {
+        skippedSmsItems.clear();
+        const csv = await fetchCsv("reminders");
+        smsRows = parseCsv(csv);
+        renderSmsQueue();
+      } catch (error) {
+        smsNote.textContent = `Nu am putut incarca queue-ul SMS: ${error.message}`;
+      }
+    });
+
+    checkSmsGateway.addEventListener("click", async () => {
+      smsNote.textContent = "Verific SMS Gateway...";
+      try {
+        const payload = await fetchJson(smsGatewayEndpoint);
+        if (!payload.configured) {
+          smsNote.textContent = "SMS Gateway nu este configurat local. Seteaza SMS_GATEWAY_URL, SMS_GATEWAY_USERNAME si SMS_GATEWAY_PASSWORD.";
+          return;
+        }
+        smsNote.textContent = payload.reachable
+          ? `SMS Gateway raspunde${payload.version ? `, versiune ${payload.version}` : ""}.`
+          : `SMS Gateway este configurat, dar nu raspunde: ${payload.message || payload.status || "offline"}.`;
+      } catch (error) {
+        smsNote.textContent = `Nu am putut verifica SMS Gateway: ${error.message}`;
+      }
+    });
+
     webinarWhatsappTarget.addEventListener("change", refreshWebinarMessage);
     webinarWhatsappTemplate.addEventListener("change", refreshWebinarMessage);
+    placeholderGrid.addEventListener("input", (event) => {
+      if (!event.target.matches("[data-placeholder-key]")) return;
+      saveWebinarPlaceholders();
+      refreshWebinarMessage();
+    });
     webinarWhatsappMessage.addEventListener("input", () => {
       if (webinarWhatsappTemplate.value !== "custom") {
         webinarWhatsappTemplate.value = "custom";
+        syncCustomSelect(webinarWhatsappTemplate);
       }
       updateWebinarButtons();
     });
@@ -996,15 +2132,42 @@
     webinarWhatsappSend.addEventListener("click", () => runWebinarWhatsapp("send"));
     webinarWhatsappCopy.addEventListener("click", async () => {
       try {
-        await navigator.clipboard.writeText(webinarWhatsappMessage.value.trim());
+        await navigator.clipboard.writeText(resolvedWebinarMessage());
         webinarWhatsappNote.textContent = "Mesajul live este copiat.";
       } catch (_) {
         webinarWhatsappNote.textContent = "Nu am putut copia automat.";
       }
     });
 
-    whatsappTemplate.addEventListener("change", refreshGroupPreview);
-    customWhatsappMessage.addEventListener("input", refreshGroupPreview);
+    whatsappQueueMode.addEventListener("change", () => {
+      setQueueModeDefaults();
+      renderWhatsappQueue();
+    });
+    whatsappTemplate.addEventListener("change", () => {
+      updateControlHints();
+      refreshGroupPreview();
+      renderWhatsappQueue();
+    });
+    whatsappAccessFilter.addEventListener("change", () => {
+      updateControlHints();
+      renderWhatsappQueue();
+    });
+    whatsappStatusFilter.addEventListener("change", () => {
+      updateControlHints();
+      renderWhatsappQueue();
+    });
+    smsAccessFilter.addEventListener("change", () => {
+      syncCustomSelect(smsAccessFilter);
+      renderSmsQueue();
+    });
+    smsStatusFilter.addEventListener("change", () => {
+      syncCustomSelect(smsStatusFilter);
+      renderSmsQueue();
+    });
+    customWhatsappMessage.addEventListener("input", () => {
+      refreshGroupPreview();
+      renderWhatsappQueue();
+    });
 
     copyGroupMessage.addEventListener("click", async () => {
       try {
@@ -1015,9 +2178,17 @@
       }
     });
 
-    whatsappQueue.addEventListener("click", async (event) => {
-      const button = event.target.closest("[data-copy-message]");
-      if (!button) return;
+	    whatsappQueue.addEventListener("click", async (event) => {
+	      if (event.target.closest("[data-send-next]")) {
+	        await sendActiveWhatsappItem();
+	        return;
+	      }
+	      if (event.target.closest("[data-skip-next]")) {
+	        skipActiveWhatsappItem();
+	        return;
+	      }
+	      const button = event.target.closest("[data-copy-message]");
+	      if (!button) return;
       const messages = JSON.parse(whatsappQueue.dataset.messages || "[]");
       const message = messages[Number(button.dataset.copyMessage)] || "";
       try {
@@ -1028,17 +2199,50 @@
       }
     });
 
-    const escapeHtml = (value) => String(value || "")
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
+    smsQueue.addEventListener("click", async (event) => {
+      if (event.target.closest("[data-send-sms]")) {
+        await sendActiveSmsItem();
+        return;
+      }
+      if (event.target.closest("[data-skip-sms]")) {
+        skipActiveSmsItem();
+        return;
+      }
+      const button = event.target.closest("[data-copy-sms]");
+      if (!button) return;
+      const messages = JSON.parse(smsQueue.dataset.messages || "[]");
+      const message = messages[Number(button.dataset.copySms)] || "";
+      try {
+        await navigator.clipboard.writeText(message);
+        smsNote.textContent = "SMS-ul este copiat.";
+      } catch (_) {
+        smsNote.textContent = "Nu am putut copia automat.";
+      }
+    });
 
-    const escapeAttr = (value) => escapeHtml(value).replace(/'/g, "&#39;");
+    tokenInput.addEventListener("change", refreshOperationalData);
 
-    refreshWebinarMessage();
-    refreshGroupPreview();
-    loadStatus();
+    const init = async () => {
+      try {
+        await loadOpsSettings();
+        renderExportButtons();
+        renderWhatsappControls();
+        hydrateWebinarPlaceholders();
+        refreshWebinarMessage();
+        setQueueModeDefaults();
+        smsStatusFilter.value = "de_trimis";
+        syncCustomSelect(smsAccessFilter);
+        syncCustomSelect(smsStatusFilter);
+        refreshGroupPreview();
+      } catch (error) {
+        opsHealth.textContent = `Nu am putut incarca setarile ops: ${error.message}`;
+        exportGrid.innerHTML = "<p>Setarile ops lipsesc.</p>";
+        statusGrid.innerHTML = "<p>Statusul nu poate fi randat fara setari.</p>";
+      }
+      await refreshOperationalData();
+    };
+
+    init();
   </script>
 </body>
 </html>

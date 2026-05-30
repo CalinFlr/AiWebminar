@@ -222,7 +222,7 @@ export function buildReminderLinks({ phone, name, access, freeGroupUrl, vipGroup
   const groupUrl = access === "vip" ? vipGroupUrl : freeGroupUrl;
   const groupName = access === "vip" ? "AI WEBMINAR PRO" : "AI WEBMINAR FREE";
   const firstName = String(name || "").trim().split(/\s+/)[0] || "Salut";
-  const message = `${firstName}, ai loc prioritar la workshopul Agenti AI 24/7. Intra in grupul WhatsApp ${groupName} pentru link, remindere si anunturi: ${groupUrl || "[link grup WhatsApp]"}`;
+  const message = `${firstName}, ai loc prioritar la workshopul AI Automation Zero to Hero. Intra in grupul WhatsApp ${groupName} pentru link, remindere, bonus si anunturi: ${groupUrl || "[link grup WhatsApp]"}`;
   const encoded = encodeURIComponent(message);
 
   return {

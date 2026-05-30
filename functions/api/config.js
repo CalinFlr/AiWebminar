@@ -22,6 +22,7 @@ export async function onRequestGet({ env }) {
 
   return json({
     ok: true,
+    publicSiteUrl: env.PUBLIC_SITE_URL || "",
     stripePaymentLinkUrl: env.STRIPE_PAYMENT_LINK_URL || "",
     stripePaymentLinkConfigured,
     stripeServerConfigured,

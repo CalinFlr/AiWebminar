@@ -119,6 +119,9 @@ function doPost(e) {
     if (type === "payment") {
       return jsonResponse(handlePayment(record));
     }
+    if (type === "vip_fulfillment") {
+      return jsonResponse(handleVipFulfillment(record));
+    }
 
     return jsonResponse({ ok: false, error: "unknown_type", type: type });
   } catch (error) {
@@ -191,16 +194,41 @@ function handleOnboarding(record) {
 }
 
 function handlePayment(record) {
+  if (record && record.fulfillmentStatus === "confirmed") {
+    return handleVipFulfillment(record);
+  }
+
+  return {
+    ok: false,
+    type: "payment",
+    error: "payment_event_not_fulfillment",
+    emailStatus: "refused"
+  };
+}
+
+function handleVipFulfillment(record) {
+  if (!isConfirmedVipFulfillment(record)) {
+    return {
+      ok: false,
+      type: "vip_fulfillment",
+      error: "unconfirmed_fulfillment_refused",
+      emailStatus: "refused"
+    };
+  }
+
   var rowRecord = Object.assign({}, record, {
+    eventId: record.eventId || record.sourceEventId || "",
+    eventType: record.eventType || record.sourceEventType || "",
+    amountTotal: formatMinorUnitAmount(record.amountTotal, record.currency),
     opsProcessedAt: new Date().toISOString(),
     emailStatus: "pending",
     oblioInvoiceStatus: "de_emis"
   });
-  var appendResult = appendRecordOnce("Payments", rowRecord, "eventId", rowRecord.eventId);
+  var appendResult = appendRecordOnce("Payments", rowRecord, "sessionId", rowRecord.sessionId);
   if (appendResult.duplicate) {
     return {
       ok: true,
-      type: "payment",
+      type: "vip_fulfillment",
       sheet: "Payments",
       row: appendResult.row,
       duplicate: true,
@@ -214,11 +242,19 @@ function handlePayment(record) {
 
   return {
     ok: true,
-    type: "payment",
+    type: "vip_fulfillment",
     sheet: "Payments",
     row: row,
     emailStatus: emailStatus
   };
+}
+
+function isConfirmedVipFulfillment(record) {
+  return record &&
+    record.fulfillmentStatus === "confirmed" &&
+    record.paymentStatus === "paid" &&
+    record.status === "complete" &&
+    Boolean(record.sessionId);
 }
 
 function appendRecord(sheetName, record) {
@@ -356,8 +392,8 @@ function sendLeadEmail(record) {
 
   var isVip = record.access === "vip";
   var subject = isVip
-    ? "Am salvat intentia ta VIP pentru Agenti AI 24/7"
-    : "Locul tau prioritar este salvat pentru Agenti AI 24/7";
+    ? "Am salvat intentia ta VIP pentru AI Automation Zero to Hero"
+    : "Locul tau prioritar este salvat pentru AI Automation Zero to Hero";
   var email = isVip ? vipIntentEmail(record) : freeLeadEmail(record);
 
   return sendEmail(record.email, subject, email.text, email.html);
@@ -374,6 +410,7 @@ function sendVipEmail(record) {
   var vipGroupUrl = getProp("WHATSAPP_VIP_GROUP_URL", "");
   var siteUrl = getProp("PUBLIC_SITE_URL", "https://aiwebminar.pages.dev").replace(/\/+$/, "");
   var thankYouUrl = siteUrl + "/thank-you.html?access=vip&session_id=" + encodeURIComponent(record.sessionId || "");
+  var bonusUrl = siteUrl + "/bonus.html";
   var text = [
     "Salut,",
     "",
@@ -382,6 +419,9 @@ function sendVipEmail(record) {
     vipGroupUrl
       ? "Intra in grupul WhatsApp AI WEBMINAR PRO pentru link, remindere si materialele premium:\n" + vipGroupUrl
       : "Pagina ta de confirmare VIP este aici:\n" + thankYouUrl,
+    "",
+    "Bonusul AI Process Audit Kit este aici:",
+    bonusUrl,
     "",
     "Urmatorul pas este onboardingul, ca sa stim ce proces vrei sa aducem mai aproape de workshop:",
     thankYouUrl,
@@ -394,13 +434,16 @@ function sendVipEmail(record) {
     "Salut. Plata a fost verificata si accesul premium este activ. De aici intri in zona in care nu mai discutam AI ca jucarie, ci ca sistem pe cazul tau.",
     [
       "Intra in grupul WhatsApp AI WEBMINAR PRO pentru link, remindere si materialele premium.",
+      "Deschide bonusul AI Process Audit Kit si alege 3-5 procese pe care vrei sa le discutam.",
       "Completeaza onboardingul ca sa stim ce proces vrei sa aducem mai aproape de workshop.",
-      "VIP include replay-uri, workbook, Implementation Lab si roadmap pe cazul tau.",
+      "VIP include replay-uri, workbook complet, Implementation Lab si roadmap pe cazul tau.",
       "Pastreaza emailul acesta: dupa workshop il folosim ca reper pentru urmatorii pasi si pentru materialele promise."
     ],
     vipGroupUrl ? "Intra in AI WEBMINAR PRO" : "Deschide pagina de confirmare",
     vipGroupUrl || thankYouUrl,
-    "AIWebminar by Calin Florea"
+    "AIWebminar by Calin Florea",
+    "Deschide bonusul",
+    bonusUrl
   );
 
   return sendEmail(record.email, "VIP confirmat - intra in grupul premium", text, html);
@@ -408,10 +451,15 @@ function sendVipEmail(record) {
 
 function freeLeadEmail(record) {
   var groupUrl = record.whatsappFreeGroupUrl || getProp("WHATSAPP_FREE_GROUP_URL", "");
+  var siteUrl = getProp("PUBLIC_SITE_URL", "https://aiwebminar.pages.dev").replace(/\/+$/, "");
+  var bonusUrl = siteUrl + "/bonus.html";
   var text = [
     "Salut, " + firstName(record.name) + ",",
     "",
-    "Ai loc prioritar la workshopul Agenti AI 24/7.",
+    "Ai loc prioritar la workshopul AI Automation Zero to Hero.",
+    "",
+    "Bonusul AI Process Audit Kit + 30 idei de automatizari este aici:",
+    bonusUrl,
     "",
     "Intra in grupul WhatsApp AI WEBMINAR FREE pentru link, anunturi si remindere:",
     groupUrl || "[link grup WhatsApp]",
@@ -423,17 +471,20 @@ function freeLeadEmail(record) {
   var html = brandedEmail(
     "Inscriere confirmata",
     "Locul tau prioritar este salvat.",
-    "Salut, " + firstName(record.name) + ". Esti pe lista pentru workshopul Agenti AI 24/7. Nu e un webinar despre prompturi dragute, ci despre cum incepi sa gandesti agenti AI care fac treaba cap-coada.",
+    "Salut, " + firstName(record.name) + ". Esti pe lista pentru workshopul AI Automation Zero to Hero. Bonusul tau este AI Process Audit Kit + 30 idei de automatizari pentru business.",
     [
       "Intra in grupul WhatsApp AI WEBMINAR FREE pentru link, anunturi si remindere.",
-      "Vei vedea demo-uri live cu agenti AI, browser automation si workflow-uri multi-agent.",
-      "O sa legam exemplele de nevoi reale: business, job, consultanta, research, continut si procese repetitive.",
+      "Deschide bonusul si noteaza 3-5 procese repetitive din businessul tau.",
+      "Vei vedea demo-uri live cu Claude Desktop, skills, agent specializat si orchestrator.",
+      "O sa legam exemplele de nevoi reale: lead-uri, follow-up, research, continut si operatiuni.",
       "Cand confirmam datele sesiunilor, primesti detaliile pe email si in grup.",
-      "Daca vrei sa lucrezi mai aplicat pe cazul tau, VIP-ul adauga replay-uri, workbook si Implementation Lab."
+      "Daca vrei sa lucrezi mai aplicat pe cazul tau, VIP-ul adauga replay-uri, workbook complet si Implementation Lab."
     ],
     "Intra in AI WEBMINAR FREE",
     groupUrl,
-    "AIWebminar by Calin Florea"
+    "AIWebminar by Calin Florea",
+    "Deschide bonusul",
+    bonusUrl
   );
   return { text: text, html: html };
 }
@@ -441,6 +492,8 @@ function freeLeadEmail(record) {
 function vipIntentEmail(record) {
   var checkoutUrl = String(record.checkoutUrl || "").trim();
   var price = vipPriceLabel();
+  var siteUrl = getProp("PUBLIC_SITE_URL", "https://aiwebminar.pages.dev").replace(/\/+$/, "");
+  var bonusUrl = siteUrl + "/bonus.html";
   var paymentLines = checkoutUrl
     ? [
       "Finalizeaza plata VIP de " + price + " prin Stripe aici:",
@@ -456,7 +509,11 @@ function vipIntentEmail(record) {
     "Am salvat intentia ta pentru VIP Implementation Lab.",
     "",
     paymentLines.join("\n"),
-    "Dupa plata, primesti acces la grupul WhatsApp AI WEBMINAR PRO, replay-uri, workbook si Implementation Lab.",
+    "",
+    "Bonusul AI Process Audit Kit este disponibil aici:",
+    bonusUrl,
+    "",
+    "Dupa plata, primesti acces la grupul WhatsApp AI WEBMINAR PRO, replay-uri, workbook complet si Implementation Lab.",
     "",
     "Calin"
   ].join("\n");
@@ -466,14 +523,17 @@ function vipIntentEmail(record) {
     "Salut, " + firstName(record.name) + ". Am salvat intentia ta pentru VIP Implementation Lab. Asta este partea pentru oamenii care nu vor doar sa asiste, ci vor sa plece cu un plan clar pentru cazul lor.",
     [
       "Investitie: " + price + ". Plata se proceseaza in RON; pentru diaspora banca face conversia automat.",
-      "Dupa plata primesti acces la grupul WhatsApp AI WEBMINAR PRO, replay-uri, workbook si Implementation Lab.",
+      "Bonusul AI Process Audit Kit este disponibil acum: foloseste-l ca sa alegi procesul pe care vrei sa-l aduci in VIP.",
+      "Dupa plata primesti acces la grupul WhatsApp AI WEBMINAR PRO, replay-uri, workbook complet si Implementation Lab.",
       "Scopul este sa pleci cu un roadmap de implementare pe cazul tau, nu doar cu idei frumoase.",
-      "In VIP ne uitam la brief, context, pasi, verificari si unde merita cu adevarat sa pui un agent AI.",
+      "In VIP ne uitam la Workflow Brief, Skill Card, Agent Role Card, verificari si ce merita dus mai departe.",
       "Daca ai deja o idee, o aduci. Daca nu ai, o construim din durerea reala: timp pierdut, follow-up, research, operatiuni sau continut."
     ],
     checkoutUrl ? "Continua la plata VIP" : "Deschide pagina workshopului",
-    checkoutUrl || getProp("PUBLIC_SITE_URL", "https://aiwebminar.pages.dev"),
-    "AIWebminar by Calin Florea"
+    checkoutUrl || siteUrl,
+    "AIWebminar by Calin Florea",
+    "Deschide bonusul",
+    bonusUrl
   );
   return { text: text, html: html };
 }
@@ -496,7 +556,7 @@ function sendEmail(to, subject, body, htmlBody) {
   }
 }
 
-function brandedEmail(kicker, title, intro, bullets, ctaLabel, ctaUrl, footerBrand) {
+function brandedEmail(kicker, title, intro, bullets, ctaLabel, ctaUrl, footerBrand, secondaryCtaLabel, secondaryCtaUrl) {
   var list = (bullets || []).map(function(item) {
     return [
       "<li style=\"margin:0 0 12px 0;color:#dfe8ef;line-height:1.55;font-size:16px;\">",
@@ -510,6 +570,12 @@ function brandedEmail(kicker, title, intro, bullets, ctaLabel, ctaUrl, footerBra
     escapeHtml(ctaLabel || "Deschide"),
     "</a>"
   ].join("") : "";
+  var secondaryCta = secondaryCtaUrl ? [
+    "<a href=\"", escapeAttr(secondaryCtaUrl), "\" style=\"display:inline-block;border:1px solid #58b7ae;color:#dff7f3;text-decoration:none;",
+    "font-weight:800;border-radius:8px;padding:14px 20px;margin-top:10px;margin-left:10px;\">",
+    escapeHtml(secondaryCtaLabel || "Deschide bonusul"),
+    "</a>"
+  ].join("") : "";
 
   return [
     "<div style=\"margin:0;padding:0;background:#111417;font-family:Arial,Helvetica,sans-serif;color:#eef4f5;\">",
@@ -517,7 +583,7 @@ function brandedEmail(kicker, title, intro, bullets, ctaLabel, ctaUrl, footerBra
     "<div style=\"background:#1d2025;border:1px solid #2f3d39;border-radius:14px;overflow:hidden;box-shadow:0 18px 44px rgba(0,0,0,.28);\">",
     "<div style=\"background:#cfe7e1;color:#101820;padding:28px 34px;\">",
     "<div style=\"font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:#2f665f;font-weight:800;\">AIWebminar</div>",
-    "<div style=\"font-size:26px;line-height:1.15;font-weight:900;margin-top:10px;\">Agenti AI 24/7 pentru business real</div>",
+    "<div style=\"font-size:26px;line-height:1.15;font-weight:900;margin-top:10px;\">Workflow-uri AI controlabile pentru business real</div>",
     "</div>",
     "<div style=\"padding:34px 34px 28px;\">",
     "<div style=\"font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#6dc8bd;font-weight:900;margin-bottom:14px;\">",
@@ -527,6 +593,7 @@ function brandedEmail(kicker, title, intro, bullets, ctaLabel, ctaUrl, footerBra
     "<p style=\"font-size:18px;line-height:1.62;margin:0 0 24px;color:#dfe8ef;\">", escapeHtml(intro), "</p>",
     list ? "<ul style=\"padding-left:24px;margin:0 0 22px;\">" + list + "</ul>" : "",
     cta,
+    secondaryCta,
     "<div style=\"border-top:1px solid #30363d;margin-top:30px;padding-top:22px;color:#aab6c2;font-size:14px;line-height:1.55;\">",
     "Diferenta dintre un prompt simpatic si un sistem AI util? 15 ani de experienta in sisteme care nu au voie sa cada.",
     "<br><strong style=\"color:#ffffff;\">", escapeHtml(footerBrand || "Calin Florea"), "</strong>",
@@ -586,6 +653,42 @@ function safeCell(value) {
     return "'" + text;
   }
   return text;
+}
+
+function formatMinorUnitAmount(value, currency) {
+  if (value === null || typeof value === "undefined" || value === "") {
+    return "";
+  }
+
+  var amount = Number(value);
+  if (!isFinite(amount)) {
+    return value;
+  }
+
+  var zeroDecimalCurrencies = {
+    bif: true,
+    clp: true,
+    djf: true,
+    gnf: true,
+    jpy: true,
+    kmf: true,
+    krw: true,
+    mga: true,
+    pyg: true,
+    rwf: true,
+    ugx: true,
+    vnd: true,
+    vuv: true,
+    xaf: true,
+    xof: true,
+    xpf: true
+  };
+  var normalizedCurrency = String(currency || "").toLowerCase();
+  var decimals = zeroDecimalCurrencies[normalizedCurrency] ? 0 : 2;
+  var majorAmount = decimals ? amount / Math.pow(10, decimals) : amount;
+  var formatted = majorAmount.toFixed(decimals);
+
+  return formatted.indexOf(".") === -1 ? formatted : formatted.replace(/\.?0+$/, "");
 }
 
 function escapeHtml(value) {

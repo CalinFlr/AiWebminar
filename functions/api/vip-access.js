@@ -1,34 +1,5 @@
 import { json, methodNotAllowed } from "../_shared/http.js";
-
-async function fetchStripeSession(secretKey, sessionId) {
-  const response = await fetch(`https://api.stripe.com/v1/checkout/sessions/${encodeURIComponent(sessionId)}`, {
-    headers: {
-      authorization: `Bearer ${secretKey}`
-    }
-  });
-
-  if (!response.ok) {
-    return { ok: false, status: response.status, data: await response.text() };
-  }
-
-  return { ok: true, data: await response.json() };
-}
-
-function isPaidSession(session) {
-  return session && session.payment_status === "paid" && session.status === "complete";
-}
-
-function isSafeSessionId(sessionId) {
-  return /^cs_[A-Za-z0-9_]{6,120}$/.test(sessionId);
-}
-
-function getExpectedAmount(env) {
-  return Number(env.EXPECTED_VIP_AMOUNT || "10000");
-}
-
-function getExpectedCurrency(env) {
-  return String(env.EXPECTED_VIP_CURRENCY || "ron").toLowerCase();
-}
+import { fetchStripeSession, isSafeSessionId, validatePaidVipCheckoutSession } from "../_shared/stripe.js";
 
 export async function onRequestGet({ request, env }) {
   const url = new URL(request.url);
@@ -72,16 +43,17 @@ export async function onRequestGet({ request, env }) {
   }
 
   const session = stripeResult.data;
-  if (!isPaidSession(session)) {
+  const validationError = validatePaidVipCheckoutSession(session, env, { leadId });
+  if (validationError === "payment_not_confirmed") {
     return json({
       ok: false,
       access: "blocked",
       error: "payment_not_confirmed",
-      paymentStatus: session.payment_status || "unknown"
+      paymentStatus: session?.payment_status || "unknown"
     }, { status: 402 });
   }
 
-  if (!session.client_reference_id) {
+  if (validationError === "missing_client_reference_id") {
     return json({
       ok: false,
       access: "blocked",
@@ -89,7 +61,7 @@ export async function onRequestGet({ request, env }) {
     }, { status: 403 });
   }
 
-  if (leadId && session.client_reference_id && session.client_reference_id !== leadId) {
+  if (validationError === "lead_mismatch") {
     return json({
       ok: false,
       access: "blocked",
@@ -97,7 +69,7 @@ export async function onRequestGet({ request, env }) {
     }, { status: 403 });
   }
 
-  if (session.payment_link !== env.STRIPE_PAYMENT_LINK_ID) {
+  if (validationError === "payment_link_mismatch") {
     return json({
       ok: false,
       access: "blocked",
@@ -105,11 +77,11 @@ export async function onRequestGet({ request, env }) {
     }, { status: 403 });
   }
 
-  if (Number(session.amount_total || 0) !== getExpectedAmount(env) || String(session.currency || "").toLowerCase() !== getExpectedCurrency(env)) {
+  if (validationError) {
     return json({
       ok: false,
       access: "blocked",
-      error: "payment_amount_mismatch"
+      error: validationError
     }, { status: 403 });
   }
 

@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Process Audit Kit | AI Automation Zero to Hero</title>
+  <meta name="description" content="Bonus pentru workshop: AI Process Audit Kit si 30 idei de automatizari AI pentru business.">
+  <style>
+    :root {
+      --ink: #171715;
+      --paper: #f7f3e9;
+      --paper-alt: #ebe4d4;
+      --line: rgba(23, 23, 21, 0.16);
+      --white: #ffffff;
+      --muted: #6d675e;
+      --teal: #2f7d7a;
+      --teal-dark: #1f5956;
+      --coral: #d96f55;
+      --brass: #b8954c;
+      --shadow: 0 18px 50px rgba(23, 23, 21, 0.14);
+      --max: 1120px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--ink);
+    }
+
+    body {
+      min-height: 100dvh;
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+      display: flex;
+      flex-direction: column;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(var(--max), calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .site-header,
+    .site-footer {
+      color: var(--white);
+      background: var(--ink);
+    }
+
+    .nav,
+    .footer-row {
+      min-height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 900;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      color: var(--white);
+      background: var(--teal);
+      font-size: 0.82rem;
+    }
+
+    .btn {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      padding: 0 18px;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .btn-primary {
+      color: var(--white);
+      background: var(--coral);
+      box-shadow: 0 10px 28px rgba(217, 111, 85, 0.28);
+    }
+
+    .btn-dark {
+      color: var(--white);
+      background: var(--ink);
+    }
+
+    main {
+      flex: 1 0 auto;
+    }
+
+    .hero {
+      padding: 76px 0 58px;
+      color: var(--white);
+      background: var(--ink);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(320px, 0.72fr);
+      gap: 34px;
+      align-items: center;
+    }
+
+    .kicker {
+      display: inline-block;
+      margin-bottom: 12px;
+      color: #91d3ce;
+      font-size: 0.8rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 780px;
+      margin-bottom: 18px;
+      font-size: clamp(2.5rem, 6vw, 4.6rem);
+      line-height: 0.96;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-bottom: 14px;
+      font-size: clamp(1.9rem, 4vw, 2.7rem);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      font-size: 1.18rem;
+      line-height: 1.2;
+    }
+
+    .lead {
+      max-width: 720px;
+      color: rgba(255, 255, 255, 0.76);
+      font-size: 1.12rem;
+    }
+
+    .hero-panel {
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 8px;
+      padding: 22px;
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.26);
+    }
+
+    .hero-panel ul,
+    .mini-list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .hero-panel li,
+    .mini-list li {
+      position: relative;
+      padding-left: 22px;
+    }
+
+    .hero-panel li::before,
+    .mini-list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 9px;
+      width: 9px;
+      height: 9px;
+      border-radius: 2px;
+      background: var(--coral);
+    }
+
+    .hero-panel li {
+      color: rgba(255, 255, 255, 0.76);
+    }
+
+    .section {
+      padding: 72px 0;
+    }
+
+    .section-alt {
+      background: var(--paper-alt);
+    }
+
+    .section-heading {
+      max-width: 780px;
+      margin-bottom: 30px;
+    }
+
+    .section-heading p,
+    .card p,
+    .mini-list li {
+      color: var(--muted);
+    }
+
+    .grid-3,
+    .grid-2 {
+      display: grid;
+      gap: 18px;
+    }
+
+    .grid-3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .grid-2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 22px;
+      background: rgba(255, 255, 255, 0.58);
+      box-shadow: var(--shadow);
+    }
+
+    .card.flat {
+      box-shadow: none;
+    }
+
+    .score {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .score div {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.62);
+    }
+
+    .score strong {
+      display: block;
+      color: var(--teal-dark);
+      font-size: 1.2rem;
+    }
+
+    .ideas {
+      columns: 2;
+      column-gap: 36px;
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .ideas li {
+      break-inside: avoid;
+      margin-bottom: 8px;
+    }
+
+    .note {
+      margin-top: 20px;
+      border-left: 4px solid var(--brass);
+      padding: 14px 0 14px 18px;
+      color: var(--muted);
+    }
+
+    .cta-band {
+      color: var(--white);
+      background: var(--ink);
+    }
+
+    .cta-band .btn-dark {
+      border-color: rgba(255, 255, 255, 0.24);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .cta-band p {
+      color: rgba(255, 255, 255, 0.74);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .site-footer {
+      flex-shrink: 0;
+      padding: 28px 0;
+      color: rgba(255, 255, 255, 0.68);
+    }
+
+    @media (max-width: 860px) {
+      .hero-grid,
+      .grid-3,
+      .grid-2,
+      .score {
+        grid-template-columns: 1fr;
+      }
+
+      .ideas {
+        columns: 1;
+      }
+
+      .actions .btn {
+        width: 100%;
+      }
+
+      .nav,
+      .footer-row {
+        align-items: flex-start;
+        flex-direction: column;
+        justify-content: center;
+        padding: 14px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="index.html">
+        <span class="brand-mark">AI</span>
+        <span>AI Automation Zero to Hero</span>
+      </a>
+      <a class="btn btn-primary" href="index.html?plan=vip#inscriere" data-plan="vip">Vreau VIP</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <span class="kicker">Bonus de inscriere</span>
+          <h1>AI Process Audit Kit + 30 idei de automatizari pentru business</h1>
+          <p class="lead">Foloseste pagina asta ca sa vii la workshop cu procese reale pe masa: ce iti consuma timp, unde pierzi lead-uri, ce poate fi pregatit de AI si unde trebuie sa ramana omul in control.</p>
+          <div class="actions">
+            <a class="btn btn-primary" href="index.html?plan=vip#inscriere" data-plan="vip">Rezerva VIP Implementation Lab</a>
+            <a class="btn btn-dark" href="index.html#program">Vezi programul</a>
+          </div>
+        </div>
+        <aside class="hero-panel">
+          <h3>Ce primesti aici</h3>
+          <ul>
+            <li>Un cadru de audit pentru procese repetitive.</li>
+            <li>Un scor simplu: timp, bani, frecventa, risc.</li>
+            <li>30 idei concrete de automatizari AI.</li>
+            <li>Workbook: Workflow Brief, Skill Card, Agent Role Card, Orchestrator Map si AI Operating Card.</li>
+            <li>Doua scenarii demonstrative: fitness sandbox si cabinet local anonim, fara date sensibile.</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-heading">
+          <span class="kicker">Audit rapid</span>
+          <h2>Alege primul proces dupa matematica, nu dupa hype.</h2>
+          <p>Noteaza 5 procese repetitive din business, apoi da-le un scor simplu. Primul workflow AI bun nu este cel mai spectaculos, ci cel care economiseste timp, reduce pierderi si poate fi verificat usor.</p>
+        </div>
+
+        <div class="grid-3">
+          <article class="card">
+            <h3>1. Procese cu volum</h3>
+            <p>Lead-uri, mesaje, intrebari repetitive, documente, content, research, programari, rapoarte.</p>
+          </article>
+          <article class="card">
+            <h3>2. Output clar</h3>
+            <p>Un mesaj, un raport, o lista de recomandari, un calendar, o triere sau o sarcina pregatita pentru om.</p>
+          </article>
+          <article class="card">
+            <h3>3. Control uman</h3>
+            <p>AI-ul pregateste, marcheaza riscuri si recomanda. Omul aproba unde exista impact pe client, bani sau reputatie.</p>
+          </article>
+        </div>
+
+        <div class="score">
+          <div><strong>Timp</strong><span>Cate ore/luna consuma?</span></div>
+          <div><strong>Bani</strong><span>Ce pierzi daca nu raspunzi?</span></div>
+          <div><strong>Frecventa</strong><span>Cat de des apare procesul?</span></div>
+          <div><strong>Risc</strong><span>Cat control uman cere?</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-heading">
+          <span class="kicker">Workbook ghidat</span>
+          <h2>Vii la live cu foi simple, nu cu panica tehnica.</h2>
+          <p>Workshopul este gandit pentru non-tehnici: daca setup-ul Claude Desktop merge, lucram acolo; daca nu, continui in browser si completezi aceleasi carduri.</p>
+        </div>
+
+        <div class="grid-3">
+          <article class="card">
+            <h3>Workflow Brief</h3>
+            <p>Procesul ales, inputurile, outputul dorit, criteriile de calitate si punctele unde omul verifica.</p>
+          </article>
+          <article class="card">
+            <h3>Skill Card</h3>
+            <p>Reteta reutilizabila pentru AI: instructiuni, exemple bune, exemple slabe si reguli de ton/calitate.</p>
+          </article>
+          <article class="card">
+            <h3>Agent Role Card</h3>
+            <p>Rol, misiune, limite si ce are voie sau nu are voie sa faca agentul specializat.</p>
+          </article>
+          <article class="card">
+            <h3>Orchestrator Map</h3>
+            <p>Cum imparti munca intre researcher, strategist, copywriter, QA si project manager.</p>
+          </article>
+          <article class="card">
+            <h3>AI Operating Card</h3>
+            <p>Mini-sistemul final: cand ruleaza, ce produce, cine verifica si cum masori daca merita.</p>
+          </article>
+          <article class="card">
+            <h3>Roadmap pe 7 zile</h3>
+            <p>Ce faci dupa workshop ca sa nu ramai doar cu un demo frumos si zero implementare.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-heading">
+          <span class="kicker">30 idei</span>
+          <h2>Procese pe care le poti analiza pentru primul workflow AI.</h2>
+          <p>Alege 3-5 idei care se potrivesc businessului tau si adu-le in onboarding sau in VIP Implementation Lab.</p>
+        </div>
+
+        <ol class="ideas">
+          <li>Calificare lead-uri din formular.</li>
+          <li>Follow-up pentru lead-uri care nu au raspuns.</li>
+          <li>Raspunsuri pregatite pentru intrebari frecvente.</li>
+          <li>Rezumat zilnic al mesajelor importante.</li>
+          <li>Research concurenta pe pagini publice.</li>
+          <li>Calendar de continut pentru social media.</li>
+          <li>Scripturi pentru reels si short videos.</li>
+          <li>Repurposing dintr-un articol in postari.</li>
+          <li>Descrieri de servicii si oferte.</li>
+          <li>Checklist de onboarding client.</li>
+          <li>Reminder intern pentru programari.</li>
+          <li>Centralizare cereri de oferta.</li>
+          <li>Analiza review-uri si feedback clienti.</li>
+          <li>Propuneri de raspuns pentru review-uri.</li>
+          <li>Raport saptamanal de marketing.</li>
+          <li>Rezumat intalniri si actiuni urmatoare.</li>
+          <li>Draft de newsletter din noutati publice.</li>
+          <li>Lista de idei pentru lead magnet.</li>
+          <li>Audit simplu de website si mesaje.</li>
+          <li>Comparatie de preturi si oferte publice.</li>
+          <li>Plan de campanie pe 7 zile.</li>
+          <li>Brief pentru designer/copywriter.</li>
+          <li>Documente repetitive cu campuri standard.</li>
+          <li>Triere cereri suport dupa urgenta.</li>
+          <li>Pregatire intrebari pentru consultatie.</li>
+          <li>Plan de upsell/cross-sell pe servicii.</li>
+          <li>Checklist de calitate pentru livrare.</li>
+          <li>Biblioteca de prompturi pe roluri.</li>
+          <li>Roadmap pentru primul agent AI.</li>
+          <li>Raport lunar: ce automatizam mai departe.</li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-heading">
+          <span class="kicker">Scenarii demonstrative</span>
+          <h2>Doua exemple de gandire, nu rezultate garantate.</h2>
+          <p>Acestea sunt scenarii demonstrative folosite pentru workshop. Ele arata potentialul si logica de ROI, nu promit venituri si nu sunt testimoniale.</p>
+        </div>
+
+        <div class="grid-2">
+          <article class="card">
+            <h3>Fitness trainer local</h3>
+            <ul class="mini-list">
+              <li>Sandbox simplu pentru research public pe competitori.</li>
+              <li>Propune calendar de continut si scripturi scurte.</li>
+              <li>Pregateste follow-up pentru lead-uri calde.</li>
+              <li>Raport saptamanal: ce postari, ce mesaje, ce oferta.</li>
+            </ul>
+            <p class="note">Miza: un singur client nou poate justifica rapid sistemul daca follow-up-ul devine mai disciplinat.</p>
+          </article>
+
+          <article class="card">
+            <h3>Cabinet local anonim</h3>
+            <ul class="mini-list">
+              <li>Fara date medicale sensibile in demo.</li>
+              <li>AI-ul pregateste raspunsuri generale aprobate.</li>
+              <li>Triaza intrebari repetitive catre echipa.</li>
+              <li>Ajuta la reputatie: review-uri, mesaje, reminder intern.</li>
+            </ul>
+            <p class="note">Miza: timp castigat, raspuns mai rapid si mai putine blocaje in operatiuni.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta-band">
+      <div class="container">
+        <span class="kicker">Urmatorul pas</span>
+        <h2>Vrei sa aplici auditul pe cazul tau?</h2>
+        <p>Intra VIP daca vrei replay-uri, workbook, hot seats si roadmap pe 7 zile. Locurile VIP sunt limitate pentru ca feedback-ul pe cazuri reale nu poate fi scalat infinit.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="index.html?plan=vip#inscriere" data-plan="vip">Vreau VIP Implementation Lab</a>
+          <a class="btn btn-dark" href="index.html?plan=free#inscriere" data-plan="free">Particip gratuit</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-row">
+      <span>AI Automation Zero to Hero</span>
+      <span>Bonus pentru workshopul live despre automatizari AI practice.</span>
+    </div>
+  </footer>
+</body>
+</html>

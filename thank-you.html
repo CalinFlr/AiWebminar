@@ -99,6 +99,9 @@
       font-weight: 900;
       cursor: pointer;
       text-align: center;
+      min-width: 0;
+      white-space: normal;
+      overflow-wrap: anywhere;
     }
 
     .btn-primary {
@@ -149,6 +152,7 @@
 
     .hero-card {
       padding: clamp(26px, 4vw, 44px);
+      min-width: 0;
     }
 
     .side-card,
@@ -179,6 +183,7 @@
       font-size: clamp(2.3rem, 6vw, 4.2rem);
       line-height: 0.98;
       letter-spacing: 0;
+      overflow-wrap: break-word;
     }
 
     h2 {
@@ -436,10 +441,15 @@
 
       .site-header .btn {
         min-height: 40px;
-        max-width: 124px;
+        max-width: 92px;
         padding: 0 10px;
         font-size: 0.8rem;
         line-height: 1.15;
+      }
+
+      h1 {
+        font-size: 2rem;
+        line-height: 1.05;
       }
 
       .page {
@@ -461,7 +471,7 @@
         <span class="brand-mark">AI</span>
         <span>AI Automation Zero to Hero</span>
       </a>
-      <a class="btn btn-secondary" href="index.html#program">Inapoi la program</a>
+      <a class="btn btn-secondary" href="index.html#program">Program</a>
     </div>
   </header>
 
@@ -547,10 +557,12 @@
 
     const params = new URLSearchParams(window.location.search);
     const sessionId = params.get("session_id") || "";
-    const requestedVip = params.get("access") === "vip" || Boolean(sessionId);
+    const onboardingMode = params.get("mode") === "onboarding";
+    const requestedAccess = params.get("access") === "vip" ? "vip" : "free";
+    const requestedVip = !onboardingMode && (requestedAccess === "vip" || Boolean(sessionId));
     const leadId = params.get("lead_id") || "";
     const signupEmail = "";
-    let confirmedAccess = requestedVip ? "vip_pending" : "free";
+    let confirmedAccess = onboardingMode ? requestedAccess : (requestedVip ? "vip_pending" : "free");
     let publicConfig = {
       stripePaymentLinkUrl: "",
       whatsappFreeGroupUrl: "",
@@ -818,6 +830,8 @@
       }
     };
 
+    const getBonusUrl = () => new URL("bonus.html", window.location.href).toString();
+
     const disabledButton = (label) => `<span class="btn btn-secondary" aria-disabled="true">${label}</span>`;
 
     const linkButton = (label, href, className = "btn btn-primary", fallback = "") => {
@@ -843,19 +857,39 @@
       document.querySelector("#onboarding").scrollIntoView({ behavior: "smooth", block: "start" });
     };
 
+    const renderOnboardingInvite = () => {
+      confirmedAccess = requestedAccess;
+      stateKicker.textContent = "Onboarding optional";
+      stateTitle.textContent = "Poti completa onboardingul rapid.";
+      stateLead.textContent = "Nu este obligatoriu. Raspunsurile ne ajuta sa alegem exemple, hot seats si follow-up-uri mai relevante pentru cazul tau.";
+      primaryActions.innerHTML = `<button class="btn btn-primary" type="button" data-scroll-onboarding>Completeaza onboardingul</button>`;
+      statusList.innerHTML = `
+        <li><strong>Ce se intampla</strong><span>Trimiti contextul tau: ce vrei sa automatizezi, tool-uri folosite si rezultat dorit.</span></li>
+        <li><strong>Accesul ramane separat</strong><span>Onboardingul nu blocheaza accesul Free sau VIP.</span></li>
+        <li><strong>De ce merita</strong><span>Putem adapta exemplele si follow-up-ul la nevoile tale.</span></li>
+      `;
+      sideBadge.textContent = requestedAccess === "vip" ? "VIP" : "Free";
+      sideTitle.textContent = "Cu cat avem mai mult context, cu atat exemplele pot fi mai utile.";
+      sideText.textContent = "Completeaza doar daca vrei sa iti cresti sansele sa primesti exemple si recomandari potrivite.";
+      sideActions.innerHTML = `<button class="btn btn-secondary" type="button" data-scroll-onboarding>Deschide formularul</button>`;
+      onboardingIntro.textContent = "Onboardingul este optional si ne ajuta sa aducem exemple mai aproape de contextul tau.";
+      window.setTimeout(scrollToOnboarding, 120);
+    };
+
     const renderFree = async () => {
       const freeData = await fetchFreeAccess();
       confirmedAccess = "free";
       stateKicker.textContent = "Loc prioritar gratuit";
       stateTitle.textContent = "Locul tau prioritar este salvat.";
-      stateLead.textContent = "Vei primi linkul workshopului pe email si reminder pe WhatsApp inainte de fiecare sesiune.";
+      stateLead.textContent = "Vei primi linkul workshopului pe email si reminder pe WhatsApp. Bonusul AI Process Audit Kit este disponibil acum.";
       primaryActions.innerHTML = `
+        ${linkButton("Deschide bonusul AI Process Audit Kit", getBonusUrl(), "btn btn-primary")}
         ${linkButton("Intra in AI WEBMINAR FREE", freeData.whatsappFreeGroupUrl, "btn btn-primary", "Grupul AI WEBMINAR FREE se activeaza curand")}
         <button class="btn btn-secondary" type="button" data-scroll-onboarding>Completeaza onboardingul</button>
       `;
       statusList.innerHTML = `
-        <li><strong>Ce ai acum</strong><span>Acces live la cele 3 sesiuni principale si demo-urile cu agenti AI.</span></li>
-        <li><strong>Ce adauga VIP</strong><span>Replay-uri, workbook, Implementation Lab, hot seats si roadmap pe cazul tau.</span></li>
+        <li><strong>Ce ai acum</strong><span>Acces live la cele 3 sesiuni principale, AI Process Audit Kit si 30 idei de automatizari.</span></li>
+        <li><strong>Ce adauga VIP</strong><span>Replay-uri, workbook complet, Implementation Lab, hot seats si roadmap pe cazul tau.</span></li>
         <li><strong>Comunitate si remindere</strong><span>AI WEBMINAR FREE este canalul pentru link, anunturi si remindere.</span></li>
       `;
       sideBadge.textContent = "Recomandat";
@@ -892,6 +926,7 @@
       stateTitle.textContent = "Accesul VIP nu este confirmat inca.";
       stateLead.textContent = message;
       primaryActions.innerHTML = `
+        ${linkButton("Deschide bonusul AI Process Audit Kit", getBonusUrl(), "btn btn-primary")}
         ${linkButton("Reia plata VIP - 100 RON", getCheckoutUrl(), "btn btn-primary", "Plata VIP se activeaza curand")}
         <button class="btn btn-secondary" type="button" data-scroll-onboarding>Completeaza onboardingul</button>
       `;
@@ -910,15 +945,16 @@
       confirmedAccess = "vip";
       stateKicker.textContent = "VIP confirmat";
       stateTitle.textContent = "Accesul tau VIP este confirmat.";
-      stateLead.textContent = "Ai acces la replay-uri, workbook, Implementation Lab si roadmap de implementare pe cazul tau.";
+      stateLead.textContent = "Ai acces la bonus, replay-uri, workbook complet, Implementation Lab si roadmap de implementare pe cazul tau.";
       primaryActions.innerHTML = `
+        ${linkButton("Deschide bonusul AI Process Audit Kit", getBonusUrl(), "btn btn-primary")}
         ${linkButton("Intra in AI WEBMINAR PRO", vipData.whatsappVipGroupUrl, "btn btn-primary", "Grupul AI WEBMINAR PRO se activeaza curand")}
         <button class="btn btn-secondary" type="button" data-scroll-onboarding>Completeaza onboardingul VIP</button>
       `;
       statusList.innerHTML = `
-        <li><strong>VIP activ</strong><span>Te pregatim pentru Implementation Lab si pentru hot seats pe cazuri reale.</span></li>
+        <li><strong>VIP activ</strong><span>Te pregatim pentru Implementation Lab, hot seats si feedback pe cazuri reale.</span></li>
         <li><strong>Grup premium</strong><span>Intra in AI WEBMINAR PRO pentru link, remindere si materialele premium.</span></li>
-        <li><strong>Urmatorul pas</strong><span>Completeaza onboardingul ca sa stim ce proces sau agent AI vrei sa lucram mai aproape.</span></li>
+        <li><strong>Urmatorul pas</strong><span>Deschide bonusul, apoi completeaza onboardingul ca sa stim ce proces vrei sa lucram mai aproape.</span></li>
       `;
       sideBadge.textContent = "VIP";
       sideTitle.textContent = "Onboardingul iti creste sansele sa primesti feedback util.";
@@ -995,6 +1031,11 @@
       payload.signupEmail = signupEmail;
       payload.access = confirmedAccess;
       payload.stripeSessionId = sessionId;
+      if (onboardingMode) {
+        payload.access = requestedAccess;
+        payload.stripeSessionId = "";
+        payload.onboardingSource = "ops_invite";
+      }
       payload.createdAt = new Date().toISOString();
       payload.turnstileToken = getTurnstileToken("onboarding");
 
@@ -1087,7 +1128,9 @@
     loadPublicConfig().then(() => {
       renderTurnstileWidgets();
       initCookieBanner();
-      if (requestedVip) {
+      if (onboardingMode) {
+        renderOnboardingInvite();
+      } else if (requestedVip) {
         verifyVipAccess();
       } else {
         renderFree();

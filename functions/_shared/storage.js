@@ -170,3 +170,77 @@ export async function savePaymentRecord(env, record) {
     return d1Error(error);
   }
 }
+
+export async function saveVipFulfillmentRecord(env, record) {
+  if (!hasD1(env)) {
+    return { provider: "d1", ok: false, skipped: true, error: "d1_not_configured" };
+  }
+
+  try {
+    const result = await env.AIWEBMINAR_DB.prepare(`
+      INSERT OR IGNORE INTO vip_fulfillments (
+        session_id, lead_id, email, amount_total, currency, payment_link_id,
+        customer_id, source_event_id, source_event_type, stripe_created,
+        fulfilled_at, sync_status, email_status, payload_json
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `).bind(
+      record.sessionId || "",
+      record.leadId || "",
+      record.email || "",
+      Number(record.amountTotal || 0),
+      record.currency || "",
+      record.paymentLinkId || "",
+      record.customerId || "",
+      record.sourceEventId || "",
+      record.sourceEventType || "",
+      Number(record.created || 0) || null,
+      record.fulfilledAt || "",
+      record.syncStatus || "pending",
+      record.emailStatus || "",
+      stringify(record)
+    ).run();
+
+    const duplicate = Number(result.meta?.changes || 0) === 0;
+    let existing = null;
+    if (duplicate && record.sessionId) {
+      existing = await env.AIWEBMINAR_DB.prepare(`
+        SELECT sync_status, email_status
+        FROM vip_fulfillments
+        WHERE session_id = ?
+        LIMIT 1
+      `).bind(record.sessionId).first();
+    }
+
+    return {
+      provider: "d1",
+      ok: true,
+      duplicate,
+      existing,
+      meta: result.meta || {}
+    };
+  } catch (error) {
+    return d1Error(error, "d1_vip_fulfillment_write_failed");
+  }
+}
+
+export async function updateVipFulfillmentSyncStatus(env, sessionId, syncStatus, emailStatus = "") {
+  if (!hasD1(env)) {
+    return { provider: "d1", ok: false, skipped: true, error: "d1_not_configured" };
+  }
+
+  try {
+    const result = await env.AIWEBMINAR_DB.prepare(`
+      UPDATE vip_fulfillments
+      SET sync_status = ?, email_status = ?
+      WHERE session_id = ?
+    `).bind(
+      syncStatus || "",
+      emailStatus || "",
+      sessionId || ""
+    ).run();
+
+    return { provider: "d1", ok: true, meta: result.meta || {} };
+  } catch (error) {
+    return d1Error(error, "d1_vip_fulfillment_sync_update_failed");
+  }
+}

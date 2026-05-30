@@ -1,58 +1,14 @@
 import { guardPublicWrite } from "../_shared/abuse.js";
 import { cleanEmail, cleanEnum, cleanLongText, cleanText, cleanUrl, json, methodNotAllowed, postOpsWebhook, readJson } from "../_shared/http.js";
 import { hasD1, saveOnboardingRecord } from "../_shared/storage.js";
-
-async function fetchStripeSession(secretKey, sessionId) {
-  const response = await fetch(`https://api.stripe.com/v1/checkout/sessions/${encodeURIComponent(sessionId)}`, {
-    headers: {
-      authorization: `Bearer ${secretKey}`
-    }
-  });
-
-  if (!response.ok) {
-    return { ok: false, error: "stripe_session_lookup_failed" };
-  }
-
-  return { ok: true, data: await response.json() };
-}
-
-function isSafeSessionId(sessionId) {
-  return /^cs_[A-Za-z0-9_]{6,120}$/.test(sessionId);
-}
-
-function getExpectedAmount(env) {
-  return Number(env.EXPECTED_VIP_AMOUNT || "10000");
-}
-
-function getExpectedCurrency(env) {
-  return String(env.EXPECTED_VIP_CURRENCY || "ron").toLowerCase();
-}
-
-function validateVipSession(session, payload, env) {
-  if (!session || session.payment_status !== "paid" || session.status !== "complete") {
-    return "payment_not_confirmed";
-  }
-  if (!session.client_reference_id) {
-    return "missing_client_reference_id";
-  }
-  if (payload.leadId && session.client_reference_id !== payload.leadId) {
-    return "lead_mismatch";
-  }
-  if (!env.STRIPE_PAYMENT_LINK_ID || session.payment_link !== env.STRIPE_PAYMENT_LINK_ID) {
-    return "payment_link_mismatch";
-  }
-  if (Number(session.amount_total || 0) !== getExpectedAmount(env)) {
-    return "payment_amount_mismatch";
-  }
-  if (String(session.currency || "").toLowerCase() !== getExpectedCurrency(env)) {
-    return "payment_currency_mismatch";
-  }
-  return "";
-}
+import { fetchStripeSession, isSafeSessionId, validatePaidVipCheckoutSession } from "../_shared/stripe.js";
 
 async function verifyVipOnboarding(payload, env) {
   if (payload.access !== "vip") {
     return { ok: true, access: payload.access };
+  }
+  if (payload.onboardingSource === "ops_invite" && !payload.stripeSessionId) {
+    return { ok: true, access: "vip" };
   }
   if (!env.STRIPE_SECRET_KEY || !env.STRIPE_PAYMENT_LINK_ID) {
     return { ok: false, access: "vip_unverified", error: "stripe_not_configured" };
@@ -63,10 +19,10 @@ async function verifyVipOnboarding(payload, env) {
 
   const stripeResult = await fetchStripeSession(env.STRIPE_SECRET_KEY, payload.stripeSessionId);
   if (!stripeResult.ok) {
-    return { ok: false, access: "vip_unverified", error: stripeResult.error };
+    return { ok: false, access: "vip_unverified", error: "stripe_session_lookup_failed" };
   }
 
-  const validationError = validateVipSession(stripeResult.data, payload, env);
+  const validationError = validatePaidVipCheckoutSession(stripeResult.data, env, { leadId: payload.leadId });
   if (validationError) {
     return { ok: false, access: "vip_unverified", error: validationError };
   }
@@ -87,6 +43,7 @@ function normalizeOnboarding(payload) {
     publicLink: cleanUrl(payload.publicLink),
     desiredOutcome: cleanLongText(payload.desiredOutcome, 1600),
     createdAt: cleanText(payload.createdAt, 40),
+    onboardingSource: cleanText(payload.onboardingSource, 80),
     turnstileToken: cleanText(payload.turnstileToken, 2048)
   };
 }
@@ -157,7 +114,7 @@ export async function onRequestPost({ request, env }) {
     ok: true,
     onboardingId: payload.onboardingId,
     access: payload.access,
-    vipVerified: vipVerification.ok && payload.access === "vip",
+    vipVerified: vipVerification.ok && payload.access === "vip" && payload.onboardingSource !== "ops_invite",
     ops: primaryResult,
     sync: syncResult
   });

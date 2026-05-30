@@ -6,6 +6,7 @@
     "deploy:cloudflare": "npm run build && wrangler pages deploy dist --project-name=aiwebminar --commit-dirty=true",
     "ops:local": "npm run preview:emails && node scripts/ops-local-server.mjs",
     "preview:emails": "node scripts/preview-emails.mjs",
+    "reconcile:stripe": "node scripts/reconcile-stripe-fulfillments.mjs",
     "test:security": "node tests/security-smoke.mjs"
   },
   "devDependencies": {

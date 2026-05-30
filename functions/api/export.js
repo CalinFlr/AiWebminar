@@ -29,15 +29,58 @@ const EXPORTS = {
       "payment_link_id", "customer_id"
     ]
   },
+  vip_fulfillments: {
+    table: "vip_fulfillments",
+    orderBy: "fulfilled_at",
+    columns: [
+      "fulfilled_at", "session_id", "lead_id", "email", "amount_total", "currency",
+      "payment_link_id", "customer_id", "source_event_id", "source_event_type",
+      "stripe_created", "sync_status", "email_status"
+    ]
+  },
   reminders: {
     table: "reminders",
     orderBy: "created_at",
     columns: [
-      "created_at", "lead_id", "name", "email", "phone", "access", "persona",
+      "id", "created_at", "lead_id", "name", "email", "phone", "access", "persona",
       "channel", "message", "action_url", "status", "last_sent_at", "owner", "notes"
     ]
   }
 };
+
+const ZERO_DECIMAL_CURRENCIES = new Set([
+  "bif", "clp", "djf", "gnf", "jpy", "kmf", "krw", "mga", "pyg", "rwf",
+  "ugx", "vnd", "vuv", "xaf", "xof", "xpf"
+]);
+
+function formatMinorUnitAmount(value, currency) {
+  if (value === null || typeof value === "undefined" || value === "") {
+    return "";
+  }
+
+  const amount = Number(value);
+  if (!Number.isFinite(amount)) {
+    return value;
+  }
+
+  const normalizedCurrency = String(currency || "").toLowerCase();
+  const decimals = ZERO_DECIMAL_CURRENCIES.has(normalizedCurrency) ? 0 : 2;
+  const majorAmount = decimals ? amount / (10 ** decimals) : amount;
+  const formatted = majorAmount.toFixed(decimals);
+
+  return formatted.includes(".") ? formatted.replace(/\.?0+$/, "") : formatted;
+}
+
+function formatExportRow(type, row) {
+  if (type !== "payments" && type !== "vip_fulfillments") {
+    return row;
+  }
+
+  return {
+    ...row,
+    amount_total: formatMinorUnitAmount(row.amount_total, row.currency)
+  };
+}
 
 function csvCell(value) {
   const text = value === null || typeof value === "undefined" ? "" : String(value);
@@ -101,7 +144,8 @@ export async function onRequestGet({ request, env }) {
     LIMIT ?
   `;
   const result = await env.AIWEBMINAR_DB.prepare(query).bind(limit).all();
-  const body = csv(result.results || [], config.columns);
+  const rows = (result.results || []).map((row) => formatExportRow(type, row));
+  const body = csv(rows, config.columns);
 
   return new Response(body, {
     headers: {

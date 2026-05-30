@@ -1,5 +1,11 @@
 import { json, methodNotAllowed, postOpsWebhook } from "../_shared/http.js";
-import { hasD1, savePaymentRecord } from "../_shared/storage.js";
+import { hasD1, savePaymentRecord, saveVipFulfillmentRecord, updateVipFulfillmentSyncStatus } from "../_shared/storage.js";
+import {
+  paymentRecordFromCheckoutEvent,
+  validateCheckoutSessionAttribution,
+  validatePaidVipCheckoutSession,
+  vipFulfillmentRecordFromCheckoutEvent
+} from "../_shared/stripe.js";
 
 function parseStripeSignature(header) {
   return String(header || "").split(",").reduce((acc, item) => {
@@ -58,50 +64,17 @@ async function verifyStripeSignature(payload, header, secret) {
   return parts.v1.some((value) => safeEqual(expected, value));
 }
 
-function getExpectedAmount(env) {
-  return Number(env.EXPECTED_VIP_AMOUNT || "10000");
+function syncStatusFromOps(sync) {
+  if (!sync || sync.skipped) return "skipped";
+  return sync.ok ? "synced" : "failed";
 }
 
-function getExpectedCurrency(env) {
-  return String(env.EXPECTED_VIP_CURRENCY || "ron").toLowerCase();
+function emailStatusFromOps(sync) {
+  return sync?.response?.emailStatus || sync?.emailStatus || "";
 }
 
-function validateCheckoutSession(session, env) {
-  if (!env.STRIPE_PAYMENT_LINK_ID) {
-    return "payment_link_not_configured";
-  }
-  if (!session.client_reference_id) {
-    return "missing_client_reference_id";
-  }
-  if (session.payment_link !== env.STRIPE_PAYMENT_LINK_ID) {
-    return "payment_link_mismatch";
-  }
-  if (Number(session.amount_total || 0) !== getExpectedAmount(env)) {
-    return "payment_amount_mismatch";
-  }
-  if (String(session.currency || "").toLowerCase() !== getExpectedCurrency(env)) {
-    return "payment_currency_mismatch";
-  }
-  return "";
-}
-
-function paymentRecordFromEvent(event) {
-  const session = event.data?.object || {};
-  return {
-    eventId: event.id,
-    eventType: event.type,
-    created: event.created,
-    sessionId: session.id || "",
-    leadId: session.client_reference_id || "",
-    email: session.customer_details?.email || session.customer_email || "",
-    amountTotal: session.amount_total || 0,
-    currency: session.currency || "eur",
-    paymentStatus: session.payment_status || "",
-    status: session.status || "",
-    paymentLinkId: session.payment_link || "",
-    customerId: session.customer || "",
-    serverReceivedAt: new Date().toISOString()
-  };
+function shouldFailForSync(sync) {
+  return sync && !sync.ok && !sync.skipped;
 }
 
 export async function onRequestPost({ request, env }) {
@@ -130,29 +103,76 @@ export async function onRequestPost({ request, env }) {
     "checkout.session.async_payment_failed"
   ]);
 
-  let ops = { skipped: true };
+  let ops = { payment: { skipped: true }, fulfillment: { skipped: true }, sync: { skipped: true } };
+  let recorded = false;
+  let fulfilled = false;
+  let duplicateFulfillment = false;
+  let ignoredReason = "";
   if (handledEvents.has(event.type)) {
     const session = event.data?.object || {};
-    const validationError = validateCheckoutSession(session, env);
-    if (validationError) {
-      return json({ ok: true, received: true, handled: false, ignoredReason: validationError });
+    const attributionError = validateCheckoutSessionAttribution(session, env);
+    if (attributionError) {
+      return json({ ok: true, received: true, handled: false, recorded, fulfilled, ignoredReason: attributionError, ops });
     }
-    const record = paymentRecordFromEvent(event);
-    ops = hasD1(env)
-      ? await savePaymentRecord(env, record)
-      : await postOpsWebhook(env, "payment", record, env.MAKE_PAYMENT_WEBHOOK_URL);
-    if (!ops.ok) {
-      const status = ops.skipped || String(ops.error || "").includes("not_configured") ? 503 : 502;
-      return json({ ok: false, error: ops.error || "payment_webhook_failed", ops }, { status });
+
+    if (!hasD1(env)) {
+      return json({ ok: false, error: "d1_not_configured", ops }, { status: 503 });
     }
-    if (hasD1(env) && !ops.duplicate) {
-      ops.sync = await postOpsWebhook(env, "payment", record, env.MAKE_PAYMENT_WEBHOOK_URL);
-    } else if (hasD1(env)) {
-      ops.sync = { skipped: true, reason: "duplicate_event" };
+
+    const paymentRecord = paymentRecordFromCheckoutEvent(event);
+    ops.payment = await savePaymentRecord(env, paymentRecord);
+    if (!ops.payment.ok) {
+      const status = ops.payment.skipped || String(ops.payment.error || "").includes("not_configured") ? 503 : 502;
+      return json({ ok: false, error: ops.payment.error || "payment_record_failed", ops }, { status });
+    }
+    recorded = true;
+
+    if (event.type === "checkout.session.async_payment_failed") {
+      ignoredReason = "async_payment_failed";
+    } else {
+      const fulfillmentError = validatePaidVipCheckoutSession(session, env);
+      if (fulfillmentError) {
+        ignoredReason = fulfillmentError;
+      } else {
+        const fulfillmentRecord = vipFulfillmentRecordFromCheckoutEvent(event);
+        ops.fulfillment = await saveVipFulfillmentRecord(env, fulfillmentRecord);
+        if (!ops.fulfillment.ok) {
+          const status = ops.fulfillment.skipped || String(ops.fulfillment.error || "").includes("not_configured") ? 503 : 502;
+          return json({ ok: false, error: ops.fulfillment.error || "vip_fulfillment_failed", ops }, { status });
+        }
+
+        duplicateFulfillment = ops.fulfillment.duplicate === true;
+        fulfilled = !duplicateFulfillment;
+
+        const existingSyncStatus = ops.fulfillment.existing?.sync_status || "";
+        if (!duplicateFulfillment || existingSyncStatus !== "synced") {
+          ops.sync = await postOpsWebhook(env, "vip_fulfillment", fulfillmentRecord, env.MAKE_PAYMENT_WEBHOOK_URL);
+          ops.syncStatus = await updateVipFulfillmentSyncStatus(
+            env,
+            fulfillmentRecord.sessionId,
+            syncStatusFromOps(ops.sync),
+            emailStatusFromOps(ops.sync)
+          );
+          if (shouldFailForSync(ops.sync)) {
+            return json({ ok: false, error: ops.sync.error || "vip_fulfillment_sync_failed", ops }, { status: 502 });
+          }
+        } else {
+          ops.sync = { skipped: true, reason: "fulfillment_already_synced" };
+        }
+      }
     }
   }
 
-  return json({ ok: true, received: true, handled: handledEvents.has(event.type), ops });
+  return json({
+    ok: true,
+    received: true,
+    handled: handledEvents.has(event.type) && recorded,
+    recorded,
+    fulfilled,
+    duplicateFulfillment,
+    ignoredReason,
+    ops
+  });
 }
 
 export async function onRequestGet() {

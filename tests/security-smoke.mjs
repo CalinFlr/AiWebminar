@@ -5,10 +5,13 @@ import { onRequest as staticGuard } from "../functions/_middleware.js";
 import { onRequestGet as config } from "../functions/api/config.js";
 import { onRequestGet as exportCsv } from "../functions/api/export.js";
 import { onRequestGet as freeAccess } from "../functions/api/free-access.js";
+import { onRequestPost as opsReminders } from "../functions/api/ops-reminders.js";
+import { onRequestGet as opsSummary } from "../functions/api/ops-summary.js";
 import { onRequestPost as lead } from "../functions/api/lead.js";
 import { onRequestPost as onboarding } from "../functions/api/onboarding.js";
 import { onRequestGet as vipAccess } from "../functions/api/vip-access.js";
 import { onRequestPost as stripeWebhook } from "../functions/api/stripe-webhook.js";
+import { findMissingFulfillments } from "../scripts/reconcile-stripe-fulfillments.mjs";
 
 const baseEnv = {
   STRIPE_SECRET_KEY: "sk_test_local",
@@ -43,6 +46,9 @@ function stripeSession(overrides = {}) {
 
 function fakeD1(changes = 1, options = {}) {
   const rateLimitCounts = [...(options.rateLimitCounts || [])];
+  const allResults = [...(options.allResults || [])];
+  const firstResults = [...(options.firstResults || [])];
+  const runChanges = [...(options.runChanges || [])];
   return {
     writes: [],
     prepare(query) {
@@ -50,14 +56,17 @@ function fakeD1(changes = 1, options = {}) {
         bind: (...values) => ({
           run: async () => {
             this.writes.push({ query, values });
-            return { meta: { changes } };
+            return { meta: { changes: runChanges.length ? runChanges.shift() : changes } };
           },
           all: async () => {
             this.writes.push({ query, values });
-            return { results: [] };
+            return { results: allResults.length ? allResults.shift() : [] };
           },
           first: async () => {
             this.writes.push({ query, values });
+            if (firstResults.length) {
+              return firstResults.shift();
+            }
             if (query.includes("rate_limits")) {
               return { count: rateLimitCounts.length ? rateLimitCounts.shift() : 1 };
             }
@@ -78,6 +87,34 @@ function fakeD1(changes = 1, options = {}) {
 
 function findWrite(db, text) {
   return db.writes.find((write) => write.query.includes(text));
+}
+
+function fakeOpsSummaryD1() {
+  const firstResults = [
+    { total: 12 },
+    { total: 4 },
+    { total: 3 },
+    { total: 2 },
+    { total: 8 },
+    { total: 5 },
+    { total: 6 },
+    { total: 8 },
+    { total: 5 },
+    { total: 3 },
+    { value: "2026-05-19T10:00:00.000Z" },
+    { value: "2026-05-19T11:00:00.000Z" },
+    { value: "2026-05-19T11:05:00.000Z" },
+    { value: "2026-05-19T12:00:00.000Z" }
+  ];
+  return {
+    queries: [],
+    prepare(query) {
+      this.queries.push(query);
+      return {
+        first: async () => firstResults.shift() || {}
+      };
+    }
+  };
 }
 
 async function stripeSignature(payload, secret, timestamp = Math.floor(Date.now() / 1000)) {
@@ -215,6 +252,23 @@ async function testOnboardingDowngradesUnverifiedVipAccess() {
   assert.equal(findWrite(db, "INSERT OR IGNORE INTO onboarding").values[3], "vip_unverified");
 }
 
+async function testOnboardingInviteKeepsVipContextWithoutSession() {
+  const db = fakeD1();
+  const response = await onboarding({
+    request: request("https://aiwebminar.test/api/onboarding", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(onboardingPayload({ stripeSessionId: "", onboardingSource: "ops_invite" }))
+    }),
+    env: { ...baseEnv, AIWEBMINAR_DB: db }
+  });
+  const body = await readJson(response);
+  assert.equal(response.status, 200);
+  assert.equal(body.access, "vip");
+  assert.equal(body.vipVerified, false);
+  assert.equal(findWrite(db, "INSERT OR IGNORE INTO onboarding").values[3], "vip");
+}
+
 async function testOnboardingKeepsVipOnlyForVerifiedPayment() {
   const originalFetch = globalThis.fetch;
   const db = fakeD1();
@@ -317,6 +371,197 @@ async function testExportAllowsBearerToken() {
   assert.equal(response.headers.get("content-type"), "text/csv; charset=utf-8");
 }
 
+async function testPaymentExportFormatsAmountForHumans() {
+  const response = await exportCsv({
+    request: request("https://aiwebminar.test/api/export?type=payments", {
+      headers: { authorization: "Bearer admin_secret" }
+    }),
+    env: {
+      ADMIN_EXPORT_TOKEN: "admin_secret",
+      AIWEBMINAR_DB: fakeD1(1, {
+        allResults: [[{
+          server_received_at: "2026-05-19T10:00:00.000Z",
+          event_id: "evt_123",
+          event_type: "checkout.session.completed",
+          stripe_created: 1760000000,
+          session_id: "cs_test_123",
+          lead_id: "lead_123",
+          email: "buyer@example.com",
+          amount_total: 10000,
+          currency: "ron",
+          payment_status: "paid",
+          status: "complete",
+          payment_link_id: "plink_expected",
+          customer_id: "cus_123"
+        }]]
+      })
+    }
+  });
+  const body = await response.text();
+  assert.equal(response.status, 200);
+  assert.match(body, /"100","ron"/);
+  assert.doesNotMatch(body, /"10000","ron"/);
+}
+
+async function testOpsSummaryRequiresBearerToken() {
+  const response = await opsSummary({
+    request: request("https://aiwebminar.test/api/ops-summary?token=admin_secret"),
+    env: { ADMIN_EXPORT_TOKEN: "admin_secret", AIWEBMINAR_DB: fakeOpsSummaryD1() }
+  });
+  const body = await readJson(response);
+  assert.equal(response.status, 403);
+  assert.equal(body.error, "forbidden");
+}
+
+async function testOpsSummaryReturnsOnlyAggregates() {
+  const response = await opsSummary({
+    request: request("https://aiwebminar.test/api/ops-summary", {
+      headers: { authorization: "Bearer admin_secret" }
+    }),
+    env: { ADMIN_EXPORT_TOKEN: "admin_secret", AIWEBMINAR_DB: fakeOpsSummaryD1() }
+  });
+  const body = await readJson(response);
+  assert.equal(response.status, 200);
+  assert.equal(body.counts.leads, 12);
+  assert.equal(body.counts.vipFulfillments, 2);
+  assert.equal(body.counts.pendingWhatsappReminders, 5);
+  assert.equal(body.counts.pendingSmsReminders, 6);
+  assert.equal(body.counts.missingOnboarding, 8);
+  assert.equal(body.counts.freeMissingOnboarding, 5);
+  assert.equal(body.counts.vipMissingOnboarding, 3);
+  assert.equal(body.latest.paymentReceivedAt, "2026-05-19T11:00:00.000Z");
+  assert.equal(body.latest.vipFulfilledAt, "2026-05-19T11:05:00.000Z");
+  assert.equal(JSON.stringify(body).includes("email"), false);
+  assert.equal(JSON.stringify(body).includes("phone"), false);
+  assert.equal(JSON.stringify(body).includes("name"), false);
+}
+
+async function testOpsRemindersRequiresBearerToken() {
+  const response = await opsReminders({
+    request: request("https://aiwebminar.test/api/ops-reminders?token=admin_secret", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ action: "mark_sent", id: 1 })
+    }),
+    env: { ADMIN_EXPORT_TOKEN: "admin_secret", AIWEBMINAR_DB: fakeD1() }
+  });
+  const body = await readJson(response);
+  assert.equal(response.status, 403);
+  assert.equal(body.error, "forbidden");
+}
+
+async function testOpsRemindersMarksSent() {
+  const db = fakeD1();
+  const response = await opsReminders({
+    request: request("https://aiwebminar.test/api/ops-reminders", {
+      method: "POST",
+      headers: { "content-type": "application/json", authorization: "Bearer admin_secret" },
+      body: JSON.stringify({ action: "mark_sent", id: 42 })
+    }),
+    env: { ADMIN_EXPORT_TOKEN: "admin_secret", AIWEBMINAR_DB: db }
+  });
+  const body = await readJson(response);
+  const write = findWrite(db, "UPDATE reminders");
+  assert.equal(response.status, 200);
+  assert.equal(body.ok, true);
+  assert.equal(body.status, "trimis");
+  assert.equal(write.values[0], "trimis");
+  assert.equal(write.values[2], 42);
+}
+
+async function testOpsRemindersCheckIsProtectedAndNonMutating() {
+  const db = fakeD1();
+  const response = await opsReminders({
+    request: request("https://aiwebminar.test/api/ops-reminders", {
+      method: "POST",
+      headers: { "content-type": "application/json", authorization: "Bearer admin_secret" },
+      body: JSON.stringify({ action: "check" })
+    }),
+    env: { ADMIN_EXPORT_TOKEN: "admin_secret", AIWEBMINAR_DB: db }
+  });
+  const body = await readJson(response);
+  assert.equal(response.status, 200);
+  assert.equal(body.ok, true);
+  assert.equal(db.writes.length, 0);
+}
+
+async function testOpsRemindersReusesOnboardingInviteWithoutPii() {
+  const db = fakeD1(1, {
+    firstResults: [
+      {
+        lead_id: "lead_123",
+        name: "Private Person",
+        email: "private@example.com",
+        phone: "0742000000",
+        access: "free",
+        persona: "business"
+      },
+      {},
+      { id: 9, status: "de_trimis", last_sent_at: "" }
+    ]
+  });
+  const response = await opsReminders({
+    request: request("https://aiwebminar.test/api/ops-reminders", {
+      method: "POST",
+      headers: { "content-type": "application/json", authorization: "Bearer admin_secret" },
+      body: JSON.stringify({
+        action: "create_onboarding_invite",
+        leadId: "lead_123",
+        message: "Salut, completeaza onboardingul.",
+        actionUrl: "https://aiwebminar.test/thank-you.html?mode=onboarding"
+      })
+    }),
+    env: { ADMIN_EXPORT_TOKEN: "admin_secret", AIWEBMINAR_DB: db }
+  });
+  const body = await readJson(response);
+  assert.equal(response.status, 200);
+  assert.equal(body.id, 9);
+  assert.equal(body.reused, true);
+  assert.equal(findWrite(db, "INSERT INTO reminders"), undefined);
+  assert.equal(JSON.stringify(body).includes("private@example.com"), false);
+  assert.equal(JSON.stringify(body).includes("0742000000"), false);
+  assert.equal(JSON.stringify(body).includes("Private Person"), false);
+}
+
+async function testOpsRemindersCreatesOnboardingInvite() {
+  const db = fakeD1(1, {
+    firstResults: [
+      {
+        lead_id: "lead_123",
+        name: "Private Person",
+        email: "private@example.com",
+        phone: "0742000000",
+        access: "free",
+        persona: "business"
+      },
+      {},
+      {},
+      { id: 10, status: "de_trimis", last_sent_at: "" }
+    ]
+  });
+  const response = await opsReminders({
+    request: request("https://aiwebminar.test/api/ops-reminders", {
+      method: "POST",
+      headers: { "content-type": "application/json", authorization: "Bearer admin_secret" },
+      body: JSON.stringify({
+        action: "create_onboarding_invite",
+        leadId: "lead_123",
+        message: "Salut, completeaza onboardingul.",
+        actionUrl: "https://aiwebminar.test/thank-you.html?mode=onboarding"
+      })
+    }),
+    env: { ADMIN_EXPORT_TOKEN: "admin_secret", AIWEBMINAR_DB: db }
+  });
+  const body = await readJson(response);
+  const write = findWrite(db, "INSERT INTO reminders");
+  assert.equal(response.status, 200);
+  assert.equal(body.id, 10);
+  assert.equal(body.reused, false);
+  assert.equal(write.values[7], "whatsapp");
+  assert.equal(write.values[12], "Calin");
+  assert.equal(write.values[13], "onboarding_invite");
+}
+
 async function testReadJsonRejectsOversizedBodyWithoutTrustingContentLength() {
   await assert.rejects(
     readRequestJson(request("https://aiwebminar.test/api/lead", {
@@ -335,6 +580,14 @@ async function testThankYouTrackingDoesNotSendStripeSessionId() {
   assert.match(html, /url\.searchParams\.delete\("session_id"\)/);
   assert.doesNotMatch(html, /page_location:\s*window\.location\.href/);
   assert.doesNotMatch(html, /session_id:\s*(?:sessionId|payload\.stripeSessionId|vipData\.sessionId)/);
+}
+
+async function testThankYouSupportsOptionalOnboardingMode() {
+  const html = await readFile(new URL("../thank-you.html", import.meta.url), "utf8");
+  assert.match(html, /const onboardingMode = params\.get\("mode"\) === "onboarding"/);
+  assert.match(html, /const renderOnboardingInvite = \(\) =>/);
+  assert.match(html, /Onboardingul nu blocheaza accesul Free sau VIP/);
+  assert.match(html, /if \(onboardingMode\) \{\s*renderOnboardingInvite\(\);/);
 }
 
 async function testConfigDoesNotExposeWhatsappGroupUrls() {
@@ -372,6 +625,16 @@ async function testFrontendReadsTurnstileHiddenFallback() {
   const thankYouHtml = await readFile(new URL("../thank-you.html", import.meta.url), "utf8");
   assert.match(indexHtml, /cf-turnstile-response/);
   assert.match(thankYouHtml, /cf-turnstile-response/);
+}
+
+async function testGoogleSheetPaymentFormatsAmountForHumans() {
+  const code = await readFile(new URL("../functions/_ops/google-apps-script/Code.gs", import.meta.url), "utf8");
+  assert.match(code, /if \(type === "vip_fulfillment"\)/);
+  assert.match(code, /function isConfirmedVipFulfillment\(record\)/);
+  assert.match(code, /unconfirmed_fulfillment_refused/);
+  assert.match(code, /function formatMinorUnitAmount\(value, currency\)/);
+  assert.match(code, /amountTotal:\s*formatMinorUnitAmount\(record\.amountTotal,\s*record\.currency\)/);
+  assert.match(code, /appendRecordOnce\("Payments", rowRecord, "sessionId", rowRecord\.sessionId\)/);
 }
 
 async function testStaticGuardBlocksInternalArtifacts() {
@@ -470,12 +733,19 @@ async function testStripeWebhookStoresExpectedPayment() {
   const body = await readJson(response);
   assert.equal(response.status, 200);
   assert.equal(body.handled, true);
-  assert.equal(body.ops.ok, true);
-  assert.equal(db.writes.length, 1);
+  assert.equal(body.recorded, true);
+  assert.equal(body.fulfilled, true);
+  assert.equal(body.duplicateFulfillment, false);
+  assert.equal(body.ops.payment.ok, true);
+  assert.equal(body.ops.fulfillment.ok, true);
+  assert.equal(body.ops.sync.skipped, true);
+  assert.equal(findWrite(db, "INSERT OR IGNORE INTO payments").values[6], 10000);
+  assert.equal(findWrite(db, "INSERT OR IGNORE INTO vip_fulfillments").values[0], "cs_test_123");
+  assert.equal(findWrite(db, "UPDATE vip_fulfillments").values[0], "skipped");
 }
 
 async function testStripeWebhookDoesNotSyncDuplicatePayment() {
-  const db = fakeD1(0);
+  const db = fakeD1(0, { firstResults: [{ sync_status: "synced", email_status: "sent" }] });
   const payload = JSON.stringify({
     id: "evt_duplicate",
     type: "checkout.session.completed",
@@ -493,8 +763,166 @@ async function testStripeWebhookDoesNotSyncDuplicatePayment() {
   });
   const body = await readJson(response);
   assert.equal(response.status, 200);
-  assert.equal(body.ops.duplicate, true);
-  assert.deepEqual(body.ops.sync, { skipped: true, reason: "duplicate_event" });
+  assert.equal(body.recorded, true);
+  assert.equal(body.fulfilled, false);
+  assert.equal(body.duplicateFulfillment, true);
+  assert.equal(body.ops.payment.duplicate, true);
+  assert.equal(body.ops.fulfillment.duplicate, true);
+  assert.deepEqual(body.ops.sync, { skipped: true, reason: "fulfillment_already_synced" });
+}
+
+async function testStripeWebhookDoesNotFulfillCompletedUnpaidSession() {
+  const db = fakeD1();
+  const payload = JSON.stringify({
+    id: "evt_unpaid",
+    type: "checkout.session.completed",
+    created: 1760000000,
+    data: { object: stripeSession({ payment_status: "unpaid" }) }
+  });
+  const signature = await stripeSignature(payload, baseEnv.STRIPE_WEBHOOK_SECRET);
+  const response = await stripeWebhook({
+    request: request("https://aiwebminar.test/api/stripe-webhook", {
+      method: "POST",
+      headers: { "stripe-signature": signature },
+      body: payload
+    }),
+    env: { ...baseEnv, AIWEBMINAR_DB: db }
+  });
+  const body = await readJson(response);
+  assert.equal(response.status, 200);
+  assert.equal(body.recorded, true);
+  assert.equal(body.fulfilled, false);
+  assert.equal(body.ignoredReason, "payment_not_confirmed");
+  assert.equal(findWrite(db, "INSERT OR IGNORE INTO payments").values[9], "complete");
+  assert.equal(findWrite(db, "INSERT OR IGNORE INTO vip_fulfillments"), undefined);
+}
+
+async function testStripeWebhookLogsAsyncPaymentFailedWithoutFulfillment() {
+  const db = fakeD1();
+  const payload = JSON.stringify({
+    id: "evt_async_failed",
+    type: "checkout.session.async_payment_failed",
+    created: 1760000000,
+    data: { object: stripeSession({ payment_status: "unpaid" }) }
+  });
+  const signature = await stripeSignature(payload, baseEnv.STRIPE_WEBHOOK_SECRET);
+  const response = await stripeWebhook({
+    request: request("https://aiwebminar.test/api/stripe-webhook", {
+      method: "POST",
+      headers: { "stripe-signature": signature },
+      body: payload
+    }),
+    env: { ...baseEnv, AIWEBMINAR_DB: db }
+  });
+  const body = await readJson(response);
+  assert.equal(response.status, 200);
+  assert.equal(body.recorded, true);
+  assert.equal(body.fulfilled, false);
+  assert.equal(body.ignoredReason, "async_payment_failed");
+  assert.equal(findWrite(db, "INSERT OR IGNORE INTO payments").values[1], "checkout.session.async_payment_failed");
+  assert.equal(findWrite(db, "INSERT OR IGNORE INTO vip_fulfillments"), undefined);
+}
+
+async function testStripeWebhookFulfillsAsyncPaymentSucceeded() {
+  const db = fakeD1();
+  const payload = JSON.stringify({
+    id: "evt_async_succeeded",
+    type: "checkout.session.async_payment_succeeded",
+    created: 1760000000,
+    data: { object: stripeSession() }
+  });
+  const signature = await stripeSignature(payload, baseEnv.STRIPE_WEBHOOK_SECRET);
+  const response = await stripeWebhook({
+    request: request("https://aiwebminar.test/api/stripe-webhook", {
+      method: "POST",
+      headers: { "stripe-signature": signature },
+      body: payload
+    }),
+    env: { ...baseEnv, AIWEBMINAR_DB: db }
+  });
+  const body = await readJson(response);
+  assert.equal(response.status, 200);
+  assert.equal(body.fulfilled, true);
+  assert.equal(findWrite(db, "INSERT OR IGNORE INTO vip_fulfillments").values[8], "checkout.session.async_payment_succeeded");
+}
+
+async function testStripeWebhookDedupesDifferentEventForSameSession() {
+  const db = fakeD1(1, {
+    runChanges: [1, 0],
+    firstResults: [{ sync_status: "synced", email_status: "sent" }]
+  });
+  const payload = JSON.stringify({
+    id: "evt_second",
+    type: "checkout.session.async_payment_succeeded",
+    created: 1760000001,
+    data: { object: stripeSession() }
+  });
+  const signature = await stripeSignature(payload, baseEnv.STRIPE_WEBHOOK_SECRET);
+  const response = await stripeWebhook({
+    request: request("https://aiwebminar.test/api/stripe-webhook", {
+      method: "POST",
+      headers: { "stripe-signature": signature },
+      body: payload
+    }),
+    env: { ...baseEnv, AIWEBMINAR_DB: db }
+  });
+  const body = await readJson(response);
+  assert.equal(response.status, 200);
+  assert.equal(body.recorded, true);
+  assert.equal(body.fulfilled, false);
+  assert.equal(body.duplicateFulfillment, true);
+  assert.deepEqual(body.ops.sync, { skipped: true, reason: "fulfillment_already_synced" });
+}
+
+async function testStripeWebhookReturnsFailureWhenFulfillmentSyncFails() {
+  const originalFetch = globalThis.fetch;
+  const db = fakeD1();
+  globalThis.fetch = async () => new Response(JSON.stringify({ ok: false, error: "apps_script_down" }), {
+    status: 500,
+    headers: { "content-type": "application/json" }
+  });
+  const payload = JSON.stringify({
+    id: "evt_sync_failed",
+    type: "checkout.session.completed",
+    created: 1760000000,
+    data: { object: stripeSession() }
+  });
+  const signature = await stripeSignature(payload, baseEnv.STRIPE_WEBHOOK_SECRET);
+
+  try {
+    const response = await stripeWebhook({
+      request: request("https://aiwebminar.test/api/stripe-webhook", {
+        method: "POST",
+        headers: { "stripe-signature": signature },
+        body: payload
+      }),
+      env: {
+        ...baseEnv,
+        AIWEBMINAR_DB: db,
+        GOOGLE_OPS_WEBHOOK_URL: "https://ops.example.test/webhook",
+        GOOGLE_OPS_WEBHOOK_SECRET: "ops_secret"
+      }
+    });
+    const body = await readJson(response);
+    assert.equal(response.status, 502);
+    assert.equal(body.error, "vip_fulfillment_sync_failed");
+    assert.equal(findWrite(db, "UPDATE vip_fulfillments").values[0], "failed");
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+}
+
+async function testStripeReconciliationFindsMissingFulfillment() {
+  const report = findMissingFulfillments([
+    stripeSession({ id: "cs_paid_saved" }),
+    stripeSession({ id: "cs_paid_missing", client_reference_id: "lead_missing" }),
+    stripeSession({ id: "cs_unpaid", payment_status: "unpaid" })
+  ], [
+    { session_id: "cs_paid_saved", lead_id: "lead_123" }
+  ]);
+  assert.equal(report.paidSessions.length, 2);
+  assert.deepEqual(report.missing.map((session) => session.id), ["cs_paid_missing"]);
+  assert.deepEqual(report.extra, []);
 }
 
 const tests = [
@@ -505,16 +933,27 @@ const tests = [
   testVipAccessBlocksMismatchedAmount,
   testVipAccessAllowsExpectedPaidSession,
   testOnboardingDowngradesUnverifiedVipAccess,
+  testOnboardingInviteKeepsVipContextWithoutSession,
   testOnboardingKeepsVipOnlyForVerifiedPayment,
   testLeadRequiresTurnstileWhenConfigured,
   testLeadAllowsValidTurnstileToken,
   testLeadRateLimitBlocksBeforePersistence,
   testExportRejectsTokenInQueryString,
   testExportAllowsBearerToken,
+  testPaymentExportFormatsAmountForHumans,
+  testOpsSummaryRequiresBearerToken,
+  testOpsSummaryReturnsOnlyAggregates,
+  testOpsRemindersRequiresBearerToken,
+  testOpsRemindersMarksSent,
+  testOpsRemindersCheckIsProtectedAndNonMutating,
+  testOpsRemindersReusesOnboardingInviteWithoutPii,
+  testOpsRemindersCreatesOnboardingInvite,
   testThankYouTrackingDoesNotSendStripeSessionId,
+  testThankYouSupportsOptionalOnboardingMode,
   testConfigDoesNotExposeWhatsappGroupUrls,
   testConfigExposesOnlyTurnstileSiteKey,
   testFrontendReadsTurnstileHiddenFallback,
+  testGoogleSheetPaymentFormatsAmountForHumans,
   testStaticGuardBlocksInternalArtifacts,
   testStaticGuardAllowsPublicPages,
   testFreeAccessRequiresSafeLeadId,
@@ -522,7 +961,13 @@ const tests = [
   testStripeWebhookRejectsInvalidSignature,
   testStripeWebhookIgnoresWrongPaymentLink,
   testStripeWebhookStoresExpectedPayment,
-  testStripeWebhookDoesNotSyncDuplicatePayment
+  testStripeWebhookDoesNotSyncDuplicatePayment,
+  testStripeWebhookDoesNotFulfillCompletedUnpaidSession,
+  testStripeWebhookLogsAsyncPaymentFailedWithoutFulfillment,
+  testStripeWebhookFulfillsAsyncPaymentSucceeded,
+  testStripeWebhookDedupesDifferentEventForSameSession,
+  testStripeWebhookReturnsFailureWhenFulfillmentSyncFails,
+  testStripeReconciliationFindsMissingFulfillment
 ];
 
 for (const test of tests) {

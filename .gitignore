@@ -5,6 +5,7 @@
 .dev.vars
 .dev.vars.local
 .clasp.json
+.local/
 .wrangler/
 dist/
 email-previews/
