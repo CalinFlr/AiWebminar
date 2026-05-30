@@ -1,0 +1,17 @@
+name = "aiwebminar"
+compatibility_date = "2026-04-28"
+pages_build_output_dir = "dist"
+
+[vars]
+PUBLIC_SITE_URL = "https://aiwebminar.pages.dev"
+WORKSHOP_STATUS = "tbd"
+EXPECTED_VIP_AMOUNT = "10000"
+EXPECTED_VIP_CURRENCY = "ron"
+GA4_MEASUREMENT_ID = "G-GT628L584B"
+META_PIXEL_ID = "997297049435070"
+TURNSTILE_SITE_KEY = "0x4AAAAAADRq0Ht5nga8sPbn"
+
+[[d1_databases]]
+binding = "AIWEBMINAR_DB"
+database_name = "aiwebminar_ops"
+database_id = "76ed4750-7db9-473d-b223-359aa43bb26e"

@@ -1,0 +1,274 @@
+{
+  "exports": [
+    {
+      "type": "leads",
+      "label": "Leads",
+      "help": "Lista persoanelor inscrise in funnel. Contine date personale, deci exportul cere token admin."
+    },
+    {
+      "type": "onboarding",
+      "label": "Onboarding",
+      "help": "Raspunsurile din formularul de onboarding: context, obiective, persona si informatii utile pentru segmentare."
+    },
+    {
+      "type": "payments",
+      "label": "Payments",
+      "help": "Evenimentele de plata primite prin Stripe/webhook. Se foloseste pentru verificari si acces VIP."
+    },
+    {
+      "type": "vip_fulfillments",
+      "label": "VIP Fulfillments",
+      "help": "Accesele VIP confirmate dupa verificarea server-side Stripe. Aceasta este sursa pentru email/acces, separata de logul brut de evenimente."
+    },
+    {
+      "type": "reminders",
+      "label": "Reminders",
+      "help": "Queue-ul operational pentru remindere, inclusiv mesajele WhatsApp 1-la-1 care trebuie trimise manual."
+    }
+  ],
+  "whatsapp": {
+    "targets": [
+      {
+        "id": "free",
+        "label": "Free",
+        "chatTitle": "AIWebminar Free",
+        "help": "Grupul gratuit. Mesajele de aici sunt mai generale si orientate spre prezenta in live."
+      },
+      {
+        "id": "vip",
+        "label": "VIP",
+        "chatTitle": "AIWebminar VIP",
+        "help": "Grupul VIP. Mesajele de aici pot fi mai aplicate si orientate spre implementare."
+      },
+      {
+        "id": "both",
+        "label": "Both",
+        "help": "Trimite acelasi mesaj secvential: intai Free, apoi VIP. Preview este dezactivat pentru Both."
+      }
+    ],
+    "placeholders": [
+      {
+        "key": "live_link",
+        "label": "Live link",
+        "type": "url",
+        "default": "",
+        "help": "URL-ul sesiunii live. Completeaza-l o singura data si se aplica in toate template-urile cu {live_link}."
+      },
+      {
+        "key": "offer_link",
+        "label": "Offer link",
+        "type": "url",
+        "default": "",
+        "help": "Linkul catre oferta sau pasul urmator. Folosit in mesajele de oferta."
+      },
+      {
+        "key": "deadline",
+        "label": "Deadline",
+        "type": "text",
+        "default": "",
+        "help": "Text liber pentru limita reala a ofertei, de exemplu \"cat timp exista locuri pentru hot seats\" sau \"pana inchidem cohorta beta\"."
+      },
+      {
+        "key": "replay_link",
+        "label": "Replay link",
+        "type": "url",
+        "default": "",
+        "help": "URL-ul replay-ului. Folosit dupa webinar, cand trimiti follow-up-ul de final."
+      }
+    ],
+    "groupTemplates": [
+      {
+        "id": "day1TMinus2",
+        "label": "Ziua 1 - T-2h",
+        "help": "Pregatire pentru prima sesiune: setup, proces repetitiv si workbook.",
+        "messages": {
+          "free": "Incepem in curand cu AI Automation Zero to Hero.\n\nAstazi nu alergam dupa \"tool-ul secret\". Alegem procesul din business care merita automatizat primul si pregatim Claude ca workspace de lucru.\n\nPregateste laptop/PC, browser fallback, AI Process Audit Kit si un proces repetitiv care iti consuma timp.\n\nLink live: {live_link}",
+          "vip": "VIP reminder: incepem in curand.\n\nAstazi pregatim Claude ca workspace, alegem procesul corect si construim primul Workflow Brief. Noteaza deja cazul pe care vrei sa-l aduci in Implementation Lab.\n\nLink live: {live_link}",
+          "both": "Incepem in curand cu Ziua 1.\n\nPregateste laptop/PC, browser fallback, AI Process Audit Kit si un proces repetitiv.\n\nLink live: {live_link}"
+        }
+      },
+      {
+        "id": "day1TMinus30",
+        "label": "Ziua 1 - T-30m",
+        "help": "Agenda pe minute pentru prima sesiune.",
+        "messages": {
+          "free": "Incepem in 30 de minute.\n\nAgenda de azi:\n- min 0-30: setup Claude Desktop + fallback browser\n- min 30-40: de ce un chat izolat nu devine sistem\n- min 40-55: alegem procesul cu potential real\n- min 55-75: construim Business OS in Claude\n- final: tema scurta + preview Ziua 2\n\nIntra aici: {live_link}",
+          "vip": "VIP: incepem in 30 de minute.\n\nAzi pregatim baza pentru cazul tau: setup, proces, Workflow Brief si puncte de verificare.\n\nIntra aici: {live_link}",
+          "both": "Incepem in 30 de minute.\n\nAzi facem setup, alegem procesul si construim primul Workflow Brief.\n\nIntra aici: {live_link}"
+        }
+      },
+      {
+        "id": "day1Recap",
+        "label": "Ziua 1 - recap",
+        "help": "Recap dupa Ziua 1 si teaser pentru Ziua 2.",
+        "messages": {
+          "free": "Recap Ziua 1:\n\nAi vazut cum treci de la chat izolat la un workspace AI pentru procesul tau.\n\nTema:\n1. Ce proces alegi?\n2. Cate ore pe saptamana consuma?\n3. Ce output vrei?\n4. Unde trebuie sa verifice omul?\n\nMaine il transformam intr-o reteta reutilizabila si un agent specializat.\n\nVIP Lab este pentru replay-uri, workbook complet, hot seats si roadmap pe cazul tau.",
+          "vip": "Recap VIP Ziua 1:\n\nPastreaza Workflow Brief-ul. In Implementation Lab alegem ce merita construit primul si ce poate produce impact in 7 zile.\n\nMaine transformam procesul in skill si agent specializat.",
+          "both": "Recap Ziua 1: proces ales, Workflow Brief si prima harta de control.\n\nMaine il transformam in skill si agent specializat."
+        }
+      },
+      {
+        "id": "day2TMinus2",
+        "label": "Ziua 2 - T-2h",
+        "help": "Pregatire pentru skills si agent specializat.",
+        "messages": {
+          "free": "Azi luam procesul de ieri si il transformam intr-un workflow repetabil.\n\nVei vedea:\n- ce inseamna un skill pe limba non-tehnica\n- cum il transformi intr-o reteta reutilizabila\n- cum construiesti un agent specializat pentru research, continut sau follow-up\n- cum pastrezi omul in punctele de verificare\n\nLink live: {live_link}",
+          "vip": "VIP reminder Ziua 2:\n\nAzi construim Skill Card si Agent Role Card. Astea sunt piesele pe care le putem rafina pe cazul tau in Implementation Lab.\n\nLink live: {live_link}",
+          "both": "Azi transformam procesul in skill si agent specializat.\n\nLink live: {live_link}"
+        }
+      },
+      {
+        "id": "day2Practice",
+        "label": "Ziua 2 - demo",
+        "help": "Mesaj in-session pentru partea practica din Ziua 2.",
+        "messages": {
+          "free": "Incepem partea practica.\n\nAcum transformam procesul intr-un skill si apoi intr-un agent specializat.\n\nDaca intri acum, prinzi diferenta dintre \"prompt\" si \"workflow repetabil\".\n\nLink: {live_link}",
+          "vip": "VIP: incepem construirea agentului specializat.\n\nNoteaza unde ai vrea feedback pe cazul tau: instructiuni, exemple, limite sau output.\n\nLink: {live_link}",
+          "both": "Incepem partea practica: skill + agent specializat.\n\nLink: {live_link}"
+        }
+      },
+      {
+        "id": "day2Recap",
+        "label": "Ziua 2 - recap",
+        "help": "Recap dupa Ziua 2 si teaser pentru orchestrator.",
+        "messages": {
+          "free": "Recap Ziua 2:\n\nAi vazut cum un proces poate deveni skill si agent specializat.\n\nTema:\n1. Ce skill ar ajuta cel mai mult cazul tau?\n2. Ce exemple bune ai da AI-ului?\n3. Ce nu are voie sa faca agentul?\n\nMaine vedem orchestratorul: cum coordonezi mai multi agenti fara sa pierzi controlul.",
+          "vip": "Recap VIP Ziua 2:\n\nSkill Card + Agent Role Card sunt baza pentru Implementation Lab. Daca vrei feedback pe ele, pastreaza-le pregatite.\n\nMaine intram in orchestrator si agenti specializati.",
+          "both": "Recap Ziua 2: skill, agent specializat si verificare.\n\nMaine vedem orchestratorul."
+        }
+      },
+      {
+        "id": "day3TMinus2",
+        "label": "Ziua 3 - T-2h",
+        "help": "Pregatire pentru orchestrator si close VIP.",
+        "messages": {
+          "free": "Astazi inchidem bucla.\n\nAi vazut proces, skill si agent specializat. Azi vezi ce se intampla cand mai multi agenti lucreaza pe roluri si un orchestrator ii tine in ordine.\n\nAgenda:\n- roluri specializate\n- orchestrator\n- demo fitness cap-coada\n- proof anonim pe cabinet local\n- ROI sanity check\n- invitatie VIP Lab pentru aplicare pe cazul tau\n\nLink live: {live_link}",
+          "vip": "VIP Ziua 3:\n\nAzi vezi orchestratorul si harta sistemului. Maine in VIP Lab lucram pe cazuri reale si alegem ce merita construit primul.\n\nLink live: {live_link}",
+          "both": "Azi inchidem bucla: agenti specializati + orchestrator + roadmap.\n\nLink live: {live_link}"
+        }
+      },
+      {
+        "id": "day3CloseVip",
+        "label": "Ziua 3 - close VIP",
+        "help": "Mesaj dupa Ziua 3 pentru impingerea VIP Lab.",
+        "messages": {
+          "free": "Cele 3 sesiuni gratuite ti-au aratat mecanismul.\n\nVIP Lab este pentru aplicare:\n- hot seats pe cazuri reale\n- feedback pe procesul tau\n- replay-uri\n- workbook complet\n- roadmap pe 7 zile\n\nLocurile sunt limitate pentru ca feedback-ul pe cazuri reale nu poate fi scalat infinit.\n\nDetalii: {offer_link}",
+          "vip": "VIP: maine lucram pe cazuri reale.\n\nPregateste procesul tau, Skill Card-ul sau Agent Role Card-ul. Alegem ce workflow merita construit primul si pleci cu roadmap pe 7 zile.",
+          "both": "VIP Lab este urmatorul pas pentru aplicare pe cazuri reale.\n\nDetalii: {offer_link}"
+        }
+      },
+      {
+        "id": "tMinus10",
+        "label": "T-10 minute",
+        "help": "Reminder scurt inainte de start. Bun cand vrei sa cresti prezenta in primele minute.",
+        "messages": {
+          "free": "Incepem in 10 minute.\n\nIntra acum ca sa prinzi partea practica de la inceput:\n{live_link}",
+          "vip": "VIP reminder: incepem in 10 minute.\n\nRecomand sa intri de la inceput, pentru ca voi explica si partea de implementare concreta + urmatorii pasi.\n{live_link}",
+          "both": "Incepem in 10 minute.\n\nIntra acum aici:\n{live_link}"
+        }
+      },
+      {
+        "id": "liveNow",
+        "label": "Suntem live",
+        "help": "Mesaj de start live. Foloseste-l cand sesiunea a inceput si vrei sa aduci oamenii in sala.",
+        "messages": {
+          "free": "Suntem live acum.\n\nDaca vrei sa vezi cum poti folosi AI concret in business/job, intra aici:\n{live_link}",
+          "vip": "Suntem live acum.\n\nPentru VIP: pregateste o intrebare concreta despre cazul tau. La final prioritizam implementarea.\n{live_link}",
+          "both": "Suntem live acum.\n\nIntra aici:\n{live_link}"
+        }
+      },
+      {
+        "id": "practice",
+        "label": "Partea practica",
+        "help": "Mesaj pentru momentul in care treci de introducere si incepe partea aplicata.",
+        "messages": {
+          "free": "Am ajuns la partea practica: proces, skill, agent sau orchestrator, in functie de zi.\n\nIntra acum daca nu esti deja in live.",
+          "vip": "Pentru VIP: acum intram in zona aplicata. Noteaza unde vrei feedback pe cazul tau: proces, skill, agent sau roadmap.",
+          "both": "Am ajuns la partea practica. Intra acum daca nu esti deja in live."
+        }
+      },
+      {
+        "id": "qa",
+        "label": "Q&A",
+        "help": "Mesaj pentru strangerea intrebarilor in grup, inainte sau in timpul sectiunii de Q&A.",
+        "messages": {
+          "free": "Pregatim Q&A.\n\nScrie intrebarea ta aici in grup si aleg cateva exemple utile pentru toata lumea.",
+          "vip": "VIP Q&A: scrie intrebarea ta concreta despre implementare, funnel sau automatizari. Le prioritizez pe cele aplicate.",
+          "both": "Pregatim Q&A. Scrie intrebarea ta aici in grup."
+        }
+      },
+      {
+        "id": "offer",
+        "label": "Oferta / pas urmator",
+        "help": "Mesaj pentru oferta sau urmatorul pas. Are nevoie de offer_link si, de obicei, deadline.",
+        "messages": {
+          "free": "Am deschis urmatorul pas pentru cei care vor aplicare, nu doar demo.\n\nVIP Lab include hot seats, replay-uri, workbook complet si roadmap pe 7 zile.\n\nDetalii aici:\n{offer_link}\n\nLimita reala: {deadline}.",
+          "vip": "Pentru VIP: urmatorul pas dupa Lab este cohorta beta sau, pentru cazuri urgente, sprint/consultanta.\n\nDetalii aici:\n{offer_link}\n\nLimita reala: {deadline}.",
+          "both": "Am deschis urmatorul pas aplicat.\n\nDetalii aici:\n{offer_link}\n\nLimita reala: {deadline}."
+        }
+      },
+      {
+        "id": "final",
+        "label": "Final + replay",
+        "help": "Mesaj de inchidere si replay. Completeaza replay_link inainte sa il trimiti.",
+        "messages": {
+          "free": "Multumesc ca ai fost live.\n\nFree este live-first. Replay-urile sunt incluse in VIP, impreuna cu workbook complet, hot seats si roadmap.\n\nUrmatorul pas: {offer_link}",
+          "vip": "Multumesc ca ai fost live.\n\nPentru VIP: replay-ul si urmatorul pas sunt aici:\n{replay_link}\n\nPastreaza procesul tau pregatit pentru feedback.",
+          "both": "Multumesc ca ai fost live.\n\nReplay-urile sunt pentru VIP. Urmatorul pas: {offer_link}"
+        }
+      },
+      {
+        "id": "delay",
+        "label": "Intarziere tehnica",
+        "help": "Mesaj de siguranta pentru o intarziere tehnica. Nu are nevoie de linkuri.",
+        "messages": {
+          "free": "Avem o mica intarziere tehnica. Revenim in cateva minute, ramaneti aproape.",
+          "vip": "Avem o mica intarziere tehnica. Revenim in cateva minute. Multumesc pentru rabdare.",
+          "both": "Avem o mica intarziere tehnica. Revenim in cateva minute."
+        }
+      },
+      {
+        "id": "custom",
+        "label": "Custom",
+        "help": "Porneste de la mesaj gol. Foloseste-l cand ai nevoie de un mesaj punctual in afara template-urilor.",
+        "messages": {
+          "free": "",
+          "vip": "",
+          "both": ""
+        }
+      }
+    ],
+    "oneToOneTemplates": [
+      {
+        "id": "dayBefore",
+        "label": "Reminder cu o zi inainte",
+        "help": "Mesaj individual pentru ziua de dinaintea workshopului.",
+        "message": "Salut, {name}. Reminder rapid pentru workshopul AI Automation Zero to Hero.\n\nMaine incepem cu setup Claude Desktop, fallback in browser si alegerea procesului care merita automatizat primul.\n\nTe rog intra si in grupul WhatsApp potrivit. Acolo pun linkul final, bonusul si anunturile importante.\n\nCalin"
+      },
+      {
+        "id": "sameDay",
+        "label": "Reminder in ziua workshopului",
+        "help": "Mesaj individual pentru ziua webinarului, orientat spre pregatirea participantului.",
+        "message": "Salut, {name}. Azi e sesiunea AI Automation Zero to Hero.\n\nPregateste laptopul, Claude Desktop daca il ai instalat si un proces real din business/job: lead-uri, research, continut, documente, follow-up sau operatiuni.\n\nDaca setup-ul nu merge, continuam in browser. Scopul nu e sa pleci cu un prompt frumos, ci cu un workflow pe care il poti controla.\n\nCalin"
+      },
+      {
+        "id": "vipNudge",
+        "label": "Nudge VIP",
+        "help": "Mesaj individual pentru a directiona leadul catre optiunea VIP/aplicata.",
+        "message": "Salut, {name}. Daca vrei sa lucram mai aplicat pe cazul tau, AI WEBMINAR PRO este partea unde intram in Workflow Brief, Skill Card, Agent Role Card, verificari si roadmap.\n\nE pentru oameni care vor sa transforme AI-ul din demo in sistem util, cu feedback pe cazul lor.\n\nCalin"
+      },
+      {
+        "id": "onboardingInvite",
+        "label": "Invita onboarding",
+        "help": "Mesaj individual pentru leadurile care nu au completat inca onboardingul. Nu blocheaza accesul, doar le da sansa sa trimita context.",
+        "message": "Salut, {name}. Daca vrei sa adaptez mai bine exemplele din webinar la cazul tau, poti completa rapid onboardingul aici:\n{onboarding_link}\n\nNu e obligatoriu, dar ma ajuta sa aleg exemple si follow-up mai relevante.\n\nCalin"
+      },
+      {
+        "id": "custom",
+        "label": "Mesaj custom",
+        "help": "Foloseste textarea-ul custom si placeholderii {name}, {access}, {persona}, {onboarding_link}.",
+        "message": ""
+      }
+    ]
+  }
+}

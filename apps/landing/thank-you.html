@@ -1,0 +1,1141 @@
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Confirmare inscriere | AI Automation Zero to Hero</title>
+  <meta name="description" content="Confirmare inscriere pentru workshopul AI Automation Zero to Hero.">
+  <style>
+    :root {
+      --ink: #171715;
+      --paper: #f7f3e9;
+      --paper-alt: #ebe4d4;
+      --line: rgba(23, 23, 21, 0.16);
+      --white: #ffffff;
+      --muted: #6d675e;
+      --teal: #2f7d7a;
+      --coral: #d96f55;
+      --brass: #b8954c;
+      --shadow: 0 18px 50px rgba(23, 23, 21, 0.14);
+      --max: 1120px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      overscroll-behavior-y: none;
+      background: var(--ink);
+    }
+
+    body {
+      min-height: 100dvh;
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+      display: flex;
+      flex-direction: column;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    .container {
+      width: min(var(--max), calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .site-header {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      background: var(--ink);
+      color: var(--white);
+    }
+
+    .nav {
+      min-height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 900;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: var(--teal);
+      font-size: 0.82rem;
+    }
+
+    .btn {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      padding: 0 18px;
+      font-weight: 900;
+      cursor: pointer;
+      text-align: center;
+      min-width: 0;
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+
+    .btn-primary {
+      color: var(--white);
+      background: var(--coral);
+      box-shadow: 0 10px 28px rgba(217, 111, 85, 0.28);
+    }
+
+    .btn-dark {
+      color: var(--white);
+      background: var(--ink);
+    }
+
+    .btn-secondary {
+      border-color: var(--line);
+      background: rgba(255, 255, 255, 0.64);
+    }
+
+    .btn[aria-disabled="true"] {
+      opacity: 0.58;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .page {
+      padding: 72px 0;
+    }
+
+    main {
+      flex: 1 0 auto;
+    }
+
+    .thankyou-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(340px, 0.78fr);
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-card,
+    .side-card,
+    .onboarding-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.64);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card {
+      padding: clamp(26px, 4vw, 44px);
+      min-width: 0;
+    }
+
+    .side-card,
+    .onboarding-card {
+      padding: 24px;
+    }
+
+    .kicker {
+      display: inline-block;
+      margin-bottom: 12px;
+      color: var(--teal);
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 760px;
+      margin-bottom: 16px;
+      font-size: clamp(2.3rem, 6vw, 4.2rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+      overflow-wrap: break-word;
+    }
+
+    h2 {
+      margin-bottom: 12px;
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      line-height: 1.04;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+    }
+
+    .lead {
+      max-width: 720px;
+      color: var(--muted);
+      font-size: 1.12rem;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 26px;
+    }
+
+    .status-list {
+      display: grid;
+      gap: 12px;
+      margin: 24px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .status-list li {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.56);
+    }
+
+    .status-list strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .status-list span,
+    .side-card p,
+    .onboarding-card p {
+      color: var(--muted);
+    }
+
+    .vip-panel {
+      border-color: rgba(217, 111, 85, 0.42);
+      background: rgba(217, 111, 85, 0.1);
+    }
+
+    .badge {
+      width: fit-content;
+      margin-bottom: 10px;
+      border-radius: 999px;
+      padding: 5px 9px;
+      color: var(--white);
+      background: var(--coral);
+      font-size: 0.74rem;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .section {
+      padding: 0 0 72px;
+    }
+
+    .onboarding-card {
+      display: grid;
+      grid-template-columns: 0.82fr 1.18fr;
+      gap: 28px;
+    }
+
+    .form {
+      display: grid;
+      gap: 14px;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+    }
+
+    .field label {
+      font-size: 0.88rem;
+      font-weight: 900;
+    }
+
+    .field input,
+    .field textarea {
+      width: 100%;
+      min-height: 46px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 0 12px;
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.78);
+    }
+
+    .field textarea {
+      min-height: 112px;
+      padding: 12px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+
+    .note {
+      min-height: 24px;
+      margin: 0;
+      color: var(--teal);
+      font-size: 0.92rem;
+      font-weight: 900;
+    }
+
+    .turnstile-slot {
+      min-height: 0;
+    }
+
+    .turnstile-slot:not(:empty) {
+      margin-top: -2px;
+    }
+
+    .consent-copy {
+      margin: -2px 0 0;
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.45;
+    }
+
+    .consent-copy a {
+      color: var(--ink);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .site-footer {
+      flex-shrink: 0;
+      padding: 34px 0;
+      color: rgba(255, 255, 255, 0.68);
+      background: var(--ink);
+    }
+
+    .footer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      font-size: 0.92rem;
+    }
+
+    .footer-links {
+      display: inline-flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 14px;
+    }
+
+    .footer-links a {
+      color: var(--white);
+    }
+
+    .cookie-banner {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 40;
+      width: min(420px, calc(100% - 36px));
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 8px;
+      padding: 16px;
+      color: var(--white);
+      background: rgba(23, 23, 21, 0.94);
+      box-shadow: var(--shadow);
+    }
+
+    .cookie-banner p {
+      margin: 0 0 12px;
+      color: rgba(255, 255, 255, 0.76);
+      font-size: 0.88rem;
+    }
+
+    .cookie-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .cookie-actions .btn {
+      min-height: 38px;
+      padding: 0 14px;
+      font-size: 0.88rem;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    @media (max-width: 860px) {
+      .thankyou-grid,
+      .onboarding-card,
+      .field-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .actions .btn {
+        width: 100%;
+      }
+
+      .footer-row {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .footer-links {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .container {
+        width: min(var(--max), calc(100% - 40px));
+      }
+
+      .nav {
+        gap: 10px;
+      }
+
+      .brand {
+        min-width: 0;
+        gap: 8px;
+        font-size: 0.92rem;
+        line-height: 1.15;
+      }
+
+      .brand-mark {
+        width: 30px;
+        height: 30px;
+        flex: 0 0 30px;
+        font-size: 0.72rem;
+      }
+
+      .site-header .btn {
+        min-height: 40px;
+        max-width: 92px;
+        padding: 0 10px;
+        font-size: 0.8rem;
+        line-height: 1.15;
+      }
+
+      h1 {
+        font-size: 2rem;
+        line-height: 1.05;
+      }
+
+      .page {
+        padding: 56px 0;
+      }
+
+      .hero-card,
+      .side-card,
+      .onboarding-card {
+        padding: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="index.html">
+        <span class="brand-mark">AI</span>
+        <span>AI Automation Zero to Hero</span>
+      </a>
+      <a class="btn btn-secondary" href="index.html#program">Program</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="page">
+      <div class="container thankyou-grid">
+        <article class="hero-card">
+          <span class="kicker" id="stateKicker">Confirmare</span>
+          <h1 id="stateTitle">Locul tau prioritar este salvat.</h1>
+          <p class="lead" id="stateLead">Vei primi detaliile workshopului pe email si reminder pe WhatsApp.</p>
+          <div class="actions" id="primaryActions"></div>
+          <ul class="status-list" id="statusList"></ul>
+        </article>
+
+        <aside class="side-card vip-panel" id="sideCard">
+          <div class="badge" id="sideBadge">Urmatorul pas</div>
+          <h3 id="sideTitle">Completeaza onboardingul</h3>
+          <p id="sideText">Raspunde la cateva intrebari scurte ca sa primesti exemple mai apropiate de cazul tau.</p>
+          <div class="actions" id="sideActions"></div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="onboarding">
+      <div class="container onboarding-card">
+        <div>
+          <span class="kicker">Onboarding rapid</span>
+          <h2 id="onboardingTitle">Spune-ne ce caz vrei sa aducem mai aproape de workshop.</h2>
+          <p id="onboardingIntro">Raspunsurile astea ne ajuta sa alegem exemple, hot seats si follow-up-uri relevante.</p>
+        </div>
+
+        <form class="form" id="onboardingForm">
+          <div class="field">
+            <label for="automationIdea">Ce ai vrea sa automatizezi prima data?</label>
+            <textarea id="automationIdea" name="automationIdea" placeholder="Ex: follow-up lead-uri, research concurenta, calendar social media, rapoarte, documente..." required></textarea>
+          </div>
+          <div class="field-grid">
+            <div class="field">
+              <label for="currentTools">Ce tool-uri folosesti acum?</label>
+              <input id="currentTools" name="currentTools" placeholder="ChatGPT, Claude, Excel, CRM, Notion...">
+            </div>
+            <div class="field">
+              <label for="publicLink">Link relevant, daca exista</label>
+              <input id="publicLink" name="publicLink" type="url" placeholder="Site, profil social, pagina produs...">
+            </div>
+          </div>
+          <div class="field">
+            <label for="desiredOutcome">Cum ar arata un rezultat bun dupa 7 zile?</label>
+            <textarea id="desiredOutcome" name="desiredOutcome" placeholder="Ex: un agent care pregateste postari, un raport saptamanal, un demo pentru clienti..." required></textarea>
+          </div>
+          <div class="turnstile-slot" data-turnstile-form="onboarding"></div>
+          <button class="btn btn-primary" type="submit">Trimite onboardingul &rarr;</button>
+          <p class="consent-copy">Prin trimitere, esti de acord sa folosim raspunsurile pentru exemple, confirmari, remindere si follow-up despre workshop. Poti cere oricand stergerea datelor. Detalii in <a href="privacy.html">Politica de confidentialitate</a>.</p>
+          <p class="note" id="onboardingNote" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-row">
+      <span>AI Automation Zero to Hero</span>
+      <span class="footer-links">
+        <span>Workshop live despre automatizari AI practice.</span>
+        <a href="privacy.html">Confidentialitate</a>
+      </span>
+    </div>
+  </footer>
+
+  <div class="cookie-banner" id="cookieBanner" hidden>
+    <p>Folosim cookies pentru analytics si reclame, ca sa intelegem ce functioneaza si sa imbunatatim workshopul.</p>
+    <div class="cookie-actions">
+      <button class="btn btn-primary" type="button" data-cookie-accept>Accept</button>
+      <button class="btn btn-secondary" type="button" data-cookie-reject>Refuz</button>
+    </div>
+  </div>
+
+  <script>
+    const ONBOARDING_ENDPOINT = "/api/onboarding";
+    const CONFIG_ENDPOINT = "/api/config";
+    const VIP_ACCESS_ENDPOINT = "/api/vip-access";
+    const FREE_ACCESS_ENDPOINT = "/api/free-access";
+
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get("session_id") || "";
+    const onboardingMode = params.get("mode") === "onboarding";
+    const requestedAccess = params.get("access") === "vip" ? "vip" : "free";
+    const requestedVip = !onboardingMode && (requestedAccess === "vip" || Boolean(sessionId));
+    const leadId = params.get("lead_id") || "";
+    const signupEmail = "";
+    let confirmedAccess = onboardingMode ? requestedAccess : (requestedVip ? "vip_pending" : "free");
+    let publicConfig = {
+      stripePaymentLinkUrl: "",
+      whatsappFreeGroupUrl: "",
+      ga4MeasurementId: "",
+      metaPixelId: "",
+      turnstileSiteKey: ""
+    };
+    const COOKIE_CONSENT_KEY = "aiwebinar_cookie_consent";
+    const TRACKED_PREFIX = "aiwebinar_tracked_";
+    const trackingQueue = [];
+    const turnstileTokens = new Map();
+    const turnstileWidgets = new Map();
+    let turnstileScriptPromise = null;
+    const metaEventByName = {
+      free_thank_you: "CompleteRegistration",
+      vip_purchase: "Purchase",
+      click_checkout: "InitiateCheckout",
+      join_whatsapp_group: "Contact",
+      open_onboarding: "CustomEvent",
+      onboarding_submit: "CompleteRegistration"
+    };
+    const googleConsentConfig = {
+      analytics_storage: "denied",
+      ad_storage: "denied",
+      ad_user_data: "denied",
+      ad_personalization: "denied"
+    };
+
+    const stateKicker = document.querySelector("#stateKicker");
+    const stateTitle = document.querySelector("#stateTitle");
+    const stateLead = document.querySelector("#stateLead");
+    const statusList = document.querySelector("#statusList");
+    const primaryActions = document.querySelector("#primaryActions");
+    const sideBadge = document.querySelector("#sideBadge");
+    const sideTitle = document.querySelector("#sideTitle");
+    const sideText = document.querySelector("#sideText");
+    const sideActions = document.querySelector("#sideActions");
+    const onboardingIntro = document.querySelector("#onboardingIntro");
+    const onboardingForm = document.querySelector("#onboardingForm");
+    const onboardingNote = document.querySelector("#onboardingNote");
+    const cookieBanner = document.querySelector("#cookieBanner");
+
+    const cleanTrackingParams = (params = {}) => Object.fromEntries(
+      Object.entries(params).filter(([, value]) => value !== undefined && value !== null && value !== "")
+    );
+
+    const getTrackingPageLocation = () => {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("session_id");
+      return url.toString();
+    };
+
+    const stripSensitiveParamsFromAddressBar = () => {
+      if (!window.history?.replaceState || !sessionId) return;
+      const url = new URL(window.location.href);
+      url.searchParams.delete("session_id");
+      window.history.replaceState({}, document.title, url.toString());
+    };
+
+    const makeTrackingEventId = (eventName, params = {}, onceKey = "") => {
+      const key = onceKey || params.event_id || params.session_id || params.onboarding_id || params.lead_id || `${Date.now()}_${Math.random().toString(16).slice(2)}`;
+      return `aiw_${eventName}_${String(key).replace(/[^a-zA-Z0-9_-]/g, "").slice(0, 80)}`;
+    };
+
+    const initConsentMode = () => {
+      window.dataLayer = window.dataLayer || [];
+      if (typeof window.gtag !== "function") {
+        window.gtag = function gtag() { window.dataLayer.push(arguments); };
+      }
+      window.gtag("consent", "default", googleConsentConfig);
+    };
+
+    const updateGoogleConsent = (granted) => {
+      if (typeof window.gtag !== "function") return;
+      const value = granted ? "granted" : "denied";
+      window.gtag("consent", "update", {
+        analytics_storage: value,
+        ad_storage: value,
+        ad_user_data: value,
+        ad_personalization: value
+      });
+    };
+
+    const makeId = (prefix) => {
+      if (window.crypto && typeof window.crypto.randomUUID === "function") {
+        return window.crypto.randomUUID();
+      }
+      return `${prefix}_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+    };
+
+    const getCookiePreference = () => {
+      try {
+        return window.localStorage.getItem(COOKIE_CONSENT_KEY);
+      } catch (error) {
+        return "";
+      }
+    };
+
+    const dispatchTrackingEvent = (eventName, params = {}) => {
+      const cleanParams = cleanTrackingParams(params);
+      if (typeof window.gtag === "function") {
+        window.gtag("event", eventName, cleanParams);
+      }
+      if (typeof window.fbq === "function") {
+        const metaEvent = metaEventByName[eventName] || "CustomEvent";
+        const metaParams = cleanTrackingParams({
+          content_name: eventName,
+          content_category: cleanParams.persona,
+          content_ids: cleanParams.lead_id ? [cleanParams.lead_id] : undefined,
+          currency: cleanParams.currency,
+          value: cleanParams.value,
+          status: cleanParams.status,
+          access: cleanParams.access
+        });
+        const metaOptions = cleanParams.event_id ? { eventID: cleanParams.event_id } : undefined;
+        if (metaEvent === "CustomEvent") {
+          window.fbq("trackCustom", eventName, metaParams, metaOptions);
+        } else {
+          window.fbq("track", metaEvent, metaParams, metaOptions);
+        }
+      }
+    };
+
+    const markTracked = (key) => {
+      if (!key) return;
+      try {
+        window.localStorage.setItem(`${TRACKED_PREFIX}${key}`, "1");
+      } catch (error) {
+        // Ignore storage errors; tracking should never block the page.
+      }
+    };
+
+    const wasTracked = (key) => {
+      if (!key) return false;
+      try {
+        return window.localStorage.getItem(`${TRACKED_PREFIX}${key}`) === "1";
+      } catch (error) {
+        return false;
+      }
+    };
+
+    const trackFunnelEvent = (eventName, params = {}, options = {}) => {
+      const preference = getCookiePreference();
+      if (preference === "rejected") return;
+      if (options.onceKey && wasTracked(options.onceKey)) return;
+      const event = {
+        name: eventName,
+        onceKey: options.onceKey || "",
+        params: {
+          page_location: getTrackingPageLocation(),
+          page_title: document.title,
+          ...params
+        }
+      };
+      event.params.event_id = makeTrackingEventId(eventName, event.params, event.onceKey);
+      if (preference !== "accepted") {
+        trackingQueue.push(event);
+        return;
+      }
+      dispatchTrackingEvent(event.name, event.params);
+      markTracked(event.onceKey);
+    };
+
+    const flushTrackingQueue = () => {
+      while (trackingQueue.length) {
+        const event = trackingQueue.shift();
+        if (event.onceKey && wasTracked(event.onceKey)) continue;
+        dispatchTrackingEvent(event.name, event.params);
+        markTracked(event.onceKey);
+      }
+    };
+
+    const loadPublicConfig = async () => {
+      try {
+        const response = await fetch(CONFIG_ENDPOINT, { headers: { accept: "application/json" } });
+        if (!response.ok) return publicConfig;
+        const config = await response.json();
+        publicConfig = { ...publicConfig, ...config };
+      } catch (error) {
+        console.warn("Config endpoint indisponibil.", error);
+      }
+      return publicConfig;
+    };
+
+    const loadTurnstileScript = () => {
+      if (!publicConfig.turnstileSiteKey) return Promise.resolve(false);
+      if (window.turnstile) return Promise.resolve(true);
+      if (turnstileScriptPromise) return turnstileScriptPromise;
+
+      turnstileScriptPromise = new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+        script.async = true;
+        script.defer = true;
+        script.onload = () => resolve(true);
+        script.onerror = () => reject(new Error("turnstile_script_failed"));
+        document.head.appendChild(script);
+      });
+
+      return turnstileScriptPromise;
+    };
+
+    const renderTurnstileWidgets = async () => {
+      if (!publicConfig.turnstileSiteKey) return;
+      try {
+        await loadTurnstileScript();
+      } catch (error) {
+        console.warn("Turnstile indisponibil.", error);
+        return;
+      }
+      document.querySelectorAll("[data-turnstile-form]").forEach((container) => {
+        const formName = container.dataset.turnstileForm;
+        if (!formName || turnstileWidgets.has(formName) || !window.turnstile) return;
+        const widgetId = window.turnstile.render(container, {
+          sitekey: publicConfig.turnstileSiteKey,
+          callback: (token) => turnstileTokens.set(formName, token),
+          "expired-callback": () => turnstileTokens.delete(formName),
+          "error-callback": () => turnstileTokens.delete(formName)
+        });
+        turnstileWidgets.set(formName, widgetId);
+      });
+    };
+
+    const getTurnstileToken = (formName) => {
+      if (!publicConfig.turnstileSiteKey) return "";
+      const container = document.querySelector(`[data-turnstile-form="${formName}"]`);
+      const fieldToken = container?.querySelector('[name="cf-turnstile-response"]')?.value || "";
+      return turnstileTokens.get(formName) || fieldToken;
+    };
+
+    const resetTurnstile = (formName) => {
+      const widgetId = turnstileWidgets.get(formName);
+      if (widgetId && window.turnstile) {
+        window.turnstile.reset(widgetId);
+      }
+      turnstileTokens.delete(formName);
+    };
+
+    const postJson = async (endpoint, payload) => {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        const error = new Error(result.error || "request_failed");
+        error.status = response.status;
+        error.result = result;
+        throw error;
+      }
+      return result;
+    };
+
+    const getCheckoutUrl = () => {
+      if (!publicConfig.stripePaymentLinkUrl) return "";
+      try {
+        const url = new URL(publicConfig.stripePaymentLinkUrl, window.location.href);
+        if (leadId) url.searchParams.set("lead_id", leadId);
+        if (leadId) url.searchParams.set("client_reference_id", leadId);
+        return url.toString();
+      } catch (error) {
+        console.warn("Stripe Payment Link invalid.", error);
+        return "";
+      }
+    };
+
+    const getBonusUrl = () => new URL("bonus.html", window.location.href).toString();
+
+    const disabledButton = (label) => `<span class="btn btn-secondary" aria-disabled="true">${label}</span>`;
+
+    const linkButton = (label, href, className = "btn btn-primary", fallback = "") => {
+      if (!href) return disabledButton(fallback || label);
+      return `<a class="${className}" href="${href}" target="_blank" rel="noopener">${label}</a>`;
+    };
+
+    const fetchFreeAccess = async () => {
+      if (!leadId) return {};
+      try {
+        const url = new URL(FREE_ACCESS_ENDPOINT, window.location.href);
+        url.searchParams.set("lead_id", leadId);
+        const response = await fetch(url.toString(), { headers: { accept: "application/json" } });
+        const result = await response.json().catch(() => ({}));
+        return response.ok && result.ok ? result : {};
+      } catch (error) {
+        console.warn("Free access endpoint indisponibil.", error);
+        return {};
+      }
+    };
+
+    const scrollToOnboarding = () => {
+      document.querySelector("#onboarding").scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+
+    const renderOnboardingInvite = () => {
+      confirmedAccess = requestedAccess;
+      stateKicker.textContent = "Onboarding optional";
+      stateTitle.textContent = "Poti completa onboardingul rapid.";
+      stateLead.textContent = "Nu este obligatoriu. Raspunsurile ne ajuta sa alegem exemple, hot seats si follow-up-uri mai relevante pentru cazul tau.";
+      primaryActions.innerHTML = `<button class="btn btn-primary" type="button" data-scroll-onboarding>Completeaza onboardingul</button>`;
+      statusList.innerHTML = `
+        <li><strong>Ce se intampla</strong><span>Trimiti contextul tau: ce vrei sa automatizezi, tool-uri folosite si rezultat dorit.</span></li>
+        <li><strong>Accesul ramane separat</strong><span>Onboardingul nu blocheaza accesul Free sau VIP.</span></li>
+        <li><strong>De ce merita</strong><span>Putem adapta exemplele si follow-up-ul la nevoile tale.</span></li>
+      `;
+      sideBadge.textContent = requestedAccess === "vip" ? "VIP" : "Free";
+      sideTitle.textContent = "Cu cat avem mai mult context, cu atat exemplele pot fi mai utile.";
+      sideText.textContent = "Completeaza doar daca vrei sa iti cresti sansele sa primesti exemple si recomandari potrivite.";
+      sideActions.innerHTML = `<button class="btn btn-secondary" type="button" data-scroll-onboarding>Deschide formularul</button>`;
+      onboardingIntro.textContent = "Onboardingul este optional si ne ajuta sa aducem exemple mai aproape de contextul tau.";
+      window.setTimeout(scrollToOnboarding, 120);
+    };
+
+    const renderFree = async () => {
+      const freeData = await fetchFreeAccess();
+      confirmedAccess = "free";
+      stateKicker.textContent = "Loc prioritar gratuit";
+      stateTitle.textContent = "Locul tau prioritar este salvat.";
+      stateLead.textContent = "Vei primi linkul workshopului pe email si reminder pe WhatsApp. Bonusul AI Process Audit Kit este disponibil acum.";
+      primaryActions.innerHTML = `
+        ${linkButton("Deschide bonusul AI Process Audit Kit", getBonusUrl(), "btn btn-primary")}
+        ${linkButton("Intra in AI WEBMINAR FREE", freeData.whatsappFreeGroupUrl, "btn btn-primary", "Grupul AI WEBMINAR FREE se activeaza curand")}
+        <button class="btn btn-secondary" type="button" data-scroll-onboarding>Completeaza onboardingul</button>
+      `;
+      statusList.innerHTML = `
+        <li><strong>Ce ai acum</strong><span>Acces live la cele 3 sesiuni principale, AI Process Audit Kit si 30 idei de automatizari.</span></li>
+        <li><strong>Ce adauga VIP</strong><span>Replay-uri, workbook complet, Implementation Lab, hot seats si roadmap pe cazul tau.</span></li>
+        <li><strong>Comunitate si remindere</strong><span>AI WEBMINAR FREE este canalul pentru link, anunturi si remindere.</span></li>
+      `;
+      sideBadge.textContent = "Recomandat";
+      sideTitle.textContent = "VIP-ul te ajuta sa aplici pe cazul tau.";
+      sideText.textContent = "Daca vrei sa revii la demo-uri si sa intri in Implementation Lab, upgrade-ul de 100 RON, aproximativ 20 EUR, este urmatorul pas.";
+      sideActions.innerHTML = `${linkButton("Vreau VIP - 100 RON", getCheckoutUrl(), "btn btn-primary", "Plata VIP se activeaza curand")}`;
+      onboardingIntro.textContent = "Pentru free, onboardingul ne ajuta sa alegem exemple mai apropiate de contextul tau.";
+      trackFunnelEvent("free_thank_you", {
+        access: "free",
+        lead_id: leadId,
+        value: 0,
+        currency: "RON"
+      }, { onceKey: `free_${leadId || "anonymous"}` });
+    };
+
+    const renderVipLoading = () => {
+      stateKicker.textContent = "Verificam plata VIP";
+      stateTitle.textContent = "Verificam accesul tau premium.";
+      stateLead.textContent = "Daca plata a fost finalizata, linkul grupului VIP apare aici in cateva secunde.";
+      primaryActions.innerHTML = disabledButton("Verificam plata...");
+      statusList.innerHTML = `
+        <li><strong>Protectie acces premium</strong><span>Linkul VIP apare doar dupa confirmarea Stripe.</span></li>
+        <li><strong>Daca ai inchis checkout-ul</strong><span>Revino la plata din email sau cere-ne manual verificarea.</span></li>
+      `;
+      sideBadge.textContent = "VIP";
+      sideTitle.textContent = "Accesul premium este blocat pana la confirmare.";
+      sideText.textContent = "Asta protejeaza grupul premium si materialele VIP.";
+      sideActions.innerHTML = `${linkButton("Reia plata VIP - 100 RON", getCheckoutUrl(), "btn btn-primary", "Plata VIP se activeaza curand")}`;
+    };
+
+    const renderVipBlocked = (message = "Nu putem confirma plata VIP inca.") => {
+      confirmedAccess = "vip_unverified";
+      stateKicker.textContent = "VIP neverificat";
+      stateTitle.textContent = "Accesul VIP nu este confirmat inca.";
+      stateLead.textContent = message;
+      primaryActions.innerHTML = `
+        ${linkButton("Deschide bonusul AI Process Audit Kit", getBonusUrl(), "btn btn-primary")}
+        ${linkButton("Reia plata VIP - 100 RON", getCheckoutUrl(), "btn btn-primary", "Plata VIP se activeaza curand")}
+        <button class="btn btn-secondary" type="button" data-scroll-onboarding>Completeaza onboardingul</button>
+      `;
+      statusList.innerHTML = `
+        <li><strong>Grup premium protejat</strong><span>Nu afisam linkul AI WEBMINAR PRO fara plata confirmata in Stripe.</span></li>
+        <li><strong>Poti continua</strong><span>Completeaza onboardingul, iar accesul VIP se confirma dupa plata.</span></li>
+      `;
+      sideBadge.textContent = "Urmatorul pas";
+      sideTitle.textContent = "Finalizeaza plata ca sa intri in grupul VIP.";
+      sideText.textContent = "Dupa confirmare, pagina iti afiseaza automat linkul grupului premium.";
+      sideActions.innerHTML = `${linkButton("Continua la plata", getCheckoutUrl(), "btn btn-primary", "Plata VIP se activeaza curand")}`;
+      onboardingIntro.textContent = "Poti completa onboardingul acum; pentru VIP il folosim dupa confirmarea platii.";
+    };
+
+    const renderVip = (vipData = {}) => {
+      confirmedAccess = "vip";
+      stateKicker.textContent = "VIP confirmat";
+      stateTitle.textContent = "Accesul tau VIP este confirmat.";
+      stateLead.textContent = "Ai acces la bonus, replay-uri, workbook complet, Implementation Lab si roadmap de implementare pe cazul tau.";
+      primaryActions.innerHTML = `
+        ${linkButton("Deschide bonusul AI Process Audit Kit", getBonusUrl(), "btn btn-primary")}
+        ${linkButton("Intra in AI WEBMINAR PRO", vipData.whatsappVipGroupUrl, "btn btn-primary", "Grupul AI WEBMINAR PRO se activeaza curand")}
+        <button class="btn btn-secondary" type="button" data-scroll-onboarding>Completeaza onboardingul VIP</button>
+      `;
+      statusList.innerHTML = `
+        <li><strong>VIP activ</strong><span>Te pregatim pentru Implementation Lab, hot seats si feedback pe cazuri reale.</span></li>
+        <li><strong>Grup premium</strong><span>Intra in AI WEBMINAR PRO pentru link, remindere si materialele premium.</span></li>
+        <li><strong>Urmatorul pas</strong><span>Deschide bonusul, apoi completeaza onboardingul ca sa stim ce proces vrei sa lucram mai aproape.</span></li>
+      `;
+      sideBadge.textContent = "VIP";
+      sideTitle.textContent = "Onboardingul iti creste sansele sa primesti feedback util.";
+      sideText.textContent = "Raspunsurile tale devin baza pentru exemple, hot seats si roadmap-ul de implementare pe 7 zile.";
+      sideActions.innerHTML = `<button class="btn btn-primary" type="button" data-scroll-onboarding>Completeaza acum</button>`;
+      onboardingIntro.textContent = "Pentru VIP, onboardingul devine baza roadmap-ului de implementare pe 7 zile.";
+      trackFunnelEvent("vip_purchase", {
+        access: "vip",
+        lead_id: vipData.leadId || leadId,
+        value: Number(vipData.amountTotal || 10000) / 100,
+        currency: String(vipData.currency || "ron").toUpperCase()
+      }, { onceKey: `vip_${vipData.sessionId || sessionId || leadId}` });
+    };
+
+    const verifyVipAccess = async () => {
+      renderVipLoading();
+
+      if (!sessionId) {
+        renderVipBlocked("Lipseste confirmarea Stripe. Daca ai platit deja, foloseste linkul primit dupa checkout sau contacteaza-ne pentru verificare manuala.");
+        return;
+      }
+
+      try {
+        const url = new URL(VIP_ACCESS_ENDPOINT, window.location.href);
+        url.searchParams.set("session_id", sessionId);
+        if (leadId) url.searchParams.set("lead_id", leadId);
+        const response = await fetch(url.toString(), { headers: { accept: "application/json" } });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || !result.ok) {
+          renderVipBlocked(result.message || "Stripe nu a confirmat inca plata VIP.");
+          return;
+        }
+        renderVip(result);
+      } catch (error) {
+        console.warn("VIP access endpoint indisponibil.", error);
+        renderVipBlocked("Nu putem verifica plata momentan. Incearca din nou sau contacteaza-ne pentru verificare manuala.");
+      }
+    };
+
+    document.addEventListener("click", (event) => {
+      const link = event.target.closest("a[href]");
+      if (link) {
+        const href = link.href || "";
+        if (href.includes("chat.whatsapp.com")) {
+          trackFunnelEvent("join_whatsapp_group", {
+            access: confirmedAccess,
+            lead_id: leadId,
+            group_type: confirmedAccess === "vip" ? "vip" : "free"
+          });
+        }
+        if (href.includes("buy.stripe.com")) {
+          trackFunnelEvent("click_checkout", {
+            access: "vip",
+            lead_id: leadId,
+            value: 100,
+            currency: "RON"
+          });
+        }
+      }
+      if (event.target.closest("[data-scroll-onboarding]")) {
+        trackFunnelEvent("open_onboarding", {
+          access: confirmedAccess,
+          lead_id: leadId
+        });
+        scrollToOnboarding();
+      }
+    });
+
+    onboardingForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const payload = Object.fromEntries(new FormData(onboardingForm).entries());
+      payload.onboardingId = makeId("onboarding");
+      payload.leadId = leadId;
+      payload.signupEmail = signupEmail;
+      payload.access = confirmedAccess;
+      payload.stripeSessionId = sessionId;
+      if (onboardingMode) {
+        payload.access = requestedAccess;
+        payload.stripeSessionId = "";
+        payload.onboardingSource = "ops_invite";
+      }
+      payload.createdAt = new Date().toISOString();
+      payload.turnstileToken = getTurnstileToken("onboarding");
+
+      try {
+        await postJson(ONBOARDING_ENDPOINT, payload);
+      } catch (error) {
+        console.warn("Onboarding endpoint indisponibil.", error);
+        onboardingNote.textContent = error.result?.message || "Nu am putut salva onboardingul. Incearca din nou in cateva secunde.";
+        resetTurnstile("onboarding");
+        return;
+      }
+
+      onboardingNote.textContent = "Multumim. Am salvat onboardingul si il folosim pentru exemplele din workshop.";
+      trackFunnelEvent("onboarding_submit", {
+        access: payload.access,
+        lead_id: payload.leadId || "",
+        onboarding_id: payload.onboardingId
+      });
+    });
+
+    const loadGa4 = () => {
+      if (!publicConfig.ga4MeasurementId || window.__aiWebinarGa4Loaded) return;
+      window.__aiWebinarGa4Loaded = true;
+      const script = document.createElement("script");
+      script.async = true;
+      script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(publicConfig.ga4MeasurementId)}`;
+      document.head.appendChild(script);
+      window.dataLayer = window.dataLayer || [];
+      if (typeof window.gtag !== "function") {
+        window.gtag = function gtag() { window.dataLayer.push(arguments); };
+      }
+      window.gtag("js", new Date());
+      window.gtag("config", publicConfig.ga4MeasurementId, {
+        page_title: document.title,
+        page_location: getTrackingPageLocation()
+      });
+    };
+
+    const loadMetaPixel = () => {
+      if (!publicConfig.metaPixelId || window.__aiWebinarPixelLoaded) return;
+      window.__aiWebinarPixelLoaded = true;
+      window.fbq = function fbq() {
+        window.fbq.callMethod ? window.fbq.callMethod.apply(window.fbq, arguments) : window.fbq.queue.push(arguments);
+      };
+      if (!window._fbq) window._fbq = window.fbq;
+      window.fbq.push = window.fbq;
+      window.fbq.loaded = true;
+      window.fbq.version = "2.0";
+      window.fbq.queue = [];
+      const script = document.createElement("script");
+      script.async = true;
+      script.src = "https://connect.facebook.net/en_US/fbevents.js";
+      document.head.appendChild(script);
+      window.fbq("init", publicConfig.metaPixelId);
+      window.fbq("track", "PageView");
+    };
+
+    const enableTracking = () => {
+      updateGoogleConsent(true);
+      loadGa4();
+      loadMetaPixel();
+      flushTrackingQueue();
+    };
+
+    const initCookieBanner = () => {
+      if (!cookieBanner) return;
+      const preference = getCookiePreference();
+      if (preference === "accepted") {
+        enableTracking();
+        return;
+      }
+      if (preference === "rejected") return;
+
+      cookieBanner.hidden = false;
+      cookieBanner.querySelector("[data-cookie-accept]").addEventListener("click", () => {
+        window.localStorage.setItem(COOKIE_CONSENT_KEY, "accepted");
+        cookieBanner.hidden = true;
+        enableTracking();
+      });
+      cookieBanner.querySelector("[data-cookie-reject]").addEventListener("click", () => {
+        window.localStorage.setItem(COOKIE_CONSENT_KEY, "rejected");
+        updateGoogleConsent(false);
+        trackingQueue.length = 0;
+        cookieBanner.hidden = true;
+      });
+    };
+
+    initConsentMode();
+    stripSensitiveParamsFromAddressBar();
+    loadPublicConfig().then(() => {
+      renderTurnstileWidgets();
+      initCookieBanner();
+      if (onboardingMode) {
+        renderOnboardingInvite();
+      } else if (requestedVip) {
+        verifyVipAccess();
+      } else {
+        renderFree();
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,3034 @@
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Workflow-uri AI pentru Business | Workshop AI Automation Zero to Hero</title>
+  <meta name="description" content="Workshop live pentru owneri: treci de la ChatGPT folosit ocazional la primul workflow sau agent AI controlabil pentru businessul tau.">
+  <style>
+    :root {
+      --ink: #171715;
+      --ink-soft: #25241f;
+      --paper: #f7f3e9;
+      --paper-alt: #ebe4d4;
+      --line: rgba(23, 23, 21, 0.16);
+      --white: #ffffff;
+      --muted: #6d675e;
+      --teal: #2f7d7a;
+      --teal-dark: #1f5956;
+      --coral: #d96f55;
+      --brass: #b8954c;
+      --green: #5f7f55;
+      --shadow: 0 18px 50px rgba(23, 23, 21, 0.14);
+      --radius: 8px;
+      --max: 1160px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      scroll-behavior: smooth;
+      overscroll-behavior-y: none;
+      background: var(--ink);
+    }
+
+    body {
+      min-height: 100dvh;
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+      display: flex;
+      flex-direction: column;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    .container {
+      width: min(var(--max), calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(23, 23, 21, 0.86);
+      backdrop-filter: blur(18px);
+      color: var(--white);
+    }
+
+    .nav {
+      min-height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      border-radius: 8px;
+      background: var(--teal);
+      color: var(--white);
+      font-size: 0.82rem;
+      letter-spacing: 0;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 0.94rem;
+    }
+
+    .btn {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      padding: 0 18px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
+      white-space: normal;
+      text-align: center;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--coral);
+      color: var(--white);
+      box-shadow: 0 10px 28px rgba(217, 111, 85, 0.28);
+    }
+
+    .btn-primary:hover {
+      background: #c96049;
+    }
+
+    .btn-secondary {
+      border-color: rgba(255, 255, 255, 0.26);
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .btn-dark {
+      background: var(--ink);
+      color: var(--white);
+    }
+
+    .btn[aria-disabled="true"] {
+      opacity: 0.58;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .hero {
+      position: relative;
+      min-height: 78vh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      padding: 104px 0 64px;
+      color: var(--white);
+      background: var(--ink);
+      isolation: isolate;
+    }
+
+    .hero-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -3;
+      background: #151512;
+    }
+
+    .hero-scrim {
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      background: rgba(12, 12, 10, 0.58);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.02fr) minmax(340px, 0.7fr);
+      gap: 48px;
+      align-items: center;
+    }
+
+    .hero-grid > * {
+      min-width: 0;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 18px;
+      padding: 7px 10px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+
+    .eyebrow-dot {
+      width: 8px;
+      height: 8px;
+      display: inline-block;
+      margin-right: 10px;
+      border-radius: 99px;
+      background: var(--coral);
+      box-shadow: 0 0 0 4px rgba(217, 111, 85, 0.18);
+      vertical-align: 0.05em;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 780px;
+      margin-bottom: 20px;
+      font-size: 4rem;
+      line-height: 0.98;
+      letter-spacing: 0;
+      overflow-wrap: break-word;
+    }
+
+    h2 {
+      margin-bottom: 18px;
+      font-size: 2.35rem;
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 10px;
+      font-size: 1.18rem;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      max-width: 680px;
+      margin-bottom: 28px;
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 1.16rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      color: rgba(255, 255, 255, 0.76);
+      font-size: 0.94rem;
+    }
+
+    .hero-meta span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 8px;
+      padding: 0 10px;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .hero-panel {
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 8px;
+      padding: 18px;
+      background: rgba(23, 23, 21, 0.72);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.24);
+    }
+
+    .system-preview {
+      display: grid;
+      gap: 12px;
+    }
+
+    .preview-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: rgba(255, 255, 255, 0.74);
+      font-size: 0.82rem;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: #bfe0c3;
+      font-weight: 800;
+    }
+
+    .status-pill::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #7fcf8b;
+      box-shadow: 0 0 0 4px rgba(127, 207, 139, 0.16);
+    }
+
+    .preview-row {
+      display: grid;
+      grid-template-columns: 84px 1fr;
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .preview-label {
+      min-height: 72px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      color: rgba(255, 255, 255, 0.72);
+      font-weight: 800;
+      font-size: 0.82rem;
+    }
+
+    .preview-work {
+      min-height: 72px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 8px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .preview-work strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--white);
+    }
+
+    .preview-work span {
+      color: rgba(255, 255, 255, 0.68);
+      font-size: 0.9rem;
+    }
+
+    .preview-progress {
+      height: 8px;
+      margin-top: 10px;
+      overflow: hidden;
+      border-radius: 99px;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .preview-progress i {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--brass);
+    }
+
+    .section {
+      padding: 86px 0;
+    }
+
+    main {
+      flex: 1 0 auto;
+    }
+
+    .section-dark {
+      color: var(--white);
+      background: var(--ink);
+    }
+
+    .section-alt {
+      background: var(--paper-alt);
+    }
+
+    .section-kicker {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--teal-dark);
+      font-size: 0.82rem;
+      font-weight: 900;
+    }
+
+    .section-dark .section-kicker {
+      color: #91d3ce;
+    }
+
+    .section-heading {
+      max-width: 780px;
+      margin-bottom: 34px;
+    }
+
+    .section-heading p {
+      max-width: 720px;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .section-dark .section-heading p {
+      color: rgba(255, 255, 255, 0.72);
+    }
+
+    .problem-grid {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .problem-statement {
+      border-left: 4px solid var(--coral);
+      padding-left: 22px;
+    }
+
+    .problem-statement p {
+      color: var(--muted);
+      font-size: 1.08rem;
+    }
+
+    .contrast-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .contrast-item {
+      display: grid;
+      grid-template-columns: 32px 1fr;
+      gap: 12px;
+      align-items: start;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.42);
+    }
+
+    .contrast-number {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: var(--ink);
+      color: var(--white);
+      font-size: 0.86rem;
+      font-weight: 900;
+    }
+
+    .contrast-item p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .cost-grid,
+    .proof-grid,
+    .case-grid,
+    .bonus-grid,
+    .difference-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .cost-card,
+    .proof-card,
+    .case-card,
+    .bonus-card,
+    .difference-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 22px;
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    .cost-value {
+      margin-bottom: 12px;
+      color: var(--coral);
+      font-size: 2.55rem;
+      line-height: 1;
+      font-weight: 900;
+    }
+
+    .cost-card p,
+    .proof-card p,
+    .case-card p,
+    .bonus-card p,
+    .difference-card p {
+      color: var(--muted);
+    }
+
+    .estimate-note {
+      margin-top: 18px;
+      border-left: 4px solid var(--brass);
+      padding: 14px 0 14px 18px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .difference-card {
+      background: rgba(23, 23, 21, 0.04);
+    }
+
+    .difference-card.highlight,
+    .proof-card.highlight,
+    .bonus-card.highlight {
+      border-color: rgba(217, 111, 85, 0.48);
+      background: rgba(217, 111, 85, 0.1);
+    }
+
+    .case-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .case-card {
+      display: grid;
+      gap: 16px;
+      background: rgba(255, 255, 255, 0.58);
+      box-shadow: var(--shadow);
+    }
+
+    .case-label {
+      width: fit-content;
+      border-radius: 999px;
+      padding: 5px 9px;
+      color: var(--white);
+      background: var(--teal);
+      font-size: 0.74rem;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .case-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .case-metric {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.58);
+    }
+
+    .case-metric strong {
+      display: block;
+      color: var(--ink);
+      font-size: 1.12rem;
+      line-height: 1.05;
+    }
+
+    .case-metric span {
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .bonus-section {
+      color: var(--white);
+      background: var(--ink);
+    }
+
+    .bonus-section .section-kicker {
+      color: #91d3ce;
+    }
+
+    .bonus-section .section-heading p,
+    .bonus-section .bonus-card p,
+    .bonus-section .bonus-card li {
+      color: rgba(255, 255, 255, 0.72);
+    }
+
+    .bonus-section .bonus-card {
+      border-color: rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .bonus-section .bonus-card.highlight {
+      border-color: rgba(217, 111, 85, 0.5);
+      background: rgba(217, 111, 85, 0.16);
+    }
+
+    .bonus-section .bonus-card h3 {
+      color: var(--white);
+    }
+
+    .proof-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .proof-stat {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.52);
+    }
+
+    .proof-stat strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--teal-dark);
+      font-size: 1.35rem;
+      line-height: 1.05;
+      font-weight: 900;
+    }
+
+    .proof-stat span {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .persona-shell {
+      display: grid;
+      grid-template-columns: 1fr;
+      position: relative;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.48);
+      box-shadow: var(--shadow);
+    }
+
+    .persona-tabs {
+      display: grid;
+      grid-column: 1;
+      grid-row: 1;
+      grid-template-columns: repeat(3, 1fr);
+      border-bottom: 1px solid var(--line);
+      background: rgba(23, 23, 21, 0.04);
+    }
+
+    .persona-tab {
+      min-height: 58px;
+      border: 0;
+      border-right: 1px solid var(--line);
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-weight: 900;
+    }
+
+    .persona-tab:last-child {
+      border-right: 0;
+    }
+
+    .persona-tab.is-active {
+      color: var(--ink);
+      background: var(--white);
+      box-shadow: inset 0 -3px 0 var(--teal);
+    }
+
+    .persona-content {
+      display: grid;
+      grid-column: 1;
+      grid-row: 2;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      padding: 30px;
+      opacity: 0;
+      pointer-events: none;
+      visibility: hidden;
+    }
+
+    .persona-content.is-active {
+      opacity: 1;
+      pointer-events: auto;
+      visibility: visible;
+    }
+
+    .persona-copy p {
+      color: var(--muted);
+    }
+
+    .mini-list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .mini-list li {
+      position: relative;
+      padding-left: 22px;
+      color: var(--muted);
+    }
+
+    .mini-list li::before {
+      content: "";
+      position: absolute;
+      top: 9px;
+      left: 0;
+      width: 9px;
+      height: 9px;
+      border-radius: 2px;
+      background: var(--teal);
+    }
+
+    .persona-result {
+      border-radius: 8px;
+      padding: 22px;
+      background: var(--ink);
+      color: var(--white);
+    }
+
+    .persona-result p {
+      color: rgba(255, 255, 255, 0.76);
+    }
+
+    .path-grid,
+    .outcome-grid,
+    .pricing-grid,
+    .faq-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .path-card,
+    .outcome-card,
+    .day-card,
+    .price-card,
+    .faq-item {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    .path-card,
+    .outcome-card {
+      padding: 22px;
+    }
+
+    .path-card h3,
+    .outcome-card h3 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .icon-box {
+      width: 34px;
+      height: 34px;
+      display: inline-grid;
+      place-items: center;
+      flex: 0 0 auto;
+      border-radius: 8px;
+      background: var(--teal);
+      color: var(--white);
+      font-weight: 900;
+      font-size: 0.78rem;
+    }
+
+    .path-card p,
+    .outcome-card p {
+      color: var(--muted);
+    }
+
+    .curriculum {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .day-card {
+      display: flex;
+      flex-direction: column;
+      min-height: 332px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.14);
+    }
+
+    .day-card h3 {
+      color: var(--white);
+    }
+
+    .day-card p,
+    .day-card li {
+      color: rgba(255, 255, 255, 0.72);
+    }
+
+    .day-label {
+      width: fit-content;
+      margin-bottom: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 8px;
+      padding: 5px 8px;
+      color: #bfe0dc;
+      font-weight: 900;
+      font-size: 0.78rem;
+    }
+
+    .day-card ul {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .day-card.featured {
+      background: rgba(217, 111, 85, 0.16);
+      border-color: rgba(217, 111, 85, 0.45);
+    }
+
+    .toolkit {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 34px;
+      align-items: center;
+    }
+
+    .toolkit-visual {
+      min-height: 360px;
+      display: grid;
+      align-content: center;
+      gap: 14px;
+      padding: 28px;
+      overflow: hidden;
+      border-radius: 8px;
+      background: var(--ink);
+      box-shadow: var(--shadow);
+    }
+
+    .tool-card {
+      width: min(78%, 360px);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 8px;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--white);
+    }
+
+    .tool-card:nth-child(1) {
+      justify-self: start;
+    }
+
+    .tool-card:nth-child(2) {
+      justify-self: end;
+      background: rgba(47, 125, 122, 0.28);
+    }
+
+    .tool-card:nth-child(3) {
+      justify-self: start;
+      margin-left: 42px;
+      background: rgba(184, 149, 76, 0.24);
+    }
+
+    .tool-card strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .tool-card span {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.9rem;
+    }
+
+    .toolkit-copy p {
+      color: var(--muted);
+    }
+
+    .toolkit-copy .mini-list {
+      margin-top: 20px;
+    }
+
+    .offer-compare {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .offer-tier {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      background: rgba(255, 255, 255, 0.52);
+    }
+
+    .offer-tier.vip {
+      border-color: rgba(217, 111, 85, 0.5);
+      background: rgba(217, 111, 85, 0.1);
+    }
+
+    .offer-tier span {
+      display: inline-block;
+      margin-bottom: 8px;
+      color: var(--teal);
+      font-size: 0.76rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .offer-tier.vip span {
+      color: var(--coral);
+    }
+
+    .offer-tier h3 {
+      margin-bottom: 10px;
+      font-size: 1.15rem;
+    }
+
+    .offer-tier ul {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .mentor-section {
+      position: relative;
+      overflow: hidden;
+      color: var(--white);
+      background: var(--ink);
+    }
+
+    .mentor-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(340px, 0.82fr);
+      gap: 34px;
+      align-items: center;
+    }
+
+    .mentor-copy h2 {
+      max-width: 760px;
+    }
+
+    .mentor-lead {
+      max-width: 760px;
+      margin-bottom: 18px;
+      color: var(--white);
+      font-size: 1.22rem;
+      font-weight: 800;
+    }
+
+    .mentor-copy p {
+      max-width: 760px;
+      color: rgba(255, 255, 255, 0.74);
+    }
+
+    .mentor-personas {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .mentor-persona {
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 8px;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .mentor-persona strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--white);
+    }
+
+    .mentor-persona span {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.92rem;
+    }
+
+    .mentor-card {
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 8px;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.26);
+    }
+
+    .mentor-profile {
+      margin: 0 0 18px;
+      text-align: center;
+    }
+
+    .mentor-photo {
+      display: block;
+      width: min(220px, 72%);
+      aspect-ratio: 1 / 1;
+      margin: 10px auto 0;
+      object-fit: cover;
+      object-position: center;
+      border: 4px solid rgba(255, 255, 255, 0.18);
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.22);
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28);
+    }
+
+    .mentor-caption {
+      padding: 16px 8px 2px;
+    }
+
+    .mentor-name {
+      margin-bottom: 6px;
+      font-size: 2rem;
+      line-height: 1;
+      font-weight: 900;
+    }
+
+    .mentor-role {
+      margin-bottom: 20px;
+      color: #bfe0dc;
+      font-weight: 900;
+    }
+
+    .impact-stack {
+      display: grid;
+      gap: 12px;
+    }
+
+    .impact-card {
+      display: grid;
+      grid-template-columns: 116px 1fr;
+      gap: 14px;
+      align-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      padding: 14px;
+      background: rgba(0, 0, 0, 0.18);
+    }
+
+    .impact-value {
+      color: var(--coral);
+      font-size: 1.36rem;
+      line-height: 1.05;
+      font-weight: 900;
+    }
+
+    .impact-card strong {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--white);
+    }
+
+    .impact-card span {
+      color: rgba(255, 255, 255, 0.68);
+      font-size: 0.92rem;
+    }
+
+    .pricing-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .price-card {
+      display: flex;
+      flex-direction: column;
+      min-height: 420px;
+      padding: 26px;
+      background: var(--white);
+    }
+
+    .price-card.highlight {
+      border-color: rgba(217, 111, 85, 0.56);
+      box-shadow: var(--shadow);
+    }
+
+    .price-badge {
+      width: fit-content;
+      margin-bottom: 10px;
+      border-radius: 999px;
+      padding: 5px 9px;
+      color: var(--white);
+      background: var(--coral);
+      font-size: 0.74rem;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .price {
+      margin: 10px 0 18px;
+      font-size: 3rem;
+      line-height: 1;
+      font-weight: 900;
+    }
+
+    .price span {
+      font-size: 1rem;
+      color: var(--muted);
+    }
+
+    .price-note {
+      margin: -8px 0 18px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .price-card .mini-list {
+      margin-bottom: 26px;
+    }
+
+    .price-card .btn {
+      margin-top: auto;
+    }
+
+    .form-band {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 32px;
+      align-items: start;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 8px;
+      padding: 32px;
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .form-band p {
+      color: rgba(255, 255, 255, 0.72);
+    }
+
+    .signup-steps {
+      display: grid;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .signup-step {
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      padding: 14px;
+      background: rgba(0, 0, 0, 0.16);
+    }
+
+    .signup-step strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--white);
+    }
+
+    .signup-step span {
+      color: rgba(255, 255, 255, 0.66);
+      font-size: 0.92rem;
+    }
+
+    .signup-form {
+      display: grid;
+      gap: 14px;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    .field label {
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 0.88rem;
+      font-weight: 800;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      min-height: 46px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 8px;
+      padding: 0 12px;
+      color: var(--white);
+      background: rgba(0, 0, 0, 0.18);
+    }
+
+    .field textarea {
+      min-height: 112px;
+      padding: 12px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+
+    .field select option {
+      color: var(--ink);
+      background: var(--white);
+    }
+
+    .field-hint {
+      color: rgba(255, 255, 255, 0.58);
+      font-size: 0.82rem;
+    }
+
+    .plan-selector {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .plan-choice {
+      position: relative;
+      cursor: pointer;
+    }
+
+    .plan-choice input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .plan-choice-body {
+      display: grid;
+      gap: 4px;
+      min-height: 92px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 8px;
+      padding: 14px;
+      background: rgba(0, 0, 0, 0.18);
+      color: rgba(255, 255, 255, 0.78);
+    }
+
+    .plan-choice-body strong {
+      color: var(--white);
+    }
+
+    .plan-choice-body em {
+      width: fit-content;
+      border-radius: 999px;
+      padding: 4px 8px;
+      color: var(--white);
+      background: var(--coral);
+      font-size: 0.72rem;
+      font-style: normal;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .plan-choice-body small {
+      color: rgba(255, 255, 255, 0.58);
+      line-height: 1.45;
+    }
+
+    .plan-choice input:checked + .plan-choice-body {
+      border-color: rgba(217, 111, 85, 0.84);
+      background: rgba(217, 111, 85, 0.18);
+      box-shadow: 0 0 0 1px rgba(217, 111, 85, 0.18);
+    }
+
+    .plan-choice input:focus-visible + .plan-choice-body {
+      outline: 3px solid rgba(217, 111, 85, 0.42);
+      outline-offset: 2px;
+    }
+
+    .form-note {
+      min-height: 24px;
+      margin: 0;
+      color: #bfe0c3;
+      font-size: 0.92rem;
+      font-weight: 800;
+    }
+
+    .turnstile-slot {
+      min-height: 0;
+    }
+
+    .turnstile-slot:not(:empty) {
+      margin-top: -2px;
+    }
+
+    .consent-copy {
+      margin: -2px 0 0;
+      color: rgba(255, 255, 255, 0.58);
+      font-size: 0.78rem;
+      line-height: 1.45;
+    }
+
+    .consent-copy a {
+      color: var(--white);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .next-step-panel {
+      display: grid;
+      gap: 14px;
+      border: 1px solid rgba(191, 224, 195, 0.28);
+      border-radius: 8px;
+      padding: 18px;
+      background: rgba(191, 224, 195, 0.1);
+    }
+
+    .next-step-panel h3 {
+      margin: 0;
+      color: var(--white);
+    }
+
+    .next-step-panel p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.74);
+    }
+
+    .next-step-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .next-step-actions .btn {
+      width: auto;
+    }
+
+    .onboarding-section {
+      border-top: 1px solid var(--line);
+    }
+
+    .onboarding-card {
+      display: grid;
+      grid-template-columns: 0.82fr 1.18fr;
+      gap: 32px;
+      align-items: start;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 32px;
+      background: rgba(255, 255, 255, 0.62);
+      box-shadow: var(--shadow);
+    }
+
+    .onboarding-card p {
+      color: var(--muted);
+    }
+
+    .onboarding-card .field label {
+      color: var(--ink);
+    }
+
+    .onboarding-card .field input,
+    .onboarding-card .field select,
+    .onboarding-card .field textarea {
+      color: var(--ink);
+      border-color: var(--line);
+      background: rgba(255, 255, 255, 0.78);
+    }
+
+    .onboarding-card .field-hint {
+      color: var(--muted);
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    .faq-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .faq-item {
+      display: grid;
+      align-content: start;
+      padding: 20px;
+    }
+
+    .faq-item p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .site-footer {
+      flex-shrink: 0;
+      padding: 34px 0;
+      color: rgba(255, 255, 255, 0.68);
+      background: var(--ink);
+    }
+
+    .footer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      font-size: 0.92rem;
+    }
+
+    .footer-links {
+      display: inline-flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 14px;
+    }
+
+    .footer-links a {
+      color: var(--white);
+    }
+
+    .cookie-banner {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 40;
+      width: min(420px, calc(100% - 36px));
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 8px;
+      padding: 16px;
+      color: var(--white);
+      background: rgba(23, 23, 21, 0.94);
+      box-shadow: var(--shadow);
+    }
+
+    .cookie-banner p {
+      margin: 0 0 12px;
+      color: rgba(255, 255, 255, 0.76);
+      font-size: 0.88rem;
+    }
+
+    .cookie-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .cookie-actions .btn {
+      min-height: 38px;
+      padding: 0 14px;
+      font-size: 0.88rem;
+    }
+
+    @media (max-width: 980px) {
+      .nav-links {
+        display: none;
+      }
+
+      .hero-grid,
+      .problem-grid,
+      .toolkit,
+      .mentor-grid,
+      .onboarding-card,
+      .form-band {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 3rem;
+      }
+
+      h2 {
+        font-size: 2rem;
+      }
+
+      .path-grid,
+      .outcome-grid,
+      .mentor-personas,
+      .curriculum,
+      .cost-grid,
+      .proof-grid,
+      .bonus-grid,
+      .difference-grid,
+      .proof-strip {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .hero-panel {
+        display: none;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(var(--max), calc(100% - 28px));
+      }
+
+      .nav {
+        gap: 10px;
+      }
+
+      .brand {
+        min-width: 0;
+      }
+
+      .brand span:last-child {
+        line-height: 1.12;
+      }
+
+      .site-header .btn {
+        width: auto;
+        min-height: 40px;
+        flex: 0 0 auto;
+        padding: 0 12px;
+        font-size: 0.78rem;
+      }
+
+      .hero {
+        min-height: 76vh;
+        padding-top: 96px;
+      }
+
+      .eyebrow {
+        max-width: 100%;
+        align-items: flex-start;
+        line-height: 1.25;
+        white-space: normal;
+      }
+
+      h1 {
+        font-size: 2.12rem;
+        line-height: 1.04;
+      }
+
+      h2 {
+        font-size: 1.72rem;
+      }
+
+      .lead {
+        font-size: 1rem;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .hero-actions,
+      .hero-meta {
+        width: 100%;
+      }
+
+      .hero-meta span {
+        width: 100%;
+      }
+
+      .section {
+        padding: 64px 0;
+      }
+
+      .toolkit {
+        align-items: stretch;
+      }
+
+      .toolkit-visual {
+        min-height: auto;
+        display: grid;
+        gap: 12px;
+        padding: 16px;
+      }
+
+      .tool-card,
+      .tool-card:nth-child(1),
+      .tool-card:nth-child(2),
+      .tool-card:nth-child(3) {
+        width: 100%;
+        justify-self: stretch;
+        margin-left: 0;
+      }
+
+      .persona-tabs,
+      .persona-content,
+      .path-grid,
+      .outcome-grid,
+      .mentor-personas,
+      .curriculum,
+      .cost-grid,
+      .proof-grid,
+      .case-grid,
+      .case-metrics,
+      .bonus-grid,
+      .difference-grid,
+      .proof-strip,
+      .offer-compare,
+      .plan-selector,
+      .pricing-grid,
+      .faq-grid,
+      .field-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .persona-tab {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .persona-content {
+        padding: 22px;
+      }
+
+      .price-card {
+        min-height: auto;
+      }
+
+      .impact-card {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-row {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .footer-links {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .brand {
+        gap: 8px;
+        font-size: 0.9rem;
+      }
+
+      .brand-mark {
+        width: 30px;
+        height: 30px;
+        font-size: 0.72rem;
+      }
+
+      .site-header .btn {
+        max-width: 126px;
+        padding: 0 10px;
+        font-size: 0.74rem;
+      }
+
+      h1 {
+        font-size: 1.88rem;
+      }
+
+      .eyebrow {
+        font-size: 0.74rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="#top" aria-label="AI Automation Zero to Hero">
+        <span class="brand-mark">AI</span>
+        <span>AI Automation Zero to Hero</span>
+      </a>
+      <nav class="nav-links" aria-label="Navigatie principala">
+        <a href="#trasee">Trasee</a>
+        <a href="#scenarii">Scenarii</a>
+        <a href="#bonus">Bonus</a>
+        <a href="#program">Program</a>
+        <a href="#mentor">Mentor</a>
+        <a href="#inscriere">Inscriere</a>
+      </nav>
+      <a class="btn btn-primary" href="#inscriere" data-plan="vip">Vreau VIP</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero" aria-labelledby="hero-title">
+      <canvas class="hero-canvas" id="systemCanvas" aria-hidden="true"></canvas>
+      <div class="hero-scrim" aria-hidden="true"></div>
+      <div class="container hero-grid">
+        <div>
+          <div class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span> Workshop live pentru owneri: AI Automation Zero to Hero</div>
+          <h1 id="hero-title">Treci de la ChatGPT la primul workflow AI care scoate munca manuala din business</h1>
+          <p class="lead">In 3 sesiuni live vezi cum alegi procesele care merita automatizate si cum construiesti un agent AI controlabil pentru lead-uri, follow-up, research, continut sau operatiuni. Fara programare. Fara promisiuni de autopilot magic.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#inscriere" data-plan="vip">Vreau VIP + Audit Kit &rarr;</a>
+            <a class="btn btn-secondary" href="#inscriere" data-plan="free">Particip gratuit</a>
+          </div>
+          <div class="hero-meta" aria-label="Detalii workshop">
+            <span>3 sesiuni live + VIP Implementation Lab</span>
+            <span>Bonus: AI Process Audit Kit + 30 idei</span>
+            <span>Locuri VIP limitate pentru hot seats si feedback</span>
+          </div>
+        </div>
+
+        <aside class="hero-panel" aria-label="Preview workflow AI">
+          <div class="system-preview">
+            <div class="preview-top">
+              <strong>Workflow AI controlabil</strong>
+              <span class="status-pill">ruleaza</span>
+            </div>
+            <div class="preview-row">
+              <div class="preview-label">Input</div>
+              <div class="preview-work">
+                <strong>Proces care pierde bani</strong>
+                <span>Lead-uri, mesaje, intrebari, documente sau research pe care le refaci manual saptamanal.</span>
+                <div class="preview-progress"><i style="width: 42%"></i></div>
+              </div>
+            </div>
+            <div class="preview-row">
+              <div class="preview-label">Agent</div>
+              <div class="preview-work">
+                <strong>Reguli + verificare + actiune</strong>
+                <span>Extrage informatii, aplica criterii, marcheaza riscuri si pregateste urmatorul pas pentru om.</span>
+                <div class="preview-progress"><i style="width: 68%; background: var(--teal)"></i></div>
+              </div>
+            </div>
+            <div class="preview-row">
+              <div class="preview-label">Output</div>
+              <div class="preview-work">
+                <strong>Sistem reutilizabil</strong>
+                <span>Follow-up, raport, plan, calendar sau checklist pe care il poti rula din nou.</span>
+                <div class="preview-progress"><i style="width: 86%; background: var(--coral)"></i></div>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section section-alt" aria-labelledby="problem-title">
+      <div class="container problem-grid">
+        <div class="problem-statement">
+          <span class="section-kicker">Problema reala</span>
+          <h2 id="problem-title">ChatGPT iti raspunde. Businessul tau tot manual ramane.</h2>
+          <p>Multi owneri au incercat ChatGPT, Claude sau tool-uri no-code. Au texte mai bune si idei mai rapide, dar lead-urile tot se pierd, follow-up-ul tot se amana, rapoartele tot se fac manual, iar echipa tot intreaba aceleasi lucruri.</p>
+          <p>Diferenta apare cand AI-ul nu mai este un chat separat, ci devine un proces: primeste input, urmeaza reguli, verifica riscuri si pregateste un output pe care il poti folosi in business.</p>
+          <p>In workshop vezi cum poate arata un agent care foloseste browserul: analizeaza informatii publice, compara concurenta si transforma research-ul intr-un plan actionabil, fara sa-l lasi sa decida singur lucruri sensibile.</p>
+        </div>
+        <div class="contrast-list">
+          <div class="contrast-item">
+            <span class="contrast-number">01</span>
+            <div>
+              <h3>De la raspunsuri la procese care muta munca mai departe</h3>
+              <p>Nu doar "scrie-mi un text", ci "verifica lead-ul, extrage datele, propune follow-up si pregateste mesajul".</p>
+            </div>
+          </div>
+          <div class="contrast-item">
+            <span class="contrast-number">02</span>
+            <div>
+              <h3>De la inspiratie la workflow-uri masurabile</h3>
+              <p>Un prompt bun te ajuta o data. Un workflow bun poate economisi ore in fiecare saptamana si poate reduce lead-urile uitate.</p>
+            </div>
+          </div>
+          <div class="contrast-item">
+            <span class="contrast-number">03</span>
+            <div>
+              <h3>De la demo generic la cazul tau real</h3>
+              <p>De aceea VIP-ul are hot seats si roadmap: alegem ce merita automatizat in businessul tau, nu intr-un exemplu frumos de pe internet.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="cost-title">
+      <div class="container">
+        <div class="section-heading">
+          <span class="section-kicker">Costul invizibil</span>
+          <h2 id="cost-title">Daca folosesti AI doar pentru texte, platesti in continuare cu ore, lead-uri si atentie.</h2>
+          <p>Acestea sunt scenarii de calcul, nu promisiuni garantate. Ideea este simpla: inainte sa mai adaugi un tool sau un om in echipa, merita sa vezi ce proces poate fi mutat intr-un workflow AI controlabil.</p>
+        </div>
+
+        <div class="cost-grid">
+          <article class="cost-card">
+            <div class="cost-value">5-10h</div>
+            <h3>pe saptamana in taskuri repetitive</h3>
+            <p>Emailuri, follow-up, research, centralizari, documente, raspunsuri repetitive si verificari facute manual.</p>
+          </article>
+          <article class="cost-card">
+            <div class="cost-value">1-3</div>
+            <h3>lead-uri pierdute pot schimba luna</h3>
+            <p>Pentru servicii locale sau B2B, un follow-up intarziat poate costa mai mult decat accesul VIP la workshop.</p>
+          </article>
+          <article class="cost-card">
+            <div class="cost-value">x3</div>
+            <h3>haos cand businessul creste</h3>
+            <p>Daca procesul nu e mapat, orice volum nou inseamna mai multe mesaje, mai multe erori si mai multa dependenta de tine.</p>
+          </article>
+        </div>
+        <p class="estimate-note">Calcul orientativ: daca un owner sau membru din echipa economiseste 6 ore pe saptamana, la o valoare interna de 25-50 EUR/ora, miza lunara poate trece rapid de 600-1.200 EUR. Workshopul te ajuta sa gasesti primul proces unde matematica asta are sens.</p>
+      </div>
+    </section>
+
+    <section class="section section-alt" aria-labelledby="difference-title">
+      <div class="container">
+        <div class="section-heading">
+          <span class="section-kicker">Diferenta noastra</span>
+          <h2 id="difference-title">Nu construim mitul ca AI-ul iti conduce businessul singur. Construim sisteme mici care pot fi verificate.</h2>
+          <p>AI-ul devine util cand are rol, context, reguli, limite si criterii de calitate. Asta este diferenta dintre un demo spectaculos si un workflow pe care il poti folosi fara sa-ti fie frica.</p>
+        </div>
+
+        <div class="difference-grid">
+          <article class="difference-card">
+            <h3>Hype obisnuit</h3>
+            <p>"Pune agenti AI pe autopilot si lasa-i sa lucreze 24/7." Suna bine, dar pentru un business real ridica intrebari despre control, date, calitate si reputatie.</p>
+          </article>
+          <article class="difference-card highlight">
+            <h3>Abordarea din workshop</h3>
+            <p>Alegi un proces cu miza clara, il mapezi, definesti outputul, pui reguli si pastrezi omul in punctele unde decizia conteaza.</p>
+          </article>
+          <article class="difference-card">
+            <h3>Rezultatul urmarit</h3>
+            <p>Primul workflow AI care reduce munca manuala si poate fi extins: lead intake, follow-up, research concurenta, continut sau raportare.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="trasee" aria-labelledby="persona-title">
+      <div class="container">
+        <div class="section-heading">
+          <span class="section-kicker">Alege traseul tau</span>
+          <h2 id="persona-title">Pagina este gandita pentru owneri, dar metoda functioneaza si pentru job sau servicii AI.</h2>
+          <p>Focusul workshopului este businessul real: procese, timp, lead-uri, follow-up si control. Daca esti profesionist sau consultant, aplici aceeasi metoda pe rolul tau sau pe clientii tai.</p>
+        </div>
+
+        <div class="persona-shell">
+          <div class="persona-tabs" role="tablist" aria-label="Trasee workshop">
+            <button class="persona-tab is-active" type="button" role="tab" aria-selected="true" data-persona="owner">Am o afacere</button>
+            <button class="persona-tab" type="button" role="tab" aria-selected="false" data-persona="pro">Vreau avantaj la job</button>
+            <button class="persona-tab" type="button" role="tab" aria-selected="false" data-persona="consultant">Vreau servicii AI</button>
+          </div>
+
+          <div class="persona-content is-active" data-panel="owner" aria-hidden="false">
+            <div class="persona-copy">
+              <h3>Pentru owneri si soloprenori</h3>
+              <p>AI-ul nu trebuie sa fie inca un tool pe care il verifici tu. Trebuie sa scoata frictiune din business: lead-uri, follow-up, rapoarte, documente, cereri si intrebari repetitive.</p>
+              <ul class="mini-list">
+                <li>Alegi procesele unde un agent AI poate economisi timp rapid.</li>
+                <li>Construiesti un workflow reutilizabil, cu reguli si verificare umana.</li>
+                <li>Inveti sa gandesti automatizarea prin ROI, risc si control.</li>
+              </ul>
+            </div>
+            <div class="persona-result">
+              <h3>Rezultat urmarit</h3>
+              <p>Pleci cu o harta clara de procese si cu primul agent sau workflow AI pe care il poti adapta in businessul tau.</p>
+            </div>
+          </div>
+
+          <div class="persona-content" data-panel="pro" aria-hidden="true">
+            <div class="persona-copy">
+              <h3>Pentru profesionisti la job</h3>
+              <p>Daca folosesti AI doar pentru texte, esti inca la suprafata. Avantajul real apare cand poti arata un workflow care economiseste ore si imbunatateste munca echipei.</p>
+              <ul class="mini-list">
+                <li>Construiesti un agent sau workflow pe rolul tau: sales, marketing, HR, operations, finance sau project management.</li>
+                <li>Inveti cum lucrezi corect cu date, verificare si acuratete.</li>
+                <li>Pregatesti un rezultat concret pe care il poti arata managerului sau echipei.</li>
+              </ul>
+            </div>
+            <div class="persona-result">
+              <h3>Rezultat urmarit</h3>
+              <p>Pleci cu un sistem de lucru demonstrabil, care te ajuta sa fii mai rapid, mai organizat si mai greu de ignorat.</p>
+            </div>
+          </div>
+
+          <div class="persona-content" data-panel="consultant" aria-hidden="true">
+            <div class="persona-copy">
+              <h3>Pentru consultanti si freelanceri</h3>
+              <p>Nu e suficient sa stii prompturi. Ca sa vinzi AI automation, ai nevoie de problema clara, demo credibil, oferta si pasi de livrare.</p>
+              <ul class="mini-list">
+                <li>Inveti sa gasesti procese repetitive care merita automatizate pentru clienti.</li>
+                <li>Construiesti un demo mic, dar suficient de clar ca sa creeze interes.</li>
+                <li>Iei un cadru simplu pentru oferta, discovery si handover.</li>
+              </ul>
+            </div>
+            <div class="persona-result">
+              <h3>Rezultat urmarit</h3>
+              <p>Pleci cu inceputul unui serviciu vandabil de AI automation: problema, demo, oferta si pasi de livrare.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt" id="scenarii" aria-labelledby="cases-title">
+      <div class="container">
+        <div class="section-heading">
+          <span class="section-kicker">Scenarii demonstrative</span>
+          <h2 id="cases-title">Vezi cum arata AI-ul cand il legi de un business concret, nu de un prompt generic.</h2>
+          <p>Aceste scenarii sunt modele de lucru si estimari orientative. Nu sunt testimoniale si nu garanteaza rezultate, dar arata tipul de gandire pe care il folosim in workshop.</p>
+        </div>
+
+        <div class="case-grid">
+          <article class="case-card">
+            <span class="case-label">Scenariu demonstrativ</span>
+            <div>
+              <h3>Fitness trainer local: din continut haotic in sistem de lead-uri si follow-up</h3>
+              <p>Agentul analizeaza profiluri publice, extrage teme de continut, propune calendar, pregateste mesaje pentru lead-uri si marcheaza intrebarile care cer raspuns uman.</p>
+            </div>
+            <div class="case-metrics">
+              <div class="case-metric">
+                <strong>6-8h</strong>
+                <span>research si continut economisit lunar</span>
+              </div>
+              <div class="case-metric">
+                <strong>24h</strong>
+                <span>follow-up maxim pentru lead-uri calde</span>
+              </div>
+              <div class="case-metric">
+                <strong>1 sistem</strong>
+                <span>calendar + mesaje + raport saptamanal</span>
+              </div>
+            </div>
+            <p>ROI potential: daca un singur client nou acopera 100-300 EUR/luna, un sistem de follow-up mai disciplinat poate plati rapid timpul investit.</p>
+          </article>
+
+          <article class="case-card">
+            <span class="case-label">Scenariu demonstrativ</span>
+            <div>
+              <h3>Cabinet sau clinica: intrebari repetitive, programari si reputatie fara date sensibile</h3>
+              <p>Workflow-ul lucreaza doar cu informatii publice si reguli aprobate: raspunsuri generale, reminder intern, intrebari frecvente, review-uri si triere catre om.</p>
+            </div>
+            <div class="case-metrics">
+              <div class="case-metric">
+                <strong>30-50%</strong>
+                <span>din intrebarile repetitive pot fi pregatite</span>
+              </div>
+              <div class="case-metric">
+                <strong>0</strong>
+                <span>date medicale sensibile in demo</span>
+              </div>
+              <div class="case-metric">
+                <strong>7 zile</strong>
+                <span>roadmap pentru primul workflow</span>
+              </div>
+            </div>
+            <p>ROI potential: miza nu este doar timpul, ci raspunsul mai rapid, reputatia si mai putine blocaje in agenda echipei.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-dark" id="program" aria-labelledby="program-title">
+      <div class="container">
+        <div class="section-heading">
+          <span class="section-kicker">Programul workshopului</span>
+          <h2 id="program-title">In 3 zile treci de la ChatGPT folosit ocazional la un workflow AI controlabil pentru business.</h2>
+          <p>Ritmul este gandit pentru non-tehnici: pregatim Claude Desktop, alegem procesul corect, construim skills ca retete reutilizabile, apoi vezi cum agentii specializati pot fi ghidati de un orchestrator.</p>
+        </div>
+
+        <div class="curriculum">
+          <article class="day-card">
+            <span class="day-label">Ziua 1 - 90 min + Q&amp;A</span>
+            <h3>Setup + Business OS in Claude</h3>
+            <p>Instalam sau pregatim workspace-ul, alegem procesul corect si vedem cum Claude devine spatiu de lucru pentru business, nu doar chat.</p>
+            <ul>
+              <li>Setup Claude Desktop + fallback in browser</li>
+              <li>AI Process Audit: timp, bani, frecventa si risc</li>
+              <li>Livrabil: Workflow Brief v1 pentru procesul tau</li>
+            </ul>
+          </article>
+
+          <article class="day-card">
+            <span class="day-label">Ziua 2 - 90 min + Q&amp;A</span>
+            <h3>Skills + agent specializat</h3>
+            <p>Transformam procesul ales intr-o reteta reutilizabila pentru AI, apoi construim un agent specializat pentru research, follow-up, continut sau raspunsuri repetitive.</p>
+            <ul>
+              <li>Skills explicate pe limba non-tehnica: instructiuni, exemple si criterii</li>
+              <li>Dual track: fitness sandbox + cabinet local anonim, fara date sensibile</li>
+              <li>Livrabil: Skill Card + Agent Role Card + checklist de verificare</li>
+            </ul>
+          </article>
+
+          <article class="day-card">
+            <span class="day-label">Ziua 3 - 105 min + buffer</span>
+            <h3>Agenti specializati + orchestrator</h3>
+            <p>Vezi diferenta dintre un agent solo si un sistem coordonat: researcher, strategist, copywriter, QA si orchestrator pe acelasi proces.</p>
+            <ul>
+              <li>Orchestratorul imparte taskul, cere outputuri si verifica progresul</li>
+              <li>Demo final: fitness cap-coada + proof anonim de cabinet local</li>
+              <li>Livrabil: AI Operating Card + roadmap pe 7 zile</li>
+            </ul>
+          </article>
+
+          <article class="day-card featured">
+            <span class="day-label">Ziua 4 VIP - 90 min</span>
+            <h3>Implementation Lab</h3>
+            <p>Nu mai urmaresti doar demo-uri. Lucram pe cazuri reale din onboarding si alegem ce workflow sau agent merita construit primul.</p>
+            <ul>
+              <li>Hot seats, feedback si selectie de cazuri</li>
+              <li>Replay-uri, workbook si roadmap pentru procesul tau</li>
+              <li>Recomandare de traseu: cohorta beta, sprint sau consultanta</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section bonus-section" id="bonus" aria-labelledby="bonus-title">
+      <div class="container">
+        <div class="section-heading">
+          <span class="section-kicker">Bonus de inscriere</span>
+          <h2 id="bonus-title">Primesti AI Process Audit Kit + 30 idei de automatizari pentru business.</h2>
+          <p>Bonusul te ajuta sa nu intri in workshop cu intrebarea "ce as putea automatiza?", ci cu o lista concreta de procese, scoruri si idei pe care le putem discuta.</p>
+        </div>
+
+        <div class="bonus-grid">
+          <article class="bonus-card">
+            <h3>Audit rapid de procese</h3>
+            <p>Un cadru simplu pentru a nota unde se pierde timp: lead-uri, follow-up, continut, suport, documente, rapoarte si operatiuni.</p>
+          </article>
+          <article class="bonus-card">
+            <h3>30 idei de automatizari AI</h3>
+            <p>Lista structurata pe tipuri de business: servicii locale, consultanta, agentii, educatie, e-commerce si echipe mici.</p>
+          </article>
+          <article class="bonus-card highlight">
+            <h3>VIP Agent Workbook</h3>
+            <p>Pentru VIP: AI Process Audit, Workflow Brief, Skill Card, Agent Role Card, Orchestrator Map, AI Operating Card si roadmap pe 7 zile.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="outcome-title">
+      <div class="container">
+        <div class="section-heading">
+          <span class="section-kicker">Ce se schimba dupa workshop</span>
+          <h2 id="outcome-title">Nu mai vezi AI-ul ca pe un chat izolat. Il vezi ca pe un sistem de lucru pe care il poti controla.</h2>
+        </div>
+
+        <div class="outcome-grid">
+          <article class="outcome-card">
+            <h3><span class="icon-box">01</span> Un proces ales corect</h3>
+            <p>Intelegi ce merita automatizat prima data si ce trebuie lasat cu verificare umana.</p>
+          </article>
+          <article class="outcome-card">
+            <h3><span class="icon-box">02</span> Skills si agenti pe intelesul tau</h3>
+            <p>Pleci cu logica unei retete reutilizabile: instructiuni, exemple, criterii, output si verificare.</p>
+          </article>
+          <article class="outcome-card">
+            <h3><span class="icon-box">03</span> O harta pentru urmatorul nivel</h3>
+            <p>Vezi cum treci de la agent solo la orchestrator si stii ce merita dus in VIP, cohorta beta sau sprint.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt" aria-labelledby="proof-title">
+      <div class="container">
+        <div class="section-heading">
+          <span class="section-kicker">Proof stack</span>
+          <h2 id="proof-title">Autoritatea nu vine din promisiuni mari, ci din cum gandesti sistemul.</h2>
+          <p>Workshopul combina experienta de sisteme enterprise cu practica actuala de agenti AI, browser automation si workflow-uri aplicate pe cazuri reale de business.</p>
+        </div>
+
+        <div class="proof-grid">
+          <article class="proof-card highlight">
+            <h3>15+ ani in sisteme enterprise</h3>
+            <p>Aplicatii, integrari si procese unde stabilitatea, acuratetea si controlul conteaza mai mult decat demo-ul frumos.</p>
+          </article>
+          <article class="proof-card">
+            <h3>AI builder practic</h3>
+            <p>Workflow-uri in Claude Desktop, skills reutilizabile si agenti care produc output verificabil, nu doar texte generate.</p>
+          </article>
+          <article class="proof-card">
+            <h3>Metoda pentru non-tehnici</h3>
+            <p>Traducem agentii AI in procese simple: input, reguli, verificare, output, limite si urmatorul pas.</p>
+          </article>
+        </div>
+
+        <div class="proof-strip" aria-label="Repere de credibilitate">
+          <div class="proof-stat">
+            <strong>Enterprise</strong>
+            <span>gandire de sisteme care nu au voie sa cada</span>
+          </div>
+          <div class="proof-stat">
+            <strong>Control</strong>
+            <span>human-in-the-loop pentru decizii sensibile</span>
+          </div>
+          <div class="proof-stat">
+            <strong>ROI</strong>
+            <span>alegem procese cu timp si bani masurabili</span>
+          </div>
+          <div class="proof-stat">
+            <strong>Demo</strong>
+            <span>fitness sandbox si cabinet local anonim fara date sensibile</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section mentor-section" id="mentor" aria-labelledby="mentor-title">
+      <div class="container mentor-grid">
+        <div class="mentor-copy">
+          <span class="section-kicker">Cine te ghideaza</span>
+          <h2 id="mentor-title">Diferenta dintre un prompt simpatic si un sistem AI util? Experienta in sisteme reale + practica de AI builder.</h2>
+          <p class="mentor-lead">Sunt Calin Florea, engineer cu 15+ ani in IT si sisteme enterprise. Am lucrat cu aplicatii, integrari si procese unde viteza, stabilitatea, acuratetea si controlul conteaza.</p>
+          <p>Acum folosesc aceeasi gandire pentru agenti AI, automatizari si workflow-uri care reduc munca repetitiva, nu doar produc raspunsuri frumoase. Am construit agenti AI pentru coding si tool-uri interne care pot analiza context, planifica pasi si produce output verificabil.</p>
+          <p>In workshop traduc zona asta pentru owneri: cum alegi ce merita automatizat, cum setezi reguli, cum pastrezi verificarea umana si cum transformi AI-ul din jucarie in proces operational.</p>
+
+          <div class="mentor-personas">
+            <div class="mentor-persona">
+              <strong>Pentru owneri</strong>
+              <span>Vezi cum alegi procese care economisesc timp, reduc haosul operational si pot deveni agenti AI utili.</span>
+            </div>
+            <div class="mentor-persona">
+              <strong>Pentru profesionisti</strong>
+              <span>Inveti sa devii omul care aduce sisteme AI in echipa, nu doar texte generate in ChatGPT.</span>
+            </div>
+            <div class="mentor-persona">
+              <strong>Pentru consultanti</strong>
+              <span>Inveti sa transformi AI automation intr-un demo, o oferta si un inceput de serviciu vandabil.</span>
+            </div>
+          </div>
+        </div>
+
+        <aside class="mentor-card" aria-label="Rezultate relevante din experienta">
+          <figure class="mentor-profile">
+            <img class="mentor-photo" src="mentor.jpeg" alt="Calin Florea">
+            <figcaption class="mentor-caption">
+              <div class="mentor-name">Calin Florea</div>
+              <div class="mentor-role">15+ ani enterprise + AI builder practic</div>
+            </figcaption>
+          </figure>
+          <div class="impact-stack">
+            <div class="impact-card">
+              <div class="impact-value">Chat &rarr; agent</div>
+              <div>
+                <strong>Misiuni, nu conversatii</strong>
+                <span>Rol, context, reguli, tool-uri si criterii de verificare, ca AI-ul sa produca output repetabil.</span>
+              </div>
+            </div>
+            <div class="impact-card">
+              <div class="impact-value">Browser &rarr; research</div>
+              <div>
+                <strong>AI conectat la lume</strong>
+                <span>Agenti care pot naviga, compara informatii publice si transforma research-ul in decizii si continut.</span>
+              </div>
+            </div>
+            <div class="impact-card">
+              <div class="impact-value">Agent &rarr; echipa</div>
+              <div>
+                <strong>Orchestrare de agenti</strong>
+                <span>Researcher, strategist, copywriter, QA si orchestrator lucrand pe acelasi caz real, nu prompturi separate aruncate in chat.</span>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section section-alt" aria-labelledby="pricing-title">
+      <div class="container">
+        <div class="section-heading" style="margin-left: auto; margin-right: auto; text-align: center;">
+          <span class="section-kicker">Participare</span>
+          <h2 id="pricing-title">Poti intra gratuit. Dar daca vrei feedback, replay-uri si roadmap pe cazul tau, intra VIP.</h2>
+          <p>Varianta gratuita iti arata mecanismul. VIP-ul este pentru ownerii care vor sa-si puna procesul pe masa si sa plece cu urmatorii pasi clarificati.</p>
+        </div>
+
+        <div class="pricing-grid">
+          <article class="price-card">
+            <h3>Workshop live</h3>
+            <div class="price">0 <span>RON</span></div>
+            <ul class="mini-list">
+              <li>Acces live la cele 3 sesiuni principale.</li>
+              <li>Demo-uri live cu Claude Desktop, skills, agent specializat si orchestrator.</li>
+              <li>AI Process Audit Kit + lista de 30 idei de automatizari.</li>
+              <li>Formular de segmentare pentru exemple relevante.</li>
+            </ul>
+            <a class="btn btn-dark" href="#inscriere" data-plan="free">Particip gratuit</a>
+          </article>
+
+          <article class="price-card highlight">
+            <span class="price-badge">Recomandat</span>
+            <h3>VIP Implementation Lab</h3>
+            <div class="price">100 <span>RON</span></div>
+            <p class="price-note">aprox. 20 EUR pentru diaspora</p>
+            <ul class="mini-list">
+              <li>Tot ce este inclus in workshopul live.</li>
+              <li>Replay-uri cu timestamp-uri, ca sa poti reveni la demo-uri.</li>
+              <li>Implementation Lab cu locuri limitate pentru hot seats si feedback.</li>
+              <li>VIP Agent Workbook: Workflow Brief, Skill Card, Agent Role Card, Orchestrator Map si QA.</li>
+              <li>Roadmap de implementare pe 7 zile pentru procesul tau.</li>
+              <li>Prioritate la intrebari in sesiunile live.</li>
+            </ul>
+            <a class="btn btn-primary" href="#inscriere" data-plan="vip">Vreau acces VIP</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-dark" id="inscriere" aria-labelledby="signup-title">
+      <div class="container form-band">
+        <div>
+          <span class="section-kicker">Inscriere segmentata</span>
+          <h2 id="signup-title">Ia loc prioritar si primeste bonusul de audit pentru primul proces AI.</h2>
+          <p>Primul pas ramane scurt: nume, email, telefon si traseu. Dupa inscriere primesti pagina de bonus si onboarding-ul rapid pentru exemple mai relevante.</p>
+          <div class="signup-steps" aria-label="Pasi inscriere">
+            <div class="signup-step">
+              <strong>1. Primesti bonusul</strong>
+              <span>AI Process Audit Kit + 30 idei de automatizari pentru owneri si echipe mici.</span>
+            </div>
+            <div class="signup-step">
+              <strong>2. Alegi gratuit sau VIP</strong>
+              <span>VIP include replay-uri, workbook, hot seats si roadmap pe cazul tau.</span>
+            </div>
+          </div>
+        </div>
+        <form class="signup-form" id="signupForm">
+          <div class="field-grid">
+            <div class="field">
+              <label for="name">Nume</label>
+              <input id="name" name="name" autocomplete="name" placeholder="Numele tau" required>
+            </div>
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" autocomplete="email" placeholder="email@exemplu.ro" required>
+            </div>
+          </div>
+
+          <div class="field-grid">
+            <div class="field full">
+              <label for="phone">Telefon / WhatsApp pentru reminder</label>
+              <input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="07xx xxx xxx" required>
+              <span class="field-hint">Trimitem linkul si reminderul inainte de sesiuni. Fara spam.</span>
+            </div>
+          </div>
+
+          <div class="field full">
+            <label>Alege traseul tau</label>
+            <div class="plan-selector persona-selector" role="radiogroup" aria-label="Alege traseul tau">
+              <label class="plan-choice">
+                <input type="radio" name="persona" value="business" checked required>
+                <span class="plan-choice-body">
+                  <strong>Am o afacere</strong>
+                  <small>Vreau workflow-uri AI pentru procese, marketing, lead-uri sau operatiuni.</small>
+                </span>
+              </label>
+              <label class="plan-choice">
+                <input type="radio" name="persona" value="job">
+                <span class="plan-choice-body">
+                  <strong>Vreau avantaj la job</strong>
+                  <small>Vreau sa folosesc AI ca sa lucrez mai rapid si mai vizibil.</small>
+                </span>
+              </label>
+              <label class="plan-choice">
+                <input type="radio" name="persona" value="consultant">
+                <span class="plan-choice-body">
+                  <strong>Vreau servicii AI</strong>
+                  <small>Vreau sa construiesc demo-uri si oferte pentru clienti.</small>
+                </span>
+              </label>
+              <label class="plan-choice">
+                <input type="radio" name="persona" value="explorare">
+                <span class="plan-choice-body">
+                  <strong>Inca explorez</strong>
+                  <small>Vreau sa inteleg ce pot face agentii AI pentru mine.</small>
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <div class="field full">
+            <label>Aleg accesul</label>
+            <div class="plan-selector" role="radiogroup" aria-label="Aleg accesul">
+              <label class="plan-choice">
+                <input type="radio" name="access" value="free">
+                <span class="plan-choice-body">
+                  <strong>Workshop gratuit</strong>
+                  <small>3 sesiuni live, demo-uri, AI Process Audit Kit si 30 idei de automatizari.</small>
+                </span>
+              </label>
+              <label class="plan-choice">
+                <input type="radio" name="access" value="vip" checked>
+                <span class="plan-choice-body">
+                  <strong>VIP Implementation Lab - 100 RON / aprox. 20 EUR</strong>
+                  <em>Recomandat</em>
+                  <small>Replay-uri, VIP Agent Workbook, locuri limitate pentru hot seats si roadmap pe cazul tau.</small>
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <div class="turnstile-slot" data-turnstile-form="signup"></div>
+          <button class="btn btn-primary" id="signupSubmit" type="submit">Continua cu acces VIP &rarr;</button>
+          <p class="consent-copy">Prin continuare, esti de acord sa folosim datele introduse pentru inscriere, confirmari, remindere si follow-up despre workshop pe email, WhatsApp sau SMS. Poti cere oricand stergerea datelor. Detalii in <a href="privacy.html">Politica de confidentialitate</a>.</p>
+          <p class="form-note" id="formNote" aria-live="polite"></p>
+          <div class="next-step-panel" id="nextStepPanel" hidden>
+            <h3 id="nextStepTitle">Urmatorul pas</h3>
+            <p id="nextStepText"></p>
+            <div class="next-step-actions" id="nextStepActions"></div>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section class="section section-alt onboarding-section" id="onboarding" aria-labelledby="onboarding-title" hidden>
+      <div class="container onboarding-card">
+        <div>
+          <span class="section-kicker">Onboarding rapid</span>
+          <h2 id="onboarding-title">Spune-ne ce caz vrei sa aducem mai aproape de workshop.</h2>
+          <p>Raspunsurile astea ne ajuta sa alegem exemple, hot seats si follow-up-uri relevante. Pentru VIP, ele devin baza roadmap-ului de implementare pe 7 zile.</p>
+        </div>
+
+        <form class="signup-form" id="onboardingForm">
+          <div class="field">
+            <label for="automationIdea">Ce ai vrea sa automatizezi prima data?</label>
+            <textarea id="automationIdea" name="automationIdea" placeholder="Ex: follow-up lead-uri, research concurenta, calendar social media, rapoarte, documente..." required></textarea>
+          </div>
+          <div class="field-grid">
+            <div class="field">
+              <label for="currentTools">Ce tool-uri folosesti acum?</label>
+              <input id="currentTools" name="currentTools" placeholder="ChatGPT, Claude, Excel, CRM, Notion...">
+            </div>
+            <div class="field">
+              <label for="publicLink">Link relevant, daca exista</label>
+              <input id="publicLink" name="publicLink" type="url" placeholder="Site, profil social, pagina produs...">
+            </div>
+          </div>
+          <div class="field">
+            <label for="desiredOutcome">Cum ar arata un rezultat bun dupa 7 zile?</label>
+            <textarea id="desiredOutcome" name="desiredOutcome" placeholder="Ex: un agent care pregateste postari, un raport saptamanal, un demo pentru clienti..." required></textarea>
+          </div>
+          <div class="turnstile-slot" data-turnstile-form="onboarding"></div>
+          <button class="btn btn-primary" type="submit">Trimite onboardingul &rarr;</button>
+          <p class="form-note" id="onboardingNote" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="faq-title">
+      <div class="container">
+        <div class="section-heading">
+          <span class="section-kicker">Intrebari frecvente</span>
+          <h2 id="faq-title">Intrebarile care apar inainte sa pui AI-ul in businessul tau.</h2>
+        </div>
+
+        <div class="faq-grid">
+          <article class="faq-item">
+            <h3>Trebuie sa stiu programare?</h3>
+            <p>Nu. Workshopul este construit pentru owneri si oameni non-tehnici. Cand apar Claude Desktop, skills, agenti specializati sau orchestrator, le explicam prin procese concrete de business.</p>
+          </article>
+          <article class="faq-item">
+            <h3>Daca folosesc AI doar ocazional?</h3>
+            <p>Este suficient. Pornim de la diferenta dintre chat si workflow, apoi urcam spre skills, agent specializat si orchestrator, in ritm ghidat.</p>
+          </article>
+          <article class="faq-item">
+            <h3>Daca nu am business?</h3>
+            <p>Este relevant si pentru job. Poti aplica logica pe research, rapoarte, documente, emailuri, organizare sau procese repetitive din echipa.</p>
+          </article>
+          <article class="faq-item">
+            <h3>Pot invata sa vand servicii?</h3>
+            <p>Da, mai ales daca esti consultant sau freelancer. Incepem realist: problema clara, demo mic, oferta simpla si limite sanatoase de livrare.</p>
+          </article>
+          <article class="faq-item">
+            <h3>De ce sa aleg VIP daca pot intra gratuit?</h3>
+            <p>Gratuit vezi sesiunile live, demo-urile si primesti bonusul de audit. VIP adauga replay-uri, workbook, Implementation Lab, hot seats si roadmap pe cazul tau.</p>
+          </article>
+          <article class="faq-item">
+            <h3>Sunt studiile de caz rezultate garantate?</h3>
+            <p>Nu. Sunt scenarii demonstrative si estimari orientative, folosite ca sa vezi logica de ROI. Nu promitem venituri garantate si nu inventam testimoniale.</p>
+          </article>
+          <article class="faq-item">
+            <h3>Trebuie sa am deja o idee de agent AI?</h3>
+            <p>Nu. Tocmai asta clarificam: alegem procesul unde AI-ul merita folosit prima data, in functie de business, job sau servicii pentru clienti.</p>
+          </article>
+          <article class="faq-item">
+            <h3>Daca nu pot participa live?</h3>
+            <p>Varianta gratuita este gandita pentru prezenta live. Daca vrei sa revii la demo-uri, VIP include replay-uri cu timestamp-uri.</p>
+          </article>
+          <article class="faq-item">
+            <h3>Este ca workshopurile cu promisiuni de autopilot?</h3>
+            <p>Nu vindem ideea ca automatizezi tot peste noapte. Vezi ce e posibil, dar construim cu reguli, verificare, limite si aplicare realista.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-row">
+      <span>AI Automation Zero to Hero</span>
+      <span class="footer-links">
+        <span>Workshop live despre automatizari AI practice.</span>
+        <a href="privacy.html">Confidentialitate</a>
+      </span>
+    </div>
+  </footer>
+
+  <div class="cookie-banner" id="cookieBanner" hidden>
+    <p>Folosim cookies pentru analytics si reclame, ca sa intelegem ce functioneaza si sa imbunatatim workshopul.</p>
+    <div class="cookie-actions">
+      <button class="btn btn-primary" type="button" data-cookie-accept>Accept</button>
+      <button class="btn btn-secondary" type="button" data-cookie-reject>Refuz</button>
+    </div>
+  </div>
+
+  <script>
+    const tabs = document.querySelectorAll(".persona-tab");
+    const panels = document.querySelectorAll(".persona-content");
+
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        const target = tab.dataset.persona;
+        tabs.forEach((item) => {
+          item.classList.toggle("is-active", item === tab);
+          item.setAttribute("aria-selected", item === tab ? "true" : "false");
+        });
+        panels.forEach((panel) => {
+          const isActive = panel.dataset.panel === target;
+          panel.classList.toggle("is-active", isActive);
+          panel.setAttribute("aria-hidden", isActive ? "false" : "true");
+        });
+      });
+    });
+
+    const form = document.querySelector("#signupForm");
+    const note = document.querySelector("#formNote");
+    const submitButton = document.querySelector("#signupSubmit");
+    const nextStepPanel = document.querySelector("#nextStepPanel");
+    const nextStepTitle = document.querySelector("#nextStepTitle");
+    const nextStepText = document.querySelector("#nextStepText");
+    const nextStepActions = document.querySelector("#nextStepActions");
+    const onboardingSection = document.querySelector("#onboarding");
+    const onboardingForm = document.querySelector("#onboardingForm");
+    const onboardingNote = document.querySelector("#onboardingNote");
+    const planInputs = document.querySelectorAll('input[name="access"]');
+    const planLinks = document.querySelectorAll("[data-plan]");
+    const cookieBanner = document.querySelector("#cookieBanner");
+    const LEAD_ENDPOINT = "/api/lead";
+    const ONBOARDING_ENDPOINT = "/api/onboarding";
+    const CONFIG_ENDPOINT = "/api/config";
+    const publicConfigDefaults = {
+      stripePaymentLinkUrl: "",
+      whatsappFreeGroupUrl: "",
+      ga4MeasurementId: "",
+      metaPixelId: "",
+      turnstileSiteKey: ""
+    };
+    let publicConfig = { ...publicConfigDefaults };
+    const turnstileTokens = new Map();
+    const turnstileWidgets = new Map();
+    let turnstileScriptPromise = null;
+    const COOKIE_CONSENT_KEY = "aiwebinar_cookie_consent";
+    const trackingQueue = [];
+    const metaEventByName = {
+      free_signup: "Lead",
+      vip_intent: "Lead",
+      begin_checkout: "InitiateCheckout",
+      select_plan: "CustomEvent",
+      open_onboarding: "CustomEvent",
+      onboarding_submit: "CompleteRegistration"
+    };
+    const googleConsentConfig = {
+      analytics_storage: "denied",
+      ad_storage: "denied",
+      ad_user_data: "denied",
+      ad_personalization: "denied"
+    };
+
+    const cleanTrackingParams = (params = {}) => Object.fromEntries(
+      Object.entries(params).filter(([, value]) => value !== undefined && value !== null && value !== "")
+    );
+
+    const makeTrackingEventId = (eventName, params = {}) => {
+      const key = params.event_id || params.session_id || params.onboarding_id || params.lead_id || `${Date.now()}_${Math.random().toString(16).slice(2)}`;
+      return `aiw_${eventName}_${String(key).replace(/[^a-zA-Z0-9_-]/g, "").slice(0, 80)}`;
+    };
+
+    const initConsentMode = () => {
+      window.dataLayer = window.dataLayer || [];
+      if (typeof window.gtag !== "function") {
+        window.gtag = function gtag() { window.dataLayer.push(arguments); };
+      }
+      window.gtag("consent", "default", googleConsentConfig);
+    };
+
+    const updateGoogleConsent = (granted) => {
+      if (typeof window.gtag !== "function") return;
+      const value = granted ? "granted" : "denied";
+      window.gtag("consent", "update", {
+        analytics_storage: value,
+        ad_storage: value,
+        ad_user_data: value,
+        ad_personalization: value
+      });
+    };
+
+    const getCookiePreference = () => {
+      try {
+        return window.localStorage.getItem(COOKIE_CONSENT_KEY);
+      } catch (error) {
+        return "";
+      }
+    };
+
+    const dispatchTrackingEvent = (eventName, params = {}) => {
+      const cleanParams = cleanTrackingParams(params);
+      if (typeof window.gtag === "function") {
+        window.gtag("event", eventName, cleanParams);
+      }
+      if (typeof window.fbq === "function") {
+        const metaEvent = metaEventByName[eventName] || "CustomEvent";
+        const metaParams = cleanTrackingParams({
+          content_name: eventName,
+          content_category: cleanParams.persona,
+          content_ids: cleanParams.lead_id ? [cleanParams.lead_id] : undefined,
+          currency: cleanParams.currency,
+          value: cleanParams.value,
+          status: cleanParams.status,
+          access: cleanParams.access
+        });
+        const metaOptions = cleanParams.event_id ? { eventID: cleanParams.event_id } : undefined;
+        if (metaEvent === "CustomEvent") {
+          window.fbq("trackCustom", eventName, metaParams, metaOptions);
+        } else {
+          window.fbq("track", metaEvent, metaParams, metaOptions);
+        }
+      }
+    };
+
+    const trackFunnelEvent = (eventName, params = {}) => {
+      const preference = getCookiePreference();
+      if (preference === "rejected") return;
+      const event = {
+        name: eventName,
+        params: {
+          page_location: window.location.href,
+          page_title: document.title,
+          ...params
+        }
+      };
+      event.params.event_id = makeTrackingEventId(eventName, event.params);
+      if (preference !== "accepted") {
+        trackingQueue.push(event);
+        return;
+      }
+      dispatchTrackingEvent(event.name, event.params);
+    };
+
+    const flushTrackingQueue = () => {
+      while (trackingQueue.length) {
+        const event = trackingQueue.shift();
+        dispatchTrackingEvent(event.name, event.params);
+      }
+    };
+
+    const makeId = (prefix) => {
+      if (window.crypto && typeof window.crypto.randomUUID === "function") {
+        return window.crypto.randomUUID();
+      }
+      return `${prefix}_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+    };
+
+    const getQueryParams = () => Object.fromEntries(new URLSearchParams(window.location.search).entries());
+
+    const loadPublicConfig = async () => {
+      try {
+        const response = await fetch(CONFIG_ENDPOINT, { headers: { accept: "application/json" } });
+        if (!response.ok) return publicConfig;
+        const config = await response.json();
+        publicConfig = { ...publicConfig, ...config };
+      } catch (error) {
+        console.warn("Config endpoint indisponibil.", error);
+      }
+      return publicConfig;
+    };
+
+    const loadTurnstileScript = () => {
+      if (!publicConfig.turnstileSiteKey) return Promise.resolve(false);
+      if (window.turnstile) return Promise.resolve(true);
+      if (turnstileScriptPromise) return turnstileScriptPromise;
+
+      turnstileScriptPromise = new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+        script.async = true;
+        script.defer = true;
+        script.onload = () => resolve(true);
+        script.onerror = () => reject(new Error("turnstile_script_failed"));
+        document.head.appendChild(script);
+      });
+
+      return turnstileScriptPromise;
+    };
+
+    const renderTurnstileWidgets = async () => {
+      if (!publicConfig.turnstileSiteKey) return;
+      try {
+        await loadTurnstileScript();
+      } catch (error) {
+        console.warn("Turnstile indisponibil.", error);
+        return;
+      }
+      document.querySelectorAll("[data-turnstile-form]").forEach((container) => {
+        const formName = container.dataset.turnstileForm;
+        if (!formName || turnstileWidgets.has(formName) || !window.turnstile) return;
+        const widgetId = window.turnstile.render(container, {
+          sitekey: publicConfig.turnstileSiteKey,
+          callback: (token) => turnstileTokens.set(formName, token),
+          "expired-callback": () => turnstileTokens.delete(formName),
+          "error-callback": () => turnstileTokens.delete(formName)
+        });
+        turnstileWidgets.set(formName, widgetId);
+      });
+    };
+
+    const getTurnstileToken = (formName) => {
+      if (!publicConfig.turnstileSiteKey) return "";
+      const container = document.querySelector(`[data-turnstile-form="${formName}"]`);
+      const fieldToken = container?.querySelector('[name="cf-turnstile-response"]')?.value || "";
+      return turnstileTokens.get(formName) || fieldToken;
+    };
+
+    const resetTurnstile = (formName) => {
+      const widgetId = turnstileWidgets.get(formName);
+      if (widgetId && window.turnstile) {
+        window.turnstile.reset(widgetId);
+      }
+      turnstileTokens.delete(formName);
+    };
+
+    const postJson = async (endpoint, payload) => {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        const error = new Error(result.error || "request_failed");
+        error.status = response.status;
+        error.result = result;
+        throw error;
+      }
+      return result;
+    };
+
+    const collectSignupPayload = (status) => {
+      const formData = new FormData(form);
+      const payload = Object.fromEntries(formData.entries());
+      payload.leadId = makeId("lead");
+      payload.status = status;
+      payload.createdAt = new Date().toISOString();
+      payload.pageUrl = window.location.href;
+      payload.utm = getQueryParams();
+      payload.turnstileToken = getTurnstileToken("signup");
+      return payload;
+    };
+
+    const getCheckoutUrl = (payload, fallbackUrl = "") => {
+      const rawUrl = fallbackUrl || publicConfig.stripePaymentLinkUrl || "";
+      if (!rawUrl) return "";
+      try {
+        const url = new URL(rawUrl, window.location.href);
+        url.searchParams.set("client_reference_id", payload.leadId);
+        url.searchParams.set("lead_id", payload.leadId);
+        return url.toString();
+      } catch (error) {
+        console.warn("Stripe Payment Link invalid.", error);
+        return "";
+      }
+    };
+
+    const getThankYouUrl = (payload, access, extraParams = {}) => {
+      const url = new URL("thank-you.html", window.location.href);
+      url.searchParams.set("access", access);
+      url.searchParams.set("lead_id", payload.leadId);
+      Object.entries(extraParams).forEach(([key, value]) => {
+        url.searchParams.set(key, value);
+      });
+      return url.toString();
+    };
+
+    const showOnboarding = () => {
+      onboardingSection.hidden = false;
+      onboardingSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+
+    const setNextStep = ({ title, text, actions }) => {
+      nextStepTitle.textContent = title;
+      nextStepText.textContent = text;
+      nextStepActions.innerHTML = actions;
+      nextStepPanel.hidden = false;
+    };
+
+    const showFreeConfirmation = (payload) => {
+      if (payload?.leadId) {
+        window.location.href = getThankYouUrl(payload, "free");
+        return;
+      }
+
+      setNextStep({
+        title: "Locul prioritar gratuit este salvat.",
+        text: "Vei primi linkul, reminderul si bonusul AI Process Audit Kit. Daca vrei replay-uri, workbook si lab pe cazul tau, poti face upgrade la VIP.",
+        actions: `
+          <button class="btn btn-primary" type="button" data-upgrade-vip>Fa upgrade la VIP - 100 RON</button>
+          <button class="btn btn-secondary" type="button" data-open-onboarding>Completeaza onboardingul</button>
+        `
+      });
+    };
+
+    const showVipNextStep = (payload, checkoutUrl) => {
+      if (checkoutUrl) {
+      setNextStep({
+        title: "Te trimitem catre plata VIP.",
+        text: "Am salvat datele tale. Dupa plata de 100 RON, aproximativ 20 EUR, revii la bonus si onboardingul pentru cazul tau.",
+        actions: `<a class="btn btn-primary" href="${checkoutUrl}">Continua la plata VIP - 100 RON</a>`
+      });
+        window.setTimeout(() => {
+          window.location.href = checkoutUrl;
+        }, 250);
+        return;
+      }
+
+      setNextStep({
+        title: "Cererea VIP este salvata.",
+        text: "Plata VIP se activeaza dupa ce conectam Stripe pe SRL. Pana atunci, avem datele tale, bonusul ramane disponibil si te putem contacta manual pentru confirmare.",
+        actions: `
+          <button class="btn btn-primary" type="button" data-open-onboarding>Completeaza onboardingul VIP</button>
+          <button class="btn btn-secondary" type="button" data-switch-free>Schimba pe gratuit</button>
+        `
+      });
+    };
+
+    const updatePlanCopy = () => {
+      const selectedPlan = document.querySelector('input[name="access"]:checked')?.value || "vip";
+      submitButton.textContent = selectedPlan === "vip" ? "Continua cu acces VIP \u2192" : "Ia loc prioritar gratuit \u2192";
+      note.textContent = "";
+    };
+
+    const setSelectedPlan = (plan) => {
+      const input = document.querySelector(`input[name="access"][value="${plan}"]`);
+      if (!input) return;
+      input.checked = true;
+      updatePlanCopy();
+    };
+
+    planInputs.forEach((input) => {
+      input.addEventListener("change", () => {
+        updatePlanCopy();
+        trackFunnelEvent("select_plan", {
+          access: input.value,
+          placement: "form_toggle"
+        });
+      });
+    });
+
+    planLinks.forEach((link) => {
+      link.addEventListener("click", () => {
+        setSelectedPlan(link.dataset.plan);
+        trackFunnelEvent("select_plan", {
+          access: link.dataset.plan,
+          placement: link.textContent.trim().slice(0, 80)
+        });
+      });
+    });
+
+    nextStepActions.addEventListener("click", (event) => {
+      if (event.target.closest("[data-upgrade-vip]")) {
+        setSelectedPlan("vip");
+        form.requestSubmit();
+      }
+      if (event.target.closest("[data-switch-free]")) {
+        setSelectedPlan("free");
+        showFreeConfirmation();
+      }
+      if (event.target.closest("[data-open-onboarding]")) {
+        trackFunnelEvent("open_onboarding", {
+          access: document.querySelector('input[name="access"]:checked')?.value || "vip"
+        });
+        showOnboarding();
+      }
+    });
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const selectedPlan = document.querySelector('input[name="access"]:checked')?.value || "vip";
+      const status = selectedPlan === "vip" ? "vip_intent" : "free_registered";
+      const payload = collectSignupPayload(status);
+
+      submitButton.disabled = true;
+      submitButton.textContent = "Se salveaza...";
+      note.textContent = "";
+
+      let leadResult = {};
+      try {
+        leadResult = await postJson(LEAD_ENDPOINT, payload);
+      } catch (error) {
+        console.warn("Lead endpoint indisponibil.", error);
+        note.textContent = error.result?.message || "Nu am putut salva inscrierea. Incearca din nou in cateva secunde.";
+        submitButton.disabled = false;
+        submitButton.textContent = selectedPlan === "vip" ? "Continua cu acces VIP \u2192" : "Ia loc prioritar gratuit \u2192";
+        resetTurnstile("signup");
+        return;
+      }
+
+      if (selectedPlan === "vip") {
+        note.textContent = "Perfect. Am salvat intentia VIP.";
+        trackFunnelEvent("vip_intent", {
+          access: "vip",
+          lead_id: payload.leadId,
+          persona: payload.persona,
+          status,
+          value: 100,
+          currency: "RON"
+        });
+        trackFunnelEvent("begin_checkout", {
+          access: "vip",
+          lead_id: payload.leadId,
+          persona: payload.persona,
+          value: 100,
+          currency: "RON"
+        });
+        showVipNextStep(payload, leadResult.checkoutUrl || getCheckoutUrl(payload));
+      } else {
+        note.textContent = "Locul prioritar gratuit este salvat.";
+        trackFunnelEvent("free_signup", {
+          access: "free",
+          lead_id: payload.leadId,
+          persona: payload.persona,
+          status,
+          value: 0,
+          currency: "RON"
+        });
+        showFreeConfirmation(payload);
+      }
+
+      submitButton.disabled = false;
+      updatePlanCopy();
+    });
+
+    onboardingForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const payload = Object.fromEntries(new FormData(onboardingForm).entries());
+      payload.onboardingId = makeId("onboarding");
+      payload.createdAt = new Date().toISOString();
+      payload.signupEmail = form.elements.email?.value || "";
+      payload.access = document.querySelector('input[name="access"]:checked')?.value || "vip";
+      payload.persona = document.querySelector('input[name="persona"]:checked')?.value || "";
+      payload.turnstileToken = getTurnstileToken("onboarding");
+
+      try {
+        await postJson(ONBOARDING_ENDPOINT, payload);
+      } catch (error) {
+        console.warn("Onboarding endpoint indisponibil.", error);
+        onboardingNote.textContent = error.result?.message || "Nu am putut salva onboardingul. Incearca din nou in cateva secunde.";
+        resetTurnstile("onboarding");
+        return;
+      }
+
+      onboardingNote.textContent = "Multumim. Am salvat onboardingul si il folosim pentru exemplele din workshop.";
+      trackFunnelEvent("onboarding_submit", {
+        access: payload.access,
+        persona: payload.persona,
+        lead_id: payload.leadId || "",
+        onboarding_id: payload.onboardingId
+      });
+    });
+
+    const loadGa4 = () => {
+      if (!publicConfig.ga4MeasurementId || window.__aiWebinarGa4Loaded) return;
+      window.__aiWebinarGa4Loaded = true;
+      const script = document.createElement("script");
+      script.async = true;
+      script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(publicConfig.ga4MeasurementId)}`;
+      document.head.appendChild(script);
+      window.dataLayer = window.dataLayer || [];
+      if (typeof window.gtag !== "function") {
+        window.gtag = function gtag() { window.dataLayer.push(arguments); };
+      }
+      window.gtag("js", new Date());
+      window.gtag("config", publicConfig.ga4MeasurementId, {
+        page_title: document.title,
+        page_location: window.location.href
+      });
+    };
+
+    const loadMetaPixel = () => {
+      if (!publicConfig.metaPixelId || window.__aiWebinarPixelLoaded) return;
+      window.__aiWebinarPixelLoaded = true;
+      window.fbq = function fbq() {
+        window.fbq.callMethod ? window.fbq.callMethod.apply(window.fbq, arguments) : window.fbq.queue.push(arguments);
+      };
+      if (!window._fbq) window._fbq = window.fbq;
+      window.fbq.push = window.fbq;
+      window.fbq.loaded = true;
+      window.fbq.version = "2.0";
+      window.fbq.queue = [];
+      const script = document.createElement("script");
+      script.async = true;
+      script.src = "https://connect.facebook.net/en_US/fbevents.js";
+      document.head.appendChild(script);
+      window.fbq("init", publicConfig.metaPixelId);
+      window.fbq("track", "PageView");
+    };
+
+    const enableTracking = () => {
+      updateGoogleConsent(true);
+      loadGa4();
+      loadMetaPixel();
+      flushTrackingQueue();
+    };
+
+    const initCookieBanner = () => {
+      if (!cookieBanner) return;
+      const preference = getCookiePreference();
+      if (preference === "accepted") {
+        enableTracking();
+        return;
+      }
+      if (preference === "rejected") return;
+
+      cookieBanner.hidden = false;
+      cookieBanner.querySelector("[data-cookie-accept]").addEventListener("click", () => {
+        window.localStorage.setItem(COOKIE_CONSENT_KEY, "accepted");
+        cookieBanner.hidden = true;
+        enableTracking();
+      });
+      cookieBanner.querySelector("[data-cookie-reject]").addEventListener("click", () => {
+        window.localStorage.setItem(COOKIE_CONSENT_KEY, "rejected");
+        updateGoogleConsent(false);
+        trackingQueue.length = 0;
+        cookieBanner.hidden = true;
+      });
+    };
+
+    initConsentMode();
+    const initialPlan = getQueryParams().plan;
+    if (initialPlan === "free" || initialPlan === "vip") {
+      setSelectedPlan(initialPlan);
+    } else {
+      updatePlanCopy();
+    }
+    loadPublicConfig().then(() => {
+      renderTurnstileWidgets();
+      initCookieBanner();
+    });
+
+    const canvas = document.querySelector("#systemCanvas");
+    const ctx = canvas.getContext("2d");
+    const pointer = { x: 0.5, y: 0.5 };
+    const nodes = [
+      { x: 0.12, y: 0.28, label: "Lead" },
+      { x: 0.28, y: 0.18, label: "Email" },
+      { x: 0.46, y: 0.32, label: "Agent" },
+      { x: 0.66, y: 0.22, label: "CRM" },
+      { x: 0.82, y: 0.36, label: "Raport" },
+      { x: 0.22, y: 0.66, label: "Brief" },
+      { x: 0.48, y: 0.72, label: "Verificare" },
+      { x: 0.76, y: 0.68, label: "Output" }
+    ];
+    const links = [[0, 2], [1, 2], [2, 3], [3, 4], [5, 6], [6, 7], [2, 6], [0, 5]];
+
+    function resizeCanvas() {
+      const rect = canvas.getBoundingClientRect();
+      const ratio = window.devicePixelRatio || 1;
+      canvas.width = Math.floor(rect.width * ratio);
+      canvas.height = Math.floor(rect.height * ratio);
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    }
+
+    function draw(time) {
+      const width = canvas.clientWidth;
+      const height = canvas.clientHeight;
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = "#151512";
+      ctx.fillRect(0, 0, width, height);
+
+      const driftX = (pointer.x - 0.5) * 24;
+      const driftY = (pointer.y - 0.5) * 18;
+
+      links.forEach(([from, to], index) => {
+        const a = nodes[from];
+        const b = nodes[to];
+        const ax = a.x * width + driftX * (index % 2 ? 0.3 : -0.2);
+        const ay = a.y * height + driftY * 0.25;
+        const bx = b.x * width + driftX * 0.16;
+        const by = b.y * height + driftY * (index % 2 ? -0.2 : 0.2);
+
+        ctx.strokeStyle = "rgba(247, 243, 233, 0.16)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(ax, ay);
+        ctx.lineTo(bx, by);
+        ctx.stroke();
+
+        const progress = ((time / 1600) + index * 0.18) % 1;
+        const px = ax + (bx - ax) * progress;
+        const py = ay + (by - ay) * progress;
+        ctx.fillStyle = index % 3 === 0 ? "#d96f55" : index % 3 === 1 ? "#2f7d7a" : "#b8954c";
+        ctx.beginPath();
+        ctx.arc(px, py, 3, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      nodes.forEach((node, index) => {
+        if (width < 720 || node.x < 0.56) {
+          return;
+        }
+
+        const pulse = Math.sin(time / 900 + index) * 3;
+        const x = node.x * width + driftX * (index % 2 ? 0.3 : -0.2);
+        const y = node.y * height + driftY * (index % 2 ? -0.22 : 0.2);
+        const w = 92;
+        const h = 40;
+
+        ctx.fillStyle = "rgba(255, 255, 255, 0.08)";
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.18)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.roundRect(x - w / 2, y - h / 2, w, h, 8);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = index === 2 ? "#d96f55" : "#f7f3e9";
+        ctx.font = "700 12px Inter, system-ui, sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(node.label, x, y + pulse * 0.15);
+      });
+
+      requestAnimationFrame(draw);
+    }
+
+    window.addEventListener("resize", resizeCanvas);
+    window.addEventListener("pointermove", (event) => {
+      pointer.x = event.clientX / window.innerWidth;
+      pointer.y = event.clientY / window.innerHeight;
+    });
+
+    resizeCanvas();
+    requestAnimationFrame(draw);
+  </script>
+</body>
+</html>
